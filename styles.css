@@ -17,6 +17,7 @@ body {
     width: 50%;
     box-sizing: border-box;
   }
-.max-logo-size{
-    width: max(5vw, 128px);
+  .gallery img{
+    width: 100%;
+    max-width : 100px;
 }
