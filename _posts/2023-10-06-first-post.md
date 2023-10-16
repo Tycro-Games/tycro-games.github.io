@@ -3,7 +3,7 @@ title: Our links to everywhere
 date: 2023-10-16 14:10:00 +0200
 categories: [Blogging, introduction]
 tags: [blog socials]
-
+pin: true
 ---
 # Some important links
 Hello! This is the first post where I am going to describe what kind of content you can find here and what you can expect in the future.
