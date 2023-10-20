@@ -66,7 +66,7 @@ Right now I am trying to research which language might be suitable. I will updat
         - the ecosystem for game dev is still young
         - I need to learn the language
 
-- [Odin](http://odin-lang.org/)
+- [Odin](https://odin-lang.org/)
     - Pros:
         - battle tested with [EmberGen](https://jangafx.com/software/embergen/)
         - explicit & simplicity
