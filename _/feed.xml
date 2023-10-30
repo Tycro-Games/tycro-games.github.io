@@ -1,0 +1,23 @@
+
+
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>http://localhost:4000/tycro-games/</id>
+  <title>Tycro Games</title>
+  <subtitle>Our website where you can find all your socials and relevant projects.</subtitle>
+  <updated>2023-10-15T21:23:06+02:00</updated>
+  <author>
+    <name>Bogdan Mocanu</name>
+    <uri>http://localhost:4000/tycro-games/</uri>
+  </author>
+  <link rel="self" type="application/atom+xml" href="http://localhost:4000/tycro-games/feed.xml"/>
+  <link rel="alternate" type="text/html" hreflang="en"
+    href="http://localhost:4000/tycro-games/"/>
+  <generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator>
+  <rights> © 2023 Bogdan Mocanu </rights>
+  <icon>tycro-games/assets/img/favicons/favicon.ico</icon>
+  <logo>tycro-games/assets/img/favicons/favicon-96x96.png</logo>
+
+
+</feed>
+
+

@@ -1,0 +1,23 @@
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+body {
+    font-family: "Pixelify Sans";
+}
+.space{
+    margin: auto;
+    padding: 25%;
+    
+
+}
+.gallery {
+    border: 5px solid red;
+    width: 50%;
+    box-sizing: border-box;
+  }
+  .gallery img{
+    width: 100%;
+    max-width : 100px;
+}
