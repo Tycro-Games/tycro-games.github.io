@@ -24,7 +24,7 @@ github_username: OneBogdan01
 minimal_mistakes_skin: default
 search: true
 
-
+github : [metadata]
 repository: "OneBogdan01/tycro-games.github.io"
 # Build settings
 markdown: kramdown
