@@ -25,7 +25,7 @@ minimal_mistakes_skin: default
 search: true
 
 
-repository: "Tycro-Games/tycro-games.github.io"
+repository: "OneBogdan01/tycro-games.github.io"
 # Build settings
 markdown: kramdown
 remote_theme: mmistakes/minimal-mistakes
