@@ -3,6 +3,7 @@ title: How to make a Scrolling Tile Map without an engine in C++
 date: 2023-10-19 14:10:00 +0200
 categories: [Game Engines]
 tags: [blog, tutorial, programming, c++]
+img_path: /assets/assets-2023-11-01
 ---
 # How to make a Scrolling Tile Map without an engine in C++
 ## Prerequisites for this tutorial:  
@@ -17,14 +18,14 @@ So for my school project we had to make a simple 2D platformer. The only require
 Minimalistic means you can more or less write to pixels and there are some math functions.
 
 Here is how it looks when you run it the first time:
-![Alt text](../assets/Screenshots/template.png))
+![picture of the output of the template](template.png)
 
 Of course not all mechanics from the project will be explained, but if you are interested in any of them let me know, and I will make specific tutorials.
 # Importance of making projects without an engine
 
 So there are hundreds of engines that can help you make a game much faster, Why the hassle of not using one? Why remake most of the already established systems that are already fine-tuned to be as efficient and generic as possible?
 
-![unity](../assets/Screenshots/unity.png) ![unreal](../assets/Screenshots/unreal.png) ![godot](../assets/Screenshots/godot.png)
+![unity](unity.png) ![unreal](unreal.png) ![godot](godot.png)
 
 The most important reason, for me, at least, is confidence. Remaking all this will make you confident in your abilities as a programmer. 
 
@@ -32,35 +33,45 @@ Curiosity is another good reason. Most people use engines on a daily basis, but 
 
 You may have heard of these titiles which are made inside an in house engine:
 
-<img src="../assets/Screenshots/hades.png" width="500" height="400">
-<br/>
-<img src="../assets/Screenshots/doom.png" width="500" height="300">
-<img src="../assets/Screenshots/halflife2.png" width="500" height="300">
+![hades](hades.png){: w="500" h="400"} 
+_the indie game Hades_
+![doom](doom.png){: w="500" h="300"} 
+_you know DOOM_
+![half life2](halflife2.png){: w="500" h="300"}
+_half life 2_
 
-> The main idea is that some engines are `born` out of games.
+> The main idea is that some engines are `born` out of games. That's also how Unreal Engine become the engine it is today.
 {: .prompt-info }
+  
+---
 
 And finally, to maybe break the status quo. I feel that most engines are tailored to some kind of ideal experience of games. That means they expect basic blocks of functionality that makes up a game. By building a game brick by brick, you are more likely to discover new alternative ways to create things. You can design your game with your own building blocks, not the ones that an engine provides. Basically, you can make your own engine for your own unique game.
 
-> That is at least what I am telling myself for starting `[this](https://tycro-games.github.io/posts/starting-a-new-game-engine/) project`.
+> That is what I am telling myself for starting my own grand strategy game. Don't worry, I might finish it in the next ten `10 years`.
 {: .prompt-tip }
+_You can read more about it on this [post](https://tycro-games.github.io/posts/starting-a-new-game-engine/)._
 
+---
 
-Firstly, you probably need some way to render pixels to the screen. On that front, I've got you covered. Just use this good free template, I also used the same one to build my project. If you wander through it and find yourself very confused about certain aspects of it. 
+## Rendering Pixels
 
-Don’t worry, it is ***bad*** because it offers a base  that you **should**  try to modify and change to suit your needs.  It is intentionally made, so you can optimize it further or add new functionality, but you do get the minimum.
+Firstly, you probably need some way to render pixels to the screen. On that front, I've got you covered. Just use the good old template, I also used the same one to build my project. Go and wander through it and find yourself very confused about certain aspects of it!
 
- A window for your game, some math, a bit of utility, basic shapes to draw on the screen and the weird notion of a Sprite and Surface which we will maybe explore deeper into another video.
+![Alt text](templatess.png)
+
+Don’t worry, it might seem overwhelming at first, but everything looks that way when you are starting out. It is ***hard to reason about*** because it offers a base that you **should**  try to modify and change to suit your needs.  It is intentionally made in this way, so you can optimize it further or add new functionality, but you do get the minimum.
+
+ A window for your game, some **math**, a bit of utility, **basic shapes** to draw on the screen and the weird notion of a **Sprite** and **Surface** which we will maybe explore deeper into another video.
 
 By the way, you don’t really have to use the stuff provided, if you don’t like the Surface class, make your own, or modify it to suit your needs.
 
-You can find the template in the description. After downloading it, you can press F5 and hopefully a hideous window is going to pop up. This is what it is so nice about this template, it just works.
+After downloading it, you can press F5 and hopefully a hideous window is going to pop up. This is what it is so nice about this template, it just works. 
+_in case you forgot how it is supposed to look like_
+![picture of the output of the template](template.png)
 
-# ///Drawing a tile map
+## Drawing a tile map
 
-[some footage of 2D games]
-
-I will keep the video short and sweet so lets have a scrolling tile map, it is probably the most used gimmick since 2D games were invented 1000 years ago. The most easy way to represent a tile map is to store an array of integers that represent the index of the tile that goes there. It goes without saying, but we also need a tile palette, so we can draw each tile to its corresponding index. We could also use a convention for empty tile, like 0.
+A scrolling tile map, it is probably the most used gimmick since 2D games were invented 1000 years ago. The most easy way to represent a tile map is to store an array of integers that represent the index of the tile that goes there. It goes without saying, but we also need a tile palette, so we can draw each tile to its corresponding index. We could also use a convention for empty tile, like 0.
 
 To illustrate this better, let’s say we have this array, it corresponds with this actual tile map. This is fine so far, but it is quite hard to visualize how the tile map would look without running the actual game. Tiled comes to rescue, link in description, Tiles is another free software for drawing tile maps and using it everywhere basically. As you can see, I could open a new file, add a tile palette, draw the tile map and save the file. Now, if you would open the same file in any text editor, you would find that this is just a bunch of text, which can be imported into our own project. We just need to parse the CSV into our array, now that task is may take some time, feel free to try it, but I just happen to have a basic CSV parser from my project, link in the description.
 
