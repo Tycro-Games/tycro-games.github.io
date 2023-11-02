@@ -72,6 +72,48 @@ _in case you forgot how it is supposed to look like_
 ## Drawing a tile map
 
 A scrolling tile map, it is probably the most used gimmick since 2D games were invented 1000 years ago. The most easy way to represent a tile map is to store an array of integers that represent the index of the tile that goes there. It goes without saying, but we also need a tile palette, so we can draw each tile to its corresponding index. We could also use a convention for empty tile, like 0.
+### Tile map array
+![grid of array](gridArray.png)
+_Our array should look something like this_
+### Tile map on screen
+![Reality](reality.png)
+_Reality is a bit more colorful_
+Fortunately, in Tiled that is exactly what we get, a tile map that we can export as a CSV file. Better yet, the .tsmx file used for saving the file can be parsed into our game. We are getting a bit ahead of ourselves, let’s start with the basics.
+
+Open Tiled and create a new map, you can choose the size of the map, the tile size and the tileset.
+
+![map](mapPopUp.png)
+> `Hint` maybe top left corner "File"?.
+{: .prompt-tip }
+
+After clicking okay we are going to have a big empty Tile Map. This is a good time to save your file, after choosing a the location and name for it, you can see that it is saved as a .tmx file. This is the file that we are going to parse into our game. To see what it looks like from the inside, you can open it with any text editor.
+
+![tiled file with a text editor](tileInside.png)
+_marvelous 0s_
+
+Back into Tiled I will use this free tileset (which I modified to be more obvious), link [here](https://zegley.itch.io/2d-platformermetroidvania-asset-pack), but you can use any tileset you want.
+![window of new tileset](newTile.png)
+
+Just click on the tileset button and add a new tileset, you can choose the image and the tile size. Save it somewhere and you are ready to go.  
+![pop up for tileset](tileSetPopUp.png)
+
+After that it should look similar to this:  
+
+![tiled set](tiledWithTileset.png)
+_Yep, that is it, you can draw a tile map._  
+
+Now, you can select a tile from the tileset and draw it to our map. 
+---
+
+I won't claim I am a good level designer or that I even know how to use Tiled properly, but the idea is that now we can select a tile and draw it to the map.  
+
+![tiled screenshot](tiledMap.png)
+_I was born an artist, I know_
+
+Save, then check the file again with a text editor, you can see that the file has changed. Now we can parse this file into our game, while not having directly modify the array inside the code. 
+_We can also just let someone who knows how to do levels..., *just a thought*._
+
+![again inside of a file](tiledFile2.png)
 
 To illustrate this better, let’s say we have this array, it corresponds with this actual tile map. This is fine so far, but it is quite hard to visualize how the tile map would look without running the actual game. Tiled comes to rescue, link in description, Tiles is another free software for drawing tile maps and using it everywhere basically. As you can see, I could open a new file, add a tile palette, draw the tile map and save the file. Now, if you would open the same file in any text editor, you would find that this is just a bunch of text, which can be imported into our own project. We just need to parse the CSV into our array, now that task is may take some time, feel free to try it, but I just happen to have a basic CSV parser from my project, link in the description.
 
