@@ -160,7 +160,8 @@ First our mental model is a 2D array, but the actual array is a linear one so le
 
 When j reaches the witdh, i is going to become 1.   
 
-Next elements will be j+i*witdh, meaning j+width in our case.
+Next elements will be j+i*witdh, meaning j+width in our case.  
+
  ![sketch](iterate1.jpeg){:  w="300" h="500"}  
 
  Finally we can see how this formula just maps 1D space to a 2D space, in the end is just going from left to right in the one dimensional space.
