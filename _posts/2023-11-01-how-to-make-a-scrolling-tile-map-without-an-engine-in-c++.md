@@ -5,7 +5,6 @@ categories: [Game Engines]
 tags: [blog, tutorial, programming, c++]
 img_path: /assets/assets-2023-11-01
 ---
-# How to make a Scrolling Tile Map without an engine in C++
 ## Prerequisites for this tutorial:  
 - Visual studio, [here](https://www.3dgep.com/
 cpp-fast-track-1-getting-started/) is a step by step tutorial to download it, you can get the latest version of this IDE which is 2022 at the time of writing this.
@@ -59,9 +58,19 @@ Firstly, you probably need some way to render pixels to the screen. On that fron
 
 ![Alt text](templatess.png)
 
+
 Don’t worry, it might seem overwhelming at first, but everything looks that way when you are starting out. It is ***hard to reason about*** because it offers a base that you **should**  try to modify and change to suit your needs.  It is intentionally made in this way, so you can optimize it further or add new functionality, but you do get the minimum.
 
- A window for your game, some **math**, a bit of utility, **basic shapes** to draw on the screen and the weird notion of a **Sprite** and **Surface** which we will maybe explore deeper into another video.
+
+ A window for your game, some **math**, a bit of utility, **basic shapes** to draw on the screen and the weird notion of a **Sprite**  which we will maybe explore deeper into another tutorial.
+
+**Surface** is the one we are interested in, because we need to store an image inside it.  
+
+Unfortunately for us, Surfaces do store pixels, but not in a 2D array. How it would have been trivial to understand, but a 1D array, or "pixels".   
+
+In case you did not know, a pixel is more or less an unsigned integer, every 8 bits from the right to left represent the following channels:blue, green and red, or RGB for short. I won't get into details now, but the idea is that a pixel is just an unsigned int which we can copy easily.  
+
+I explain how to traverse the pixels of a Surface as a 2D array, [here](https://tycro-games.github.io/posts/how-to-make-a-scrolling-tile-map-without-an-engine-in-c++/#traversing-a-1d-array-as-a-2d-one).
 
 By the way, you don’t really have to use the stuff provided, if you don’t like the Surface class, make your own, or modify it to suit your needs.
 
@@ -91,7 +100,7 @@ After clicking okay we are going to have a big empty Tile Map. This is a good ti
 ![tiled file with a text editor](tileInside.png)
 _marvelous 0s_
 
-Back into Tiled I will use this free tileset (which I modified to be more obvious), link [here](https://zegley.itch.io/2d-platformermetroidvania-asset-pack), but you can use any tileset you want.
+Back into Tiled I will use this free tileset (which I modified for this section so it is easier to see), link [here](https://zegley.itch.io/2d-platformermetroidvania-asset-pack), but you can use any tileset you want.
 ![window of new tileset](newTile.png)
 
 Just click on the tileset button and add a new tileset, you can choose the image and the tile size. Save it somewhere and you are ready to go.  
@@ -110,28 +119,65 @@ I won't claim I am a good level designer or that I even know how to use Tiled pr
 ![tiled screenshot](tiledMap.png)
 _I was born an artist, I know_
 
-Save, then check the file again with a text editor, you can see that the file has changed. Now we can parse this file into our game, while not having directly modify the array inside the code. 
-_We can also just let someone who knows how to do levels..., *just a thought*._
+Save, then check the file again with a text editor, you can see that the file has changed. Now we can parse this file into our game, while not having directly modify the array inside the code  
+
+
 
 ![again inside of a file](tiledFile2.png)
+_You could also just let someone who knows how to do levels..., just a thought._
 
-To illustrate this better, let’s say we have this array, it corresponds with this actual tile map. This is fine so far, but it is quite hard to visualize how the tile map would look without running the actual game. Tiled comes to rescue, link in description, Tiles is another free software for drawing tile maps and using it everywhere basically. As you can see, I could open a new file, add a tile palette, draw the tile map and save the file. Now, if you would open the same file in any text editor, you would find that this is just a bunch of text, which can be imported into our own project. We just need to parse the CSV into our array, now that task is may take some time, feel free to try it, but I just happen to have a basic CSV parser from my project, link in the description.
+Finally, We *just* need to parse the CSV into our array, now that task may take some time, feel free to try it, but I just happen to have a basic CSV parser from my project, link [here](https://github.com/Tycro-Games/BlockA-Pitfall/blob/3de2bd3511af3642d20dcbc5835f264125db8c4a/Scripts/Map/Tilemap.cpp#L141C1-L173C2). Keep in mind it only works for one layer, but I am sure you can modify it to support multiple layers.
 
-[diagram that shows how to copy pixel by pixel]
+![code for parsing](codeCSV.png)
+_sorry for the C style strings, one of the requirements for the project were to not use strings from C++_
+## Getting our tile map into the game
 
-Ok, now we have to make some code that copies the tile from the palette image to the screen. Well, images and our screen is made out of pixels, so we can copy from the source to the destination. 
+If you get stucked, or you just want *to make* it work, I do have a repo for this part [here](https://github.com/Tycro-Games/How-to-make-a-Scrolling-Tile-Map-without-an-engine-in-C-).
+--- 
 
-[Show some Stack Overflow responses on dynamic memory management]
+Ok, now we have to make some code that copies the tile from the palette image to the screen. The image we used earlier to draw to inside Tiled can be reused for this purpose, just be sure to use the .png file, not the one that Tiled uses to represent tile sets.
 
-Unfortunately for us, Surfaces do store pixels, but not in a 2D array how it is trivial to understand but a 1D array. We can use this formula to traverse the array as it was 2D, we might want 1D arrays over 2D arrays because dynamic memory is much more inefficient in 2D than 1D. 
+You should do something like this, before moving on to rendering.
+![code start](codeStarter.png)
+My assets folder looks like this:
+![folderStructure](folderstructure.png)
 
-[show how formula works visually]
+Images and our screen is made out of pixels, so we can copy from the source to the screen, or more generally, the destination.
+
+![fromSRCtoDST](DSTtoSRC.png)
+
+## Traversing a 1D array as a 2D one
+
+As I said earlied, Surfaces have 1D arrays to represent pixels, *aka contigious block of memory*.
+
+We can use this formula to traverse the array as it was 2D, we might want 1D arrays over 2D arrays because traversing dynamic memory is much more inefficient in 2D than 1D. 
+
+![formula for traversing the 1D array](1Darray.png)
+
+Let's iterate a bit over this, how would the indices change:
+First our mental model is a 2D array, but the actual array is a linear one so let's show this here.  
+![sketch](iterate2.jpeg){:  w="300" h="300"}
+
+When j reaches the witdh, i is going to become 1.   
+
+Next elements will be j+i*witdh, meaning j+width in our case.
+ ![sketch](iterate1.jpeg){:  w="300" h="500"}  
+
+ Finally we can see how this formula just maps 1D space to a 2D space, in the end is just going from left to right in the one dimensional space.
+![sketch](iterate.jpeg){:  w="300" h="300"}
+_sorry for the horrible drawings_
 
 After you get your head around how this formula works, you know more or less how you can copy the value of each pixel from the palette and  draw it to the corresponding screen pixel. 
 
-Let’s start small, and draw just one tile to the screen. That is beautiful, isn’t it? Of course, there are already optimizations to be made, but just let’s be happy about this big step towards our own tile map draw method.
+Let’s start small, and draw just one tile to the screen.
+![Code for a tile](CodeForTile.png)
+_make sure you do your drawing in the tick function, as soon as your tile map starts moving you need to clear the screen and redraw the map to the screen_
+ If you run the solution you should see a majestic tile:  
+ ![a tile](aTile.png)
+ That is beautiful, isn’t it? Of course, there are already optimizations to be made, but just let’s be happy about this big step towards our own tile map draw method.
+Right now we are drawing the first tile of the tile palette to the screen, but we want to draw tiles according to our tile map indices stored in our array. We have to do some little adjustments to get the source of the tile we need to draw, aligned to the screen.
 
-Next we have to do some little adjustments to get the as the source the tile we need and to adjust the drawing to the screen.
+You might want to try this one on your own, or not, here is the code:
 
 # ///Scrolling Tile map
 
