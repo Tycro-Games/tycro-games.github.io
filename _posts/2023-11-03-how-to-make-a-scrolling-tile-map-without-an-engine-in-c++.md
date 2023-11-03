@@ -164,7 +164,8 @@ Next elements will be j+i*witdh, meaning j+width in our case.
 
  ![sketch](iterate1.jpeg){:  w="300" h="500"}  
 
- Finally we can see how this formula just maps 1D space to a 2D space, in the end is just going from left to right in the one dimensional space.
+ Finally we can see how this formula just maps 1D space to a 2D space, in the end is just going from left to right in the one imensional space.  
+ 
 ![sketch](iterate.jpeg){:  w="300" h="300"}
 _sorry for the horrible drawings_
 
