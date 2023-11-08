@@ -249,6 +249,6 @@ Here are some things you can try to do on your own:
 - Making the movement framerate independent, hint use delta time in the formula!
 
 # Bye bye
-Ok, I guess that’s it for this tutorial. I hope I sparked your interest, in adding more interesting mechanics and making a 2D platformer. You could also copy a game, so you don’t have to make the game design yourself. For my [school project]("https://tycro-games.itch.io/pitfall-block-a") I had to recreate a platformer with some mechanics from [Pitfall Mayan Adventure]("https://www.retrogames.cz/play_309-SNES.php") which is an ancient game from the '90. 
+Ok, I guess that’s it for this tutorial. I hope I sparked your interest, in adding more interesting mechanics and making a 2D platformer. You could also copy a game, so you don’t have to make the game design yourself. For my [school project](https://tycro-games.itch.io/pitfall-block-a) I had to recreate a platformer with some mechanics from [Pitfall Mayan Adventure](https://www.retrogames.cz/play_309-SNES.php) which is an ancient game from the '90. 
 
 If you want, you could also get some inspiration from my project. You can leave a comment below, about how badly I structured my game project, or any other mechanics that you would like to be explained. Yeah, that’s it, thanks for reading until the very end. Bye!
