@@ -129,7 +129,7 @@ _You could also just let someone who knows how to do levels..., just a thought._
 Finally, We *just* need to parse the CSV into our array, now that task may take some time, feel free to try it, but I just happen to have a basic CSV parser from my project, link [here](https://github.com/Tycro-Games/BlockA-Pitfall/blob/3de2bd3511af3642d20dcbc5835f264125db8c4a/Scripts/Map/Tilemap.cpp#L141C1-L173C2). Keep in mind it only works for one layer, but I am sure you can modify it to support multiple layers.
 
 ![code for parsing](codeCSV.png)
-_sorry for the C style strings, one of the requirements for the project were to not use strings from C++_
+_sorry for the C style strings, one of the requirements for the project was to not use strings from C++_
 ## Getting our tile map into the game
 
 If you get stucked, or you just want *to make* it work, I do have a repo for this part [here](https://github.com/Tycro-Games/How-to-make-a-Scrolling-Tile-Map-without-an-engine-in-C-).
@@ -156,59 +156,99 @@ We can use this formula to traverse the array as it was 2D, we might want 1D arr
 
 Let's iterate a bit over this, how would the indices change:
 First our mental model is a 2D array, but the actual array is a linear one so let's show this here.  
-![sketch](iterate2.jpeg){:  w="300" h="300"}
+![sketch](iterate2.jpeg){:  w="400" h="400"}
 
 When j reaches the witdh, i is going to become 1.   
 
 Next elements will be j+i*witdh, meaning j+width in our case.  
 
- ![sketch](iterate1.jpeg){:  w="300" h="500"}  
+ ![sketch](iterate1.jpeg){:  w="400" h="500"}  
 
  Finally we can see how this formula just maps 1D space to a 2D space, in the end is just going from left to right in the one imensional space.  
  
-![sketch](iterate.jpeg){:  w="300" h="300"}
+![sketch](iterate.jpeg){:  w="400" h="400"}
 _sorry for the horrible drawings_
 
 After you get your head around how this formula works, you know more or less how you can copy the value of each pixel from the palette and  draw it to the corresponding screen pixel. 
 
 Let’s start small, and draw just one tile to the screen.
 ![Code for a tile](CodeForTile.png)
-_make sure you do your drawing in the tick function, as soon as your tile map starts moving you need to clear the screen and redraw the map to the screen_
+_make sure you do your drawing in the tick function_
  If you run the solution you should see a majestic tile:  
  ![a tile](aTile.png)
  That is beautiful, isn’t it? Of course, there are already optimizations to be made, but just let’s be happy about this big step towards our own tile map draw method.
-Right now we are drawing the first tile of the tile palette to the screen, but we want to draw tiles according to our tile map indices stored in our array. We have to do some little adjustments to get the source of the tile we need to draw, aligned to the screen.
 
-You might want to try this one on your own, or not, here is the code:
+## Drawing more then one tile
+Right now we are drawing the first tile of the tile palette to the screen, but we want to draw all tiles from our tile map indices. We have to do some little adjustments to get the source of the tile we need to draw, aligned to the screen.
 
-# ///Scrolling Tile map
+You might want to try this one on your own, or not, here is the rundown:
 
-Ok, we are nearly done, we just need to add some code that moves our map. And we get, some awful C++ errors. The direct translation would be: 
+### Getting the indices for our tiles
 
-- You just tried to write outside the screen!
+![codeIndex](indecesGet.png)
+_You could get away without computing source_x and source_y if your tile palette has only one row_
 
-Before I explain how to add a scrolling tile map, feel free to have a go at it and try to do your best solving this, of course if you don’t mind listening to a random guy on YouTube giving you an answer and ruining all the fun you could have coming up with a solution.//might change
+### Drawing one tile at a time
 
-Adding some code to check if a tile is out of screen should be easy enough, we just need to check if we are below 0 or above our screen resolution.
+![codeTile](RenderingTile.png)
+_This is how a tile would get drawn_
 
-Let’s try one more time!
+And now, after hard work we get the notorious error:
+![error](access.png)
+> `Access violation` means that we tried to write somewhere outside of our `array`, or `screen` in this context.
+{: .prompt-info }
+### Partial Rendering of Tiles
 
-[Disclaimer, there are better ways to solve this, but let's just go along with this for now]
+I might have *partially* lied earlier about the error, you might or might not get it, depening on how big your screen and/or your tile map. Assuming you do not want to live with that compromise, we need to partially draw tiles in order not to draw outside the screen.
+
+Adding some code to check if a tile is out of screen should be easy enough, we just need to check if we are below 0 or above our screen resolution. Or you know, check the complete opposite and check if the condition is true.
+
+![clampScreen](clampScreen.png)
+Let’s try one more time! But, before that let's give our tile a position and some code to move it in the opposite direction of our keys, we do this to create the illusion of moving to the right, while the tile map moves to the left.
+
+Let's make some vectors to store the position and the direction we need to go to:
+![floats](vec2Floats.png)
+
+We get the input like so:  
+![input](input.png)
+_You also need to go to the header of the game.h and move the implementation into the .cpp file._
+
+## Moving the tile map but not a scrolling one yet!
+
+![some gif](save.gif)
 
 So it seems to work, but we don’t get partial tiles. We need to find a way to render tiles partially to the screen. Let’s think about the logic for one lonely tile at each corner and edge of the screen, we can observe how it clamps to the screen resolution when it is off-screen. 
 
-We can add the amount we clamped to the destination pixel, but then we are copying the wrong pixels! It is still as it had been if the tiles were completely on-screen!
+### What is visible:
+![visible](visibleTile.png)
 
-So we also need to add the amount we clip to the source pixel, in this way we can draw a partial tile to the screen.
+### What we need to clip
+![non visible](non-visible.png)
 
-[Show how it looks in game]
+Adding some code to handle the clipping for every other *corner* case:
+![corner case](clippingCorner.png)
 
-Our lonely tile seems to work perfectly, so when we add the whole tile map, everything works as it is expected. 
+We can add the amount we clamped to the destination pixel, but then we are copying the wrong pixels! It is still as it had been if the tile was completely on-screen!
 
-# ///outro
+![We need to also add the offset to the source](stillNeedSrc.png)
 
-Ok, I guess that’s it for this tutorial. I hope I sparked your interest, in adding more interesting mechanics and making a 2D platformer. You could also copy a game, so you don’t have to make the game design yourself. For my school project I had to recreate a platformer with some mechanics from Pitfall Mayan Adventure which is an ancient game from the 90. 
+Adding this code, we handle adding the clip amount to the source:
+![fin](finClip.png)
 
-If you want, you could also get some inspiration from my project. You can leave a comment below, about how badly I structured my game project, or any other mechanics that you would like to be explained, and I might make a video about that concept. In the description, I will have a link to everything discussed, as well as some links to resources about the template and a discord server with people that know how the template works. Yeah, that’s it, thanks for staying until the very end, Bye!
+In this way we can draw a partial tile to the screen.
+![draw](drawFin.png)  
 
-## Feedback
+## End product
+![gif](sda.gif)
+
+### Optimizations and challanges
+Here are some things you can try to do on your own:
+- Currently we are drawing our tile map every frame, could we somehow store it to a sprite or surface and then draw that clipped to the screen?
+- A player sprite would be nice
+- World bounds, so you can't go certain limits
+- Making the movement framerate independent, hint use delta time in the formula!
+
+# Bye bye
+Ok, I guess that’s it for this tutorial. I hope I sparked your interest, in adding more interesting mechanics and making a 2D platformer. You could also copy a game, so you don’t have to make the game design yourself. For my [school project]("https://tycro-games.itch.io/pitfall-block-a") I had to recreate a platformer with some mechanics from [Pitfall Mayan Adventure]("https://www.retrogames.cz/play_309-SNES.php") which is an ancient game from the '90. 
+
+If you want, you could also get some inspiration from my project. You can leave a comment below, about how badly I structured my game project, or any other mechanics that you would like to be explained. Yeah, that’s it, thanks for reading until the very end. Bye!
