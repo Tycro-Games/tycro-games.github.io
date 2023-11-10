@@ -155,20 +155,21 @@ We can use this formula to traverse the array as it was 2D, we might want 1D arr
 ![formula for traversing the 1D array](1Darray.png)
 
 Let's iterate a bit over this, how would the indices change:
-First our mental model is a 2D array, but the actual array is a linear one so let's show this here.  
-![sketch](iterate2.jpeg){:  w="400" h="400"}
 
-When j reaches the witdh, i is going to become 1.   
 
-Next elements will be j+i*witdh, meaning j+width in our case.  
 
- ![sketch](iterate1.jpeg){:  w="400" h="500"}  
+- First our mental model is a 2D array, but the actual array is a linear one so let's show this here.  
 
- Finally we can see how this formula just maps 1D space to a 2D space, in the end is just going from left to right in the one imensional space.  
- 
-![sketch](iterate.jpeg){:  w="400" h="400"}
-_sorry for the horrible drawings_
+- When x reaches the witdh, y is going to become 1.   
 
+- Next elements will be x + y * witdh, meaning x+width in if y = 1.  
+
+- Finally we can see how this formula just maps 1D space to a 2D space, in the end is just going from left to right in the one dimensional space.    
+
+[![gif for 1D traversal](result.gif)](https://github.com/ecupak/1D-Array-Traversal-Demo)  
+
+_My friend, Erik, provided this great animation_  
+### ***Note*** : Click on the gif so you can see his github repo.
 After you get your head around how this formula works, you know more or less how you can copy the value of each pixel from the palette and  draw it to the corresponding screen pixel. 
 
 Let’s start small, and draw just one tile to the screen.
