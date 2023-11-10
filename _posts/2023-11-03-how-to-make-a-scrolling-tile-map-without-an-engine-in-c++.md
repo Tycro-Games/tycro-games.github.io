@@ -86,7 +86,7 @@ _Our array should look something like this_
 ### Tile map on screen
 ![Reality](reality.png)
 _Reality is a bit more colorful_
-Fortunately, in Tiled that is exactly what we get, a tile map that we can export as a CSV file. Better yet, the .tsmx file used for saving the file can be parsed into our game. We are getting a bit ahead of ourselves, let’s start with the basics.
+Fortunately, in Tiled that is exactly what we get, a tile map that we can export as a CSV file. Better yet, the .tsmx file used for saving the file can be parsed into our game.
 
 Open Tiled and create a new map, you can choose the size of the map, the tile size and the tileset.
 
@@ -94,7 +94,7 @@ Open Tiled and create a new map, you can choose the size of the map, the tile si
 > `Hint` maybe top left corner "File"?.
 {: .prompt-tip }
 
-After clicking okay we are going to have a big empty Tile Map. This is a good time to save your file, after choosing a the location and name for it, you can see that it is saved as a .tmx file. This is the file that we are going to parse into our game. To see what it looks like from the inside, you can open it with any text editor.
+After clicking okay we are going to have a big empty tile map. This is a good time to save your file. Choose a location and a name for it and then you can see that it is saved as a .tmx file. This is the file that we are going to parse into our game. To see what it looks like from the inside, you can open it with any text editor.
 
 ![tiled file with a text editor](tileInside.png)
 _marvelous 0s_
@@ -102,7 +102,7 @@ _marvelous 0s_
 Back into Tiled I will use this free tileset (which I modified for this section so it is easier to see), link [here](https://zegley.itch.io/2d-platformermetroidvania-asset-pack), but you can use any tileset you want.
 ![window of new tileset](newTile.png)
 
-Just click on the tileset button and add a new tileset, you can choose the image and the tile size. Save it somewhere and you are ready to go.  
+Click on the tileset button and add a new tileset, you can choose the image and the tile size. Save it somewhere and you are ready to go.  
 ![pop up for tileset](tileSetPopUp.png)
 
 After that it should look similar to this:  
@@ -125,7 +125,7 @@ Save, then check the file again with a text editor, you can see that the file ha
 ![again inside of a file](tiledFile2.png)
 _You could also just let someone who knows how to do levels..., just a thought._
 
-Finally, We *just* need to parse the CSV into our array, now that task may take some time, feel free to try it, but I just happen to have a basic CSV parser from my project, link [here](https://github.com/Tycro-Games/BlockA-Pitfall/blob/3de2bd3511af3642d20dcbc5835f264125db8c4a/Scripts/Map/Tilemap.cpp#L141C1-L173C2). Keep in mind it only works for one layer, but I am sure you can modify it to support multiple layers.
+Finally, we *just* need to parse the CSV into our array, now that task may take some time, feel free to try it, but I just happen to have a basic CSV parser from my project, link [here](https://github.com/Tycro-Games/BlockA-Pitfall/blob/3de2bd3511af3642d20dcbc5835f264125db8c4a/Scripts/Map/Tilemap.cpp#L141C1-L173C2). Keep in mind it only works for one layer, but I am sure you can modify it to support multiple layers.
 
 ![code for parsing](codeCSV.png)
 _sorry for the C style strings, one of the requirements for the project was to not use strings from C++_
