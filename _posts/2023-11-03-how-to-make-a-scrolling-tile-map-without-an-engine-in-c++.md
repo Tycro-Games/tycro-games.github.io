@@ -171,7 +171,7 @@ _My friend, Erik, provided this great animation_
 ### ***Note*** : Click on the gif so you can see his github repo.
 After you get your head around how this formula works, you know more or less how you can copy the value of each pixel from the palette and  draw it to the corresponding screen pixel. 
 
-Let’s start small, and draw just one tile to the screen.
+Let’s start small, and draw just the first tile to the screen.
 ![Code for a tile](CodeForTile.png)
 _make sure you do your drawing in the tick function_
  If you run the solution you should see a majestic tile:  
@@ -199,12 +199,13 @@ And now, after hard work we get the notorious error:
 {: .prompt-info }
 ### Partial Rendering of Tiles
 
-I might have *partially* lied earlier about the error, you might or might not get it, depening on how big your screen and/or your tile map. Assuming you do not want to live with that compromise, we need to partially draw tiles in order not to draw outside the screen.
+I might have *partially* lied earlier about the error, you might or might not get it, depending on how big your screen and/or your tile map. Assuming you do not want to live with that compromise, we need to partially draw tiles in order not to draw outside the screen.
 
-Adding some code to check if a tile is out of screen should be easy enough, we just need to check if we are below 0 or above our screen resolution. Or you know, check the complete opposite and check if the condition is true.
+Let's start simple with checking if a tile is out of screen. If the tile's corners are between 0 and the screen resolution we can draw it.
 
 ![clampScreen](clampScreen.png)
-Let’s try one more time! But, before that let's give our tile a position and some code to move it in the opposite direction of our keys, we do this to create the illusion of moving to the right, while the tile map moves to the left.
+Let’s try one more time! But, before that let's give our tile a position and some code to move it in the opposite direction of our keys.
+We do this to create the illusion of movement, the map should move in the opposite direction of where we want to move.
 
 Let's make some vectors to store the position and the direction we need to go to:
 ![floats](vec2Floats.png)
