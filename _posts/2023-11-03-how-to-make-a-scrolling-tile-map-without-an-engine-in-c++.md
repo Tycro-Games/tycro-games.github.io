@@ -11,6 +11,11 @@ img_path: /assets/assets-2023-11-01
 - [Tiled](https://www.mapeditor.org/), a free software for drawing tile maps.
 
 ---
+## This tutorial but Video  
+
+I also made a video form of this tutorial:
+{% include embed/youtube.html id='yVBfBOmTwu8'%}
+
 ## About the template
 So for my school project we had to make a simple 2D platformer. The only requirement was to use [this](https://github.com/jbikker/tmpl8) template, which is a minimalistic framework for making 2D games in C++.
 Minimalistic means you can more or less write to pixels and there are some math functions.
