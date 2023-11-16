@@ -162,11 +162,11 @@ Let's iterate a bit over this, how would the indices change:
 
 
 
-- First our mental model is a 2D array, but the actual array is a linear one so let's show this here.  
+- First our mental model is a 2D array, but the actual array is a 1D one as shown below, in the gif.  
 
-- When x reaches the witdh, y is going to become 1.   
+- When **x** reaches the witdh, **y** is going to increase by 1.   
 
-- Next elements will be x + y * witdh, meaning x+width in if y = 1.  
+- **y * width** is how we get the column and by adding **x** we can get the row.
 
 - Finally we can see how this formula just maps 1D space to a 2D space, in the end is just going from left to right in the one dimensional space.    
 
