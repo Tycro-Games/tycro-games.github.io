@@ -1,7 +1,7 @@
 ---
 title: How to make a Scrolling Tile Map without an engine in C++
 date: 2023-11-03 14:10:00 +0200
-categories: [Game Engines]
+categories: [Tutorials]
 tags: [blog, tutorial, programming, c++]
 img_path: /assets/assets-2023-11-01
 ---
