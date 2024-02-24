@@ -1,5 +1,5 @@
 ---
-title: Our links to everywhere
+title: My links to everywhere
 date: 2023-10-16 14:10:00 +0200
 categories: [Blogging, introduction]
 tags: [blog, socials]
