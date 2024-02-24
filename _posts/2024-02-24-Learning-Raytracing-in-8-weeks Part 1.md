@@ -6,9 +6,13 @@ tags: [blog, programming, c++, raytracing, graphics, voxels]
 math: true
 img_path: /assets/assets-2024-02-24
 ---
-# Simple Area lights
+# Repo
+You can see the repo of my raytracer [here](https://github.com/OneBogdan01/voxpopuli).
+
+## Simple Area lights
 Hello, this is the first part of this 8 part series where I write down what I have learned in my journey learning about Raytracing on the CPU with voxels (which is of course in C++). 
 ![State of my raytracer](RaytracerSoftShadows.png)
+
 ## The humble Point Light
 The first step towards implementing an area light is starting with something that is a bit easier. In this context, Point Lights are the perfect candidate. We cast a ray towards a voxel, if we hopefully hit something, we need to answer the binary question, are we in shadow or not?
 ![drawing](MyDrawingLight.png)
