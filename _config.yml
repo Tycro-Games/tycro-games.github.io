@@ -18,7 +18,7 @@ title: Tycro Dev # the main title
 tagline: Indie games and other cool projects # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
-  Our website where you can find all your socials and relevant projects.
+  My website where you can find all my socials and relevant projects.
 
 # Fill in the protocol & hostname for your site.
 # e.g. 'https://username.github.io', note that it does not end with a '/'.
@@ -28,13 +28,13 @@ github:
   username: Tycro-Games # change to your github username
 
 twitter:
-  username: twitter_username # change to your twitter username
+  username: @Tycro_Dev # change to your twitter username
 
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
-  name: Tycro Games
-  email: tycro.games@gmail.com # change to your email address
+  name: Bogdan Mocanu
+  email: bogdan.game.development.@gmail.com # change to your email address
   links:
     # The first element serves as the copyright owner's link
     #- https://twitter.com/username # change to your twitter homepage

@@ -9,9 +9,9 @@
 - type: youtube
   icon: "fa-brands fa-youtube"
   url:  'https://www.youtube.com/@tycro_games' 
-# - type: twitter
-#   icon: "fa-brands fa-x-twitter"
-
+- type: twitter
+  icon: "fa-brands fa-x-twitter"
+  url:  'https://twitter.com/i/flow/login?redirect_after_login=%2FTycro_dev' 
 - type: email
   icon: "fas fa-envelope"
   noblank: true # open link in current tab
