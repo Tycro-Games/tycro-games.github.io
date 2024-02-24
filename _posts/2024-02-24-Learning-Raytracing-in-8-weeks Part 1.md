@@ -10,7 +10,7 @@ img_path: /assets/assets-2024-02-24
 You can see the repo of my raytracer [here](https://github.com/OneBogdan01/voxpopuli).
 
 ## Simple Area lights
-Hello, this is the first part of this 8 part series where I write down what I have learned in my journey learning about Raytracing on the CPU with voxels (which is of course in C++). 
+Hello, this is the first of an 8 part series where I write down what I've learned about Raytracing on the CPU with voxels (which is of course in C++). 
 ![State of my raytracer](RaytracerSoftShadows.png)
 
 ## The humble Point Light
