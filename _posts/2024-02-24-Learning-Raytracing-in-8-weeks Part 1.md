@@ -14,13 +14,13 @@ Hello, this is the first of an 8 part series where I write down what I've learne
 ![State of my raytracer](RaytracerSoftShadows.png)
 
 ## The humble Point Light
-The first step towards implementing an area light is starting with something that is a bit easier. In this context, Point Lights are the perfect candidate. We cast a ray towards a voxel, if we hopefully hit something, we need to answer the binary question, are we in shadow or not?
+The first step towards implementing an area light is starting with something that is a bit easier. In this context, Point Lights are the perfect candidate. We cast a ray towards a voxel: if we hopefully hit something, we need to answer the binary question of whether or not we are in the shadow.
 ![drawing](MyDrawingLight.png)
 
 ---
 
 ### We are in light
-We can cast a shadow ray from the intersection point of the primary source towards our point light. A point light can be thought of as a position with a defined color. One function that illustrates this concept could look like this:
+We can cast a shadow ray from the intersection point of the ray primary towards our point light. A point light can be thought of as a position with a defined color. One function that illustrates this concept could look like this:
 ```cpp
 float3 Renderer::PointLightEvaluate(Ray& ray, Scene& scene, PointLightData lightData)
 {
@@ -51,10 +51,12 @@ float3 Renderer::PointLightEvaluate(Ray& ray, Scene& scene, PointLightData light
 	return lightIntensity * k;
 }
 ```
-I will walk you through the code, but first, let's see how it look:
+I will walk you through the code, but first, let's see how it looks:
 ![Hard shadows](hardShadows.png)
-As you can see this code results in some hard shadows, the result of our "yes" or "no" answer to the shadow question.
-After we get all the common variables, such as the normal, intersection point for our hit, as well as the distance and direction to the point light we compute the lambertian cosine law which states that the intensity of light reflected off a surface is proportional to the cosine of the angle between the incident light and the surface normal, or in this case the dot product, because it is the same thing.
+
+
+As you can see, this code results in some hard shadows because of our "yes" or "no" answer to the shadow question.
+After we get all the common variables, such as the normal, intersection point for our hit, as well as the distance and direction to the point light, we compute the ***lambertian cosine law***, which states that the intensity of light reflected off a surface is proportional to the cosine of the angle between the incident light and the surface normal, or in this case, the dot product (it's the same thing and also faster to compute).
 
 
 ---
@@ -66,22 +68,22 @@ $$\mathbf{a} \cdot \mathbf{b} = |\mathbf{a}| \cdot |\mathbf{b}| \cdot \cos(\thet
 ---
 
 
-That means that in code we multiply the cosine between the normal of the point and the direction to the point light with the color of the light. We also need to divide by the distance squared, this is known as distance attenuation.
+That means that in code we multiply the cosine between the normal of the point and the direction to the point light with the color of the light. We also need to divide by the distance squared. This is known as distance attenuation.
 
 ```cpp
 	const float3 lightIntensity = max(0.0f, cosTheta) * lightData.color / (dst * dst);
 ```
 
-All that is left is to construct a shadow ray and check if it occluded or not, in other words, if there is something between our point and the light. If it is then we are in shadow, if not we multiply by the color of the object and the light intensity based on the previous formula.
+All that is left is to construct a shadow ray and check whether it is occluded or not. In other words, we check if there is something between our point and the light. If there is, then we are in shadow, if not, we multiply by the color of the object and by the light intensity based on the previous formula.
 ![block](blocksRay.png)
 
- In case you want a more detailed walkthough over how point lights are defined ogldev has a more in depth tutorial [here](https://ogldev.org/www/tutorial20/tutorial20.html).
+ In case you want a more detailed walkthough over how point lights are defined, ogldev has a more in depth tutorial [here](https://ogldev.org/www/tutorial20/tutorial20.html).
 
 
-## How can we approximate a sphere
-I am quite new to raytracing, but the simplest approach to adding an area light is to have an imaginary sphere that is light source. The idea is very similar to our point light, while an area light shares a color and a position it is different by having a volume, for instance a sphere that irradiades light.
+## How we can approximate a sphere
+I am quite new to raytracing, but the simplest approach to adding an area light is to have an imaginary sphere that acts as a light source. The idea is very similar to our point light: while an area light shares a color and a position with a point light, it is different because it has a volume. For instance, a sphere would have a radius that defines its volume.
 
- Let's consider a simple approach for a random point on the sphere we are going to shoot a shadow ray. Repeat this process for a certain number of times and add up the total light intensity like we did with the point light. Finally, we can divide by the total number of shadow rays that we fired and we end up with a pretty good approximation. This is how a version of this in code might look like:
+ Let's consider the following: we take a random point on the sphere and shoot a shadow ray towards it. We repeat this process for a certain number of times and add up the total light intensity, like we did with the point light. Then, we can divide by the total number of shadow rays that we fired, and we end up with a pretty good approximation of the extent to which we are in a shadow (the percentage). This is how a version of this in code might look like:
 
 ```cpp
 
@@ -91,7 +93,8 @@ float3 Renderer::AreaLightEvaluation(Ray& ray, Scene& scene, SphereAreaLightData
 	//the same as before, we get all the needed variables
 
 
-	//we check the shadow for a number of points and then average by the sample count
+	//we check the shadow for a number of points and then we divide by 
+    //the sample count to get the average
 	for (int i = 0; i < numberOfSamples; i++)
 	{
 		float3 randomPoint = RandomDirection();
@@ -127,12 +130,14 @@ float3 Renderer::AreaLightEvaluation(Ray& ray, Scene& scene, SphereAreaLightData
 }
 ```
 
-In practice this is going to look quite noise, but using an accumulator, we are going to get a better image over time.
+In practice, this is going to look quite noisy, but by using an accumulator, we are going to get a better image over time.
+
+
 ![soft shadows](SoftShadows.png)
 _We have soft shadows now!_
 
 ## What are we actually doing?
-Formally, what we have done might be defined in the following way:
+Formally, what we have done can be defined in the following way:
 
 $$
 \int_{\Omega} L(\mathbf{x}, \omega) \cos(\theta) \, d\omega \approx \frac{1}{N} \sum_{i=1}^{N} \frac{L(\mathbf{x}, \omega_i) \cos(\theta_i)}{p(\omega_i)}
@@ -152,8 +157,8 @@ $$
 
 _I hope the legend is helpful_
 
-At first, this seems daunting, however, in computer graphics, we do not solve integrals analytically (most of the time I suppose), but we are trying to solve them numerically. In other words, we try to approximate until we get a solution that is very close to the truth. This is why we got so much noise in the image; over time, we would get less and less noise.
-For a much better explanation of this topic, you can click on [this](https://jacco.ompf2.com/2019/12/11/probability-theory-for-physically-based-rendering/) article.
+At first, this may seem daunting, however, in computer graphics, we do not solve integrals analytically (most of the time I suppose), but we are trying to solve them numerically. In other words, we try to approximate until we get a result that is very close to reality. This is why we initially got so much noise in the image; over time, we will get less and less noise.
+For a much better explanation of this topic, you can click on [this](https://jacco.ompf2.com/2019/12/11/probability-theory-for-physically-based-rendering/) article by Jacco Bikker.
 
 
 ---
