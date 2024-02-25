@@ -82,7 +82,7 @@ All that is left is to construct a shadow ray and check whether it is occluded o
  In case you want a more detailed walkthough over how point lights are defined, ogldev has a more in depth tutorial [here](https://ogldev.org/www/tutorial20/tutorial20.html).
 
 
-## How we can approximate a sphere
+## How we can approximate a sphere that emits light
 I am quite new to raytracing, but the simplest approach to adding an area light is to have an imaginary sphere that acts as a light source. The idea is very similar to our point light: while an area light shares a color and a position with a point light, it is different because it has a volume. For instance, a sphere would have a radius that defines its volume.
 
  Let's consider the following: we take a random point on the sphere and shoot a shadow ray towards it. We repeat this process for a certain number of times and add up the total light intensity, like we did with the point light. Then, we can divide by the total number of shadow rays that we fired, and we end up with a pretty good approximation of the extent to which we are in a shadow (the percentage). This is how a version of this in code might look like:
@@ -165,7 +165,7 @@ For a much better explanation of this topic, you can click on [this](https://jac
 
 ---
 
-Thanks for reading my short article. If you have any feedback or questions, please feel free to share them in the comments or email me at bogdan.game.development@gmail.com. 
+Thanks for reading my article. If you have any feedback or questions, please feel free to share them in the comments or email me at bogdan.game.development@gmail.com. 
 
 
 
