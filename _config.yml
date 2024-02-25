@@ -28,7 +28,7 @@ github:
   username: Tycro-Games # change to your github username
 
 twitter:
-  username: @Tycro_Dev # change to your twitter username
+  username: tycro_dev # change to your twitter username
 
 social:
   # Change to your full name.
@@ -37,7 +37,7 @@ social:
   email: bogdan.game.development.@gmail.com # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    #- https://twitter.com/username # change to your twitter homepage
+    - https://twitter.com/Tycro_dev # change to your twitter homepage
     - https://github.com/Tycro-Games # change to your github homepage
     - https://tycro-games.itch.io/ # change to your github homepage
     - https://www.youtube.com/@tycro_games # change to your github homepage
