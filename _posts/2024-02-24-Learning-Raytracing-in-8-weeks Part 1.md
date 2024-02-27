@@ -85,7 +85,7 @@ All that is left is to construct a shadow ray and check whether it is occluded o
 ## How we can approximate a sphere that emits light
 I am quite new to raytracing, but the simplest approach to adding an area light is to have an imaginary sphere that acts as a light source. The idea is very similar to our point light: while an area light shares a color and a position with a point light, it is different because it has a volume. For instance, a sphere would have a radius that defines its volume.
 
- Let's consider the following: we take a random point on the sphere and shoot a shadow ray towards it. We repeat this process for a certain number of times and add up the total light intensity, like we did with the point light. Then, we can divide by the total number of shadow rays that we fired, and we end up with a pretty good approximation of the extent to which we are in a shadow (the percentage). This is how a version of this in code might look like:
+ Let's consider the following: we take a random point on the sphere and shoot a shadow ray towards it. We repeat this process for a certain number of times and add up the total light intensity, like we did with the point light. Then, we can divide by the total number of shadow rays that we fired, and we end up with a pretty good approximation of the extent to which we are in a shadow (the percentage). This method is called **Monte Carlo integration**. This is how a version of this in code might look like:
 
 ```cpp
 
@@ -132,9 +132,47 @@ float3 Renderer::AreaLightEvaluation(Ray& ray, Scene& scene, SphereAreaLightData
 }
 ```
 
-In practice, this is going to look quite noisy, but by using an accumulator, we are going to get a better image over time.
+## A basic accumulator
+In practice, this is going to look quite noisy, but by using an accumulator, we are going to get a better image over time. The most basic accumulator is going to average our previos screen renders becoming more accurate over time. Here is some code:
 
+```cpp
+void Tick(){
+	for_each(execution::par, vertIterator.begin(), vertIterator.end(),
+	         [this](uint32_t y)
+	         {
+		         //do only once
+		         const uint32_t pitch = y * SCRWIDTH;
+		         for (uint32_t x = 0; x < SCRWIDTH; x++)
+		         {
+			        float3 totalLight{0};
 
+					Ray primaryRay = camera.GetPrimaryRay(static_cast<float>(x) ,
+														static_cast<float>(y));
+
+					//value for this pixel
+					totalLight = Trace(primaryRay, maxBounces);
+
+			        const float4 newPixel = totalLight;
+			        //over time our accumulator is to have more weight
+			         float weight = 1.0f / (static_cast<float>(numRenderedFrames) + 1.0f);
+			         //we accumulate
+			         float4 pixel = accumulator[x + pitch] * (1 - weight) + newPixel * weight;
+			         screen->pixels[x + pitch] = RGBF32_to_RGB8(&pixel);
+			         accumulator[x + pitch] = pixel;
+		         }
+	         });
+
+	//increase number of frames
+	numRenderedFrames++;
+
+	//Reset number of frames to 0 if we changed something in the scene
+	if (camera.HandleInput(deltaTime))
+	{
+		numRenderedFrames = 0;
+	}
+}
+```
+For a slightly longer and visual explanation of an accumulator watch [Sebastian Lague's Raytracing segment](https://youtu.be/Qz0KTGYJtUk?si=isQTw4moO400gsLL&t=1103).
 ![soft shadows](SoftShadows.png)
 _We have soft shadows now!_
 
