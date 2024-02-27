@@ -133,7 +133,7 @@ float3 Renderer::AreaLightEvaluation(Ray& ray, Scene& scene, SphereAreaLightData
 ```
 
 ## A basic accumulator
-In practice, this is going to look quite noisy, but by using an accumulator, we are going to get a better image over time. The most basic accumulator is going to average our previos screen renders becoming more accurate over time. Here is some code:
+In practice, this is going to look quite noisy, but, by using an accumulator, we are going to get a better image over time. The most basic accumulator is going to average our previos screen renders, becoming more accurate over time. Here is some code:
 
 ```cpp
 void Tick(){
@@ -172,7 +172,7 @@ void Tick(){
 	}
 }
 ```
-For a slightly longer and visual explanation of an accumulator watch [Sebastian Lague's Raytracing segment](https://youtu.be/Qz0KTGYJtUk?si=isQTw4moO400gsLL&t=1103).
+For a slightly longer and visual explanation of an accumulator, watch [Sebastian Lague's Raytracing segment](https://youtu.be/Qz0KTGYJtUk?si=isQTw4moO400gsLL&t=1103).
 ![soft shadows](SoftShadows.png)
 _We have soft shadows now!_
 
