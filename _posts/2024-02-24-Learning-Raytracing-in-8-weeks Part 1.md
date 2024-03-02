@@ -9,7 +9,7 @@ img_path: /assets/assets-2024-02-24
 # Intro
 Hello, this is the first of an 8 part series where I write down what I've learned about Raytracing on the CPU with voxels (which is of course in C++). I have used [this](https://github.com/jbikker/voxpopuli) template that I have added features and refactored over the span of the 8 weeks.
 
-You can see the repo of my raytracer [here](https://github.com/OneBogdan01/voxpopuli).
+You can see the repo of my raytracer [here](https://github.com/Tycro-Games/Raytracer-VoxPopuli).
 
 ## Simple Area lights
 Hello, this is the first of an 8 part series where I write down what I've learned about Raytracing on the CPU with voxels (which is of course in C++). 
