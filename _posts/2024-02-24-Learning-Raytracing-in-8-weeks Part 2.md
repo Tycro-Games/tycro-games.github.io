@@ -55,7 +55,7 @@ I will skip the explanation of how to get there as you can find it quite easily 
 For further reading, I found an interesting course [presentation](https://cseweb.ucsd.edu/classes/sp17/cse168-a/CSE168_03_Fresnel.pdf) that has a lot of good information on this topic. 
 
 ## How we traverse voxels
-The algorithm I have in my project is based on [this](http://www.cse.yorku.ca/~amana/research/grid.pdf) paper that describes the algorithm. The TLDR version is that when we shoot a ray we check if it missed the whole voxel volume, if we did not we are going to increment the distance exactly to the next voxel until we get outside the voxel volume or hit a non-empty one. 
+The algorithm I have in my project is based on [this](www.cse.yorku.ca/~amana/research/grid.pdf) paper that describes the algorithm. The TLDR version is that when we shoot a ray we check if it missed the whole voxel volume, if we did not we are going to increment the distance exactly to the next voxel until we get outside the voxel volume or hit a non-empty one. 
 
 This image is from a nice video explaining this traversal, you can find that video [here](https://www.youtube.com/watch?v=gXSHtBZFxEI).
 
