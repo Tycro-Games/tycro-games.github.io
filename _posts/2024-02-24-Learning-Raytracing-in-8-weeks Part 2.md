@@ -417,8 +417,12 @@ Another thing to keep in mind is that we need to know when we get outside the vo
 		newRay.isInsideGlass = isInGlass;
 		return Trace(newRay, depth - 1) * color;
 	}
-	```
+```
+
+
 ---
+
+
 
 
 Thanks for reading my article. If you have any feedback or questions, please feel free to share them in the comments or email me at bogdan.game.development@gmail.com. 
