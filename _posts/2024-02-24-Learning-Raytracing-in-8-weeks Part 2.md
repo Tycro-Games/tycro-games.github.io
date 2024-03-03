@@ -57,14 +57,140 @@ For further reading, I found an interesting course [presentation](https://cseweb
 ## How we traverse voxels
 The algorithm I have in my project is based on [this](https://www.researchgate.net/publication/2611491_A_Fast_Voxel_Traversal_Algorithm_for_Ray_Tracing) paper that describes the algorithm. The TLDR version is that when we shoot a ray we check if it missed the whole voxel volume, if we did not we are going to increment the distance exactly to the next voxel until we get outside the voxel volume or hit a non-empty one. 
 
-This image is from a nice video explaining this traversal, you can find that video [here](https://www.youtube.com/watch?v=gXSHtBZFxEI).
+This image is from a nice [video](https://www.youtube.com/watch?v=gXSHtBZFxEI) explaining this traversal.
 
 ![Voxel explanation](voxelExplanation.png)
 
 ## Some code at last
 
-At the most basic, we need to refract in and out of the material, do this we need to figure out if we are, well, inside the voxel, or outside. We are going to store that information in the ray and then assign the IOR ratio based on that. The angle of refraction is going to depend on the IOR ratio which is the IOR of the environment we are going, in this case, air (1.0), and the environment we are going in, glass (1.45). Keeping track where we are is quite simple at this point,
-as we can only refract into the glass voxel, and then refract again outside of the voxel. When we are inside of the glass, we need to get to the next non-glass voxel, that is what the "FindMaterialExit" is doing.
+This is what we are going to do:
+![drawing](drawing.png)
+Observe how the beam of light bends in the environment and then rotates to the same angle as it was before we got there. By using the other IOR ratio on the refracted ray inside we get the previos entering ray.
+
+
+At the most basic, we need to refract in and out of the material, do this we need to figure out weather we are inside or outside the voxel. We are going to store that information in the ray and then assign the IOR ratio based on that. Like so:
+```cpp
+//gets the color of glass if we are inside
+float3 color{1};
+//going to be set to true later
+bool isInGlass = ray.isInsideGlass;
+float IORMaterial = ray.GetRefractivity(mainScene); // defaults to 1.45
+//get the IOR based if the ray is inside or outside the glass
+float refractionRatio = isInGlass ? IORMaterial : 1.0f / IORMaterial;
+```
+
+The angle of refraction is going to depend on the IOR ratio which is the IOR of the environment we are going, in this case, air (1.0), and the environment we are going in, glass (1.45). 
+
+
+Keeping track where we are is quite simple at this point, as we can only refract into the glass voxel, and then refract again outside of the voxel. When we are inside of the glass, we need to get to the next non-glass voxel, that is what the "FindMaterialExit" is doing.
+```cpp
+if (isInGlass)
+{
+	//add color of the glass, maybe expand with Beer Law
+	color = ray.GetAlbedo(mainScene);
+	//gets to the next non-glass voxel
+	mainScene.FindMaterialExit(ray, MaterialType::GLASS);
+}
+```
+Usually we would traverse by just checking for a non-empty voxel, the modified version would look like:
+```cpp
+
+bool Scene::FindMaterialExit(Ray& ray, MaterialType::MatType matType) const
+{
+	// setup Amanatides & Woo grid traversal
+	DDAState s;
+	if (!Setup3DDDA(ray, s)) return false;
+	// start stepping
+	while (1)
+	{
+
+		const MaterialType::MatType cell = grid[s.X + s.Y * GRIDSIZE + s.Z * GRIDSIZE2];
+////////////////////////////////////////////////////
+//        the conditional modifies the ray        //
+////////////////////////////////////////////////////
+		if (cell != matType)
+		{
+			ray.t = s.t;
+			ray.indexMaterial = cell;
+			return true;
+		}
+		
+//////////////////////////////////////////////////////////////////////
+//        we just step through the grid as explained earlier        //
+//////////////////////////////////////////////////////////////////////
+
+		if (s.tmax.x < s.tmax.y)
+		{
+			if (s.tmax.x < s.tmax.z)
+			{
+				s.t = s.tmax.x, s.X += s.step.x;
+				if (s.X >= GRIDSIZE) break;
+				s.tmax.x += s.tdelta.x;
+			}
+			else
+			{
+				s.t = s.tmax.z, s.Z += s.step.z;
+				if (s.Z >= GRIDSIZE) break;
+				s.tmax.z += s.tdelta.z;
+			}
+		}
+		else
+		{
+			if (s.tmax.y < s.tmax.z)
+			{
+				s.t = s.tmax.y, s.Y += s.step.y;
+				if (s.Y >= GRIDSIZE) break;
+				s.tmax.y += s.tdelta.y;
+			}
+			else
+			{
+				s.t = s.tmax.z, s.Z += s.step.z;
+				if (s.Z >= GRIDSIZE) break;
+				s.tmax.z += s.tdelta.z;
+			}
+		}
+	}
+	// TODO:
+	// - A nested grid will let rays skip empty space much faster.
+	// - Coherent rays can traverse the grid faster together.
+	// - Perhaps s.X / s.Y / s.Z (the integer grid coordinates) can be stored in a single uint?
+	// - Loop-unrolling may speed up the while loop.
+	// - This code can be ported to GPU.
+	return false;
+}
+```
+To create a new ray we compute a new direction for the refracted vector using the previos "Refract" method. For our origin, normally we would offset the intersection point by an epsilon value to avoid self-intersection. I found an interestin article in Raytracing gems that does exactly that, but without using a parameter, based on the intersection point and on the normal.
+This is the intersection point we get when we call "ray.IntersectionPoint()".
+![intersection](IPOINT.png)
+
+
+![offset](OFFSETUP.png)
+_When we call "OffsetRay" with a normal that is pointing outside the voxel._
+
+
+![offset](offsetDOWN.png)
+_When we call "OffsetRay" with a normal that is pointing inside the voxel._
+
+All these vectors are unit vectors. Notice that when we are outside the glass, we want the next ray to start inside, while when we are already inside the glass and we just hit the other side of the voxel, the next refracted ray will get a normal pointing towards the glass, so we also need a negative normal in that case, so it starts outside the glass. This is why we pass the negative normal, that will change when we can reflect inside or outside the glass, but for this implementation it will do fine.
+```cpp
+
+float3 resultingDirection = Refract(ray.D, ray.GetNormal(), refractionRatio);
+
+//this is an implementation from Raytracing gems chapter 6: https://www.realtimerendering.com/raytracinggems/unofficial_RayTracingGems_v1.9.pdf
+//this computes the origin of an ray assuring that it is not self-intersecting
+float3 originDirection = OffsetRay(ray.IntersectionPoint(), -ray.GetNormal());
+
+//we are exiting or entering the glass
+isInGlass = !isInGlass;
+//we need to create a new ray that starts a bit outside or inside the dialectric voxel
+newRay = {originDirection, resultingDirection};
+//set the booalean
+newRay.isInsideGlass = isInGlass;
+//continue the trace function
+return Trace(newRay, depth - 1) * color;
+```
+
+
 ```cpp
 float3 color{1};
 //code for glass
@@ -95,13 +221,10 @@ newRay.isInsideGlass = isInGlass;
 return Trace(newRay, depth - 1) * color;
 ```
 
-This is what we are doing:
-![drawing](drawing.png)
-Observe how the beam of light bends in the environment and then rotates to the same angle as it was before we got there. By using the other IOR ratio on the refracted ray inside we get the previos entering ray.
-
 ![sphere vox](refractOnly.png)
 _A refract only sphere of voxel_
 
+I love how a refraction only material looks like!
 
 ## Getting reflections
 
@@ -109,18 +232,144 @@ In real life glass also reflects light, so we would like our voxel sphere to als
 
 ![sphere vox](reflectingLight.png)
 
----
+Snell's formula might have no solutions, which means we can't refract at all.
+
+$$
+n_1 \sin(\theta_1) - n_2 \sin(\theta_2) = 0
+$$
+
+$$
+\begin{align*}
+&\text{Legend:} \\
+&- n_1: \text{Index of refraction of the medium the incident ray is traveling through.} \\
+&- \theta_1: \text{Angle of incidence.} \\
+&- n_2: \text{Index of refraction of the medium the refracted ray enters.} \\
+&- \theta_2: \text{Angle of refraction.} \\
+&- \text{No solution exists if } n_1 > n_2.
+\end{align*}
+$$
+
+Thus, we need to change our code, we will not always refract in and out of the material:
+
+```cpp
+float cosTheta = min(dot(-ray.D, ray.GetNormal()), 1.0f);
+float sinTheta = sqrtf(1.0f - cosTheta * cosTheta);
+
+bool cannotRefract = refractionRatio * sinTheta > 1.0;
+
+float3 resultingDirection;
+
+//this may be negative if we refract
+float3 resultingNormal;
+
+if (cannotRefract)
+{
+	//reflect!
+	resultingDirection = Reflect(ray.D, normal);
+	//we do not change the boolean value
+	//isInGlass = !isInGlass;
+	//the normal used for the offset needs to point towards the same voxel we came from
+	resultingNormal = normal;
+}
+else
+{
+	//we are exiting or entering the glass
+	resultingDirection = Refract(ray.D, normal, refractionRatio);
+	//we change the bolean value
+	isInGlass = !isInGlass;
+	//we keep the negative normal to offset correctly
+	resultingNormal = -normal;
+}
+newRay = {OffsetRay(ray.IntersectionPoint(), resultingNormal), resultingDirection};
+newRay.isInsideGlass = isInGlass;
+return Trace(newRay, depth - 1) * color;
+```
+
+What is important here is to keep track of where we are, if we reflect we do not need to move the ray from the environment it is already in, if we are inside glass, we are just going to reflect inside it. If we are outside glass, we are still reflecting outside, so we do not need to change the boolean.
+With this change we get reflection when refraction is impossible, which means at the edges:
+![edge](REFLECTIONSSS.png)
 
 
-Thanks for reading my article. If you have any feedback or questions, please feel free to share them in the comments or email me at bogdan.game.development@gmail.com. 
+This is very unrealistic, in real life you can see your reflection in a window. The Fresnel equation are desribing how much of light gets into a material and how much it reflects.
+
+**Fresnel Equations:**
+
+For s-polarization:
+$$
+r_s = \frac{n_1 \cos(\theta_i) - n_2 \cos(\theta_t)}{n_1 \cos(\theta_i) + n_2 \cos(\theta_t)}
+$$
+$$
+t_s = \frac{2n_1 \cos(\theta_i)}{n_1 \cos(\theta_i) + n_2 \cos(\theta_t)}
+$$
+
+For p-polarization:
+$$
+r_p = \frac{n_1 \cos(\theta_t) - n_2 \cos(\theta_i)}{n_1 \cos(\theta_t) + n_2 \cos(\theta_i)}
+$$
+$$
+t_p = \frac{2n_1 \cos(\theta_i)}{n_1 \cos(\theta_t) + n_2 \cos(\theta_i)}
+$$
+
+As you can see this is quite hard to read and to compute, this is why I am going to use the Schilick Approximation:
+
+
+**Schlick Approximation:**
+
+
+$$
+R = R_0 + (1 - R_0)(1 - \cos(\theta))^5
+$$
+
+$$
+\begin{align*}
+&\text{Legend:} \\
+&- R: \text{Reflectance of the material.} \\
+&- R_0: \text{Reflectance at normal incidence, given by } \left(\frac{n_1 - n_2}{n_1 + n_2}\right)^2. \\
+&- \theta: \text{Angle of incidence.}
+\end{align*}
+$$
 
 
 
+Here is the code I am going to use:
+```cpp
+float Renderer::SchlickReflectance(const float cosine, const float indexOfRefraction)
+{
+	// Use Schlick's approximation for reflectance.
+	auto r0 = (1 - indexOfRefraction) / (1 + indexOfRefraction);
+	r0 = r0 * r0;
+	return r0 + (1 - r0) * powf((1 - cosine), 5);
+}
+```
+And now, we can add:
+```cpp
+//other code
+//Random has the range of [0 1].
+if (cannotRefract || SchlickReflectance(cosTheta, refractionRatio) > RandomFloat())
+{
+	//reflect!
 
+}
+else
+//refract
+```
+We have already computed everything we need for the Schilick formula, we just need to plug the right parameters in and we are good to go. The random 
 
+## One last render
+![render](render.png)
 
+Keep in mind that you can change the IOR of your material:
 
-code for reference
+![ior1](ior1.png)
+_IOR of 1_
+
+![ior 1.45](IOR145.png)
+_IOR of 1.45_
+
+![ior max](IOR245.png)
+_IOR of 2.4_
+
+Another thing to keep in mind is that we need to know when we get outside the voxel volume, so we need to return the sky color. Here is the final version:
 ```cpp
 
 	{
@@ -169,11 +418,8 @@ code for reference
 		return Trace(newRay, depth - 1) * color;
 	}
 	```
+---
 
 
-
-
-
-
-
+Thanks for reading my article. If you have any feedback or questions, please feel free to share them in the comments or email me at bogdan.game.development@gmail.com. 
 
