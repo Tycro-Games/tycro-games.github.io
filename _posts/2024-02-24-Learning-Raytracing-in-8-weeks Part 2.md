@@ -15,9 +15,9 @@ You can see the repo of my raytracer [here](https://github.com/Tycro-Games/Raytr
 ![sphere of voxels](sphereOfVoxels.png)
 _A sphere of glass made out of voxels_
 
-Glass has been done many times in most real raytracers. You can even find a great explanation along with some code that does the trick from the Peter Shirley's notorious tutorial, [Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html#dielectrics). 
+Glass has been done many times in most real raytracers. You can even find a great explanation along with some code that does the trick from Peter Shirley's notorious tutorial, [Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html#dielectrics). 
 
-Glass, or more generally a dialectric material has some interesting properties. Its behavior could be split into two parts for the sake of simplicity: refraction and reflection.
+Glass, or more generally a dialectric material has some interesting properties. Its behavior could be split into two parts: refraction and reflection.
 
 
 
