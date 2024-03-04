@@ -75,14 +75,14 @@ float3 color{1};
 //going to be set to true later
 bool isInGlass = ray.isInsideGlass;
 float IORMaterial = ray.GetRefractivity(mainScene); // defaults to 1.45
-//get the IOR based if the ray is inside or outside the glass
+//get the IOR if the ray is inside or outside the glass
 float refractionRatio = isInGlass ? IORMaterial : 1.0f / IORMaterial;
 ```
 
 The angle of refraction is going to depend on the IOR ratio which is the IOR of the environment we are going, in this case, air (1.0), and the environment we are going in, glass (1.45). 
 
 
-Keeping track where we are is quite simple at this point, as we can only refract into the glass voxel, and then refract again outside of the voxel. When we are inside of the glass, we need to get to the next non-glass voxel, that is what the "FindMaterialExit" is doing.
+Keeping track where we are is quite simple at this point, as we can only refract into the glass voxel, and then refract again outside of the voxel. When we are inside of the glass, we need to get to the next non-glass voxel, that is what the "FindMaterialExit" method is doing.
 ```cpp
 if (isInGlass)
 {
@@ -92,7 +92,7 @@ if (isInGlass)
 	mainScene.FindMaterialExit(ray, MaterialType::GLASS);
 }
 ```
-Usually we would traverse by just checking for a non-empty voxel, the modified version would look like:
+Usually we would traverse the grid by just checking for a non-empty voxel. The modified version would look like this:
 ```cpp
 
 bool Scene::FindMaterialExit(Ray& ray, MaterialType::MatType matType) const
@@ -105,9 +105,9 @@ bool Scene::FindMaterialExit(Ray& ray, MaterialType::MatType matType) const
 	{
 
 		const MaterialType::MatType cell = grid[s.X + s.Y * GRIDSIZE + s.Z * GRIDSIZE2];
-////////////////////////////////////////////////////
-//        the conditional modifies the ray        //
-////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//        the conditional modifies the ray for the material type we pass        //
+//////////////////////////////////////////////////////////////////////////////////
 		if (cell != matType)
 		{
 			ray.t = s.t;
@@ -150,16 +150,12 @@ bool Scene::FindMaterialExit(Ray& ray, MaterialType::MatType matType) const
 			}
 		}
 	}
-	// TODO:
-	// - A nested grid will let rays skip empty space much faster.
-	// - Coherent rays can traverse the grid faster together.
-	// - Perhaps s.X / s.Y / s.Z (the integer grid coordinates) can be stored in a single uint?
-	// - Loop-unrolling may speed up the while loop.
-	// - This code can be ported to GPU.
 	return false;
 }
 ```
-To create a new ray we compute a new direction for the refracted vector using the previos "Refract" method. For our origin, normally we would offset the intersection point by an epsilon value to avoid self-intersection. I found an interestin article in Raytracing gems that does exactly that, but without using a parameter, based on the intersection point and on the normal.
+To create a new ray we compute a new direction for the refracted vector using the previous "Refract" method. For our origin, normally we would offset the intersection point by an epsilon value to avoid self-intersection. I found an article in Raytracing gems that does exactly that, but without using a parameter. It is only using the intersection point and the normal.
+
+
 This is the intersection point we get when we call "ray.IntersectionPoint()".
 ![intersection](IPOINT.png)
 
@@ -191,6 +187,8 @@ return Trace(newRay, depth - 1) * color;
 ```
 
 
+The complete version we have so far.
+
 ```cpp
 float3 color{1};
 //code for glass
@@ -220,15 +218,14 @@ newRay = {originDirection, resultingDirection};
 newRay.isInsideGlass = isInGlass;
 return Trace(newRay, depth - 1) * color;
 ```
+And a render:
 
 ![sphere vox](refractOnly.png)
 _A refract only sphere of voxel_
 
-I love how a refraction only material looks like!
-
 ## Getting reflections
 
-In real life glass also reflects light, so we would like our voxel sphere to also reflect:
+In real life glass also reflects light, so we would like our voxel sphere to also have that effect, like in this render:
 
 ![sphere vox](reflectingLight.png)
 
@@ -285,12 +282,16 @@ newRay.isInsideGlass = isInGlass;
 return Trace(newRay, depth - 1) * color;
 ```
 
-What is important here is to keep track of where we are, if we reflect we do not need to move the ray from the environment it is already in, if we are inside glass, we are just going to reflect inside it. If we are outside glass, we are still reflecting outside, so we do not need to change the boolean.
+What is important here is to keep track of where we are, if we reflect we do not need to move the ray from the environment it is already in. If we are inside glass, we are just going to reflect inside it. If we are outside of it, we are still reflecting outside, so we do not need to change the "isInGlass" boolean.
+
+
 With this change we get reflection when refraction is impossible, which means at the edges:
 ![edge](REFLECTIONSSS.png)
+> You could also add fresnel to your non-metal or metal materials for a bit more realism.
+{: .prompt-tip }
 
 
-This is very unrealistic, in real life you can see your reflection in a window. The Fresnel equation are desribing how much of light gets into a material and how much it reflects.
+This does not quite look right yet, in real life you can see your reflection in a window. The Fresnel equation are desribing how much light gets into a material and how much it reflects.
 
 **Fresnel Equations:**
 
@@ -333,6 +334,7 @@ $$
 
 Here is the code I am going to use:
 ```cpp
+//again from Ray Tracing in One Weekend
 float Renderer::SchlickReflectance(const float cosine, const float indexOfRefraction)
 {
 	// Use Schlick's approximation for reflectance.
@@ -344,7 +346,7 @@ float Renderer::SchlickReflectance(const float cosine, const float indexOfRefrac
 And now, we can add:
 ```cpp
 //other code
-//Random has the range of [0 1].
+//RandomFloat has the range of [0 1].
 if (cannotRefract || SchlickReflectance(cosTheta, refractionRatio) > RandomFloat())
 {
 	//reflect!
@@ -353,7 +355,7 @@ if (cannotRefract || SchlickReflectance(cosTheta, refractionRatio) > RandomFloat
 else
 //refract
 ```
-We have already computed everything we need for the Schilick formula, we just need to plug the right parameters in and we are good to go. The random 
+We have already computed everything we need for the Schilick formula, we just need to plug the right parameters in and we are good to go.
 
 ## One last render
 ![render](render.png)
@@ -363,13 +365,17 @@ Keep in mind that you can change the IOR of your material:
 ![ior1](ior1.png)
 _IOR of 1_
 
+A good rule of thumb is that an IOR of 1 should look like air (not taking into account the reflections).
+
 ![ior 1.45](IOR145.png)
 _IOR of 1.45_
 
 ![ior max](IOR245.png)
 _IOR of 2.4_
 
-Another thing to keep in mind is that we need to know when we get outside the voxel volume, so we need to return the sky color. Here is the final version:
+
+
+A cornercase that you need to keep in mind is that when we get outside the voxel volume, we need to return the sky color. Here is the final version:
 ```cpp
 
 	{
