@@ -23,7 +23,7 @@ Glass, or more generally a dialectric material has some interesting properties. 
 
 
 ## Refraction in a cube of glass
-I am going to start simple by only doing refraction. There is an equation that dictates what happens when light enters a medium that has a different index of refraction. Pure materials or trasnparent such as air, water, diamonds and glass are interacting with light based on their index of refraction which I am going to refer as IOR from now on. The IOR defined that material, for instance, air has IOR of 1, water 1.3, glass, 1.4 to 1.8 and so on. Computing a refracted ray is quite easy after you translate Snell's law into code.
+I am going to start simple by only doing refraction. There is an equation that dictates what happens when light enters a medium that has a different index of refraction. Pure materials (or transparent) such as air, water, diamonds and glass are interacting with light based on their index of refraction which I am going to refer as IOR from now on. The IOR defines that material, for instance, air has IOR of 1, water 1.3, glass 1.4 to 1.8 and so on. Computing a refracted ray is quite easy after you translate Snell's law into code.
 
 $$
 n_1 \sin(\theta_1) = n_2 \sin(\theta_2)
@@ -57,7 +57,7 @@ For further reading, I found an interesting course [presentation](https://cseweb
 ## How we traverse voxels
 The algorithm I have in my project is based on [this](https://www.researchgate.net/publication/2611491_A_Fast_Voxel_Traversal_Algorithm_for_Ray_Tracing) paper that describes the algorithm. The TLDR version is that when we shoot a ray we check if it missed the whole voxel volume, if we did not we are going to increment the distance exactly to the next voxel until we get outside the voxel volume or hit a non-empty one. 
 
-This image is from a nice [video](https://www.youtube.com/watch?v=gXSHtBZFxEI) explaining this traversal.
+This image is from a nice [video](https://www.youtube.com/watch?v=gXSHtBZFxEI) explaining the traversal.
 
 ![Voxel explanation](voxelExplanation.png)
 
@@ -65,10 +65,10 @@ This image is from a nice [video](https://www.youtube.com/watch?v=gXSHtBZFxEI) e
 
 This is what we are going to do:
 ![drawing](drawing.png)
-Observe how the beam of light bends in the environment and then rotates to the same angle as it was before we got there. By using the other IOR ratio on the refracted ray inside we get the previos entering ray.
+Observe how the beam of light (purple) bends in the environment and then rotates to the same angle as it was before we got there. By using the other IOR ratio on the refracted ray inside we get the previos entering ray.
 
 
-At the most basic, we need to refract in and out of the material, do this we need to figure out weather we are inside or outside the voxel. We are going to store that information in the ray and then assign the IOR ratio based on that. Like so:
+At the most basic, we need to refract in and out of the material, do this we need to figure out whether we are inside or outside the voxel. We are going to store that information in the ray and then assign the IOR ratio based on that. Like so:
 ```cpp
 //gets the color of glass if we are inside
 float3 color{1};
