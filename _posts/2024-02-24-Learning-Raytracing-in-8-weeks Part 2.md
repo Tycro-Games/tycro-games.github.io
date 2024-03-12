@@ -7,7 +7,7 @@ math: true
 img_path: /assets/assets-2024-03-02
 ---
 # Intro
-Hello, this is the second article of an 8 part series where I write down what I've learned about Raytracing on the CPU with voxels (which is of course in C++). I have used [this](https://github.com/jbikker/voxpopuli) template that I have added features and refactored over the span of the 8 weeks.
+Hello, this is the second article of an 8 part series where I write down what I've learned about Raytracing on the CPU with voxels (which is of course in C++). I have used [this](https://github.com/jbikker/voxpopuli) template to which I have added features and refactored over the span of the 8 weeks.
 
 You can see the repo of my raytracer [here](https://github.com/Tycro-Games/Raytracer-VoxPopuli).
 
@@ -15,7 +15,7 @@ You can see the repo of my raytracer [here](https://github.com/Tycro-Games/Raytr
 ![sphere of voxels](sphereOfVoxels.png)
 _A sphere of glass made out of voxels_
 
-Glass has been done many times in most real raytracers. You can even find a great explanation along with some code that does the trick from Peter Shirley's notorious tutorial, [Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html#dielectrics). 
+Glass has been done many times in most real raytracers. You can even find a great explanation along with some code that does the trick from Peter Shirley's well known tutorial, [Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html#dielectrics). 
 
 Glass, or more generally a dialectric material has some interesting properties. Its behavior could be split into two parts: refraction and reflection.
 
@@ -23,7 +23,7 @@ Glass, or more generally a dialectric material has some interesting properties. 
 
 
 ## Refraction in a cube of glass
-I am going to start simple by only doing refraction. There is an equation that dictates what happens when light enters a medium that has a different index of refraction. Pure materials (or transparent) such as air, water, diamonds and glass are interacting with light based on their index of refraction which I am going to refer as IOR from now on. The IOR defines that material, for instance, air has IOR of 1, water 1.3, glass 1.4 to 1.8 and so on. Computing a refracted ray is quite easy after you translate Snell's law into code.
+I am going to start simple by only doing refraction. There is an equation that dictates what happens when light enters a medium that has a different index of refraction. Pure materials (or transparent) such as air, water, diamonds and glass interact with light based on their index of refraction, which I am going to call IOR from now on. The IOR defines a material. For instance, air has IOR of 1, water 1.3, glass 1.4 to 1.8 and so on. Computing a refracted ray is quite easy after you translate Snell's law into code.
 
 $$
 n_1 \sin(\theta_1) = n_2 \sin(\theta_2)
@@ -50,12 +50,12 @@ float3 Renderer::Refract(const float3 direction, const float3 normal, const floa
 	return rPer + rPar;
 }
 ```
-I will skip the explanation of how to get there as you can find it quite easily in Ray Tracing in One Weekend.
+I will skip the explanation of how to get there, as you can find it quite easily in Ray Tracing in One Weekend.
 
 For further reading, I found an interesting course [presentation](https://cseweb.ucsd.edu/classes/sp17/cse168-a/CSE168_03_Fresnel.pdf) that has a lot of good information on this topic. 
 
 ## How we traverse voxels
-The algorithm I have in my project is based on [this](https://www.researchgate.net/publication/2611491_A_Fast_Voxel_Traversal_Algorithm_for_Ray_Tracing) paper that describes the algorithm. The TLDR version is that when we shoot a ray we check if it missed the whole voxel volume, if we did not we are going to increment the distance exactly to the next voxel until we get outside the voxel volume or hit a non-empty one. 
+The algorithm I have in my project is based on [this](https://www.researchgate.net/publication/2611491_A_Fast_Voxel_Traversal_Algorithm_for_Ray_Tracing) paper that describes the algorithm. The TLDR version is that when we shoot a ray, we check if it missed the whole voxel volume. If it did not, then we can increment the distance exactly to the next voxel until we get outside the voxel volume or hit a non-empty one. 
 
 This image is from a nice [video](https://www.youtube.com/watch?v=gXSHtBZFxEI) explaining the traversal.
 
@@ -68,7 +68,7 @@ This is what we are going to do:
 Observe how the beam of light (purple) bends in the environment and then rotates to the same angle as it was before we got there. By using the other IOR ratio on the refracted ray inside we get the previos entering ray.
 
 
-At the most basic, we need to refract in and out of the material, do this we need to figure out whether we are inside or outside the voxel. We are going to store that information in the ray and then assign the IOR ratio based on that. Like so:
+At the most basic, we need to refract in and out of the material, to do this, we need to figure out whether we are inside or outside the voxel. We are going to store that information in the ray and then assign the IOR ratio based on that. Like so:
 ```cpp
 //gets the color of glass if we are inside
 float3 color{1};
@@ -79,10 +79,10 @@ float IORMaterial = ray.GetRefractivity(mainScene); // defaults to 1.45
 float refractionRatio = isInGlass ? IORMaterial : 1.0f / IORMaterial;
 ```
 
-The angle of refraction is going to depend on the IOR ratio which is the IOR of the environment we are going, in this case, air (1.0), and the environment we are going in, glass (1.45). 
+The angle of refraction is going to depend on the IOR ratio, which is the IOR of the environment we are going from (in this case, air 1.0) and the environment we are going in (glass 1.45). 
 
 
-Keeping track where we are is quite simple at this point, as we can only refract into the glass voxel, and then refract again outside of the voxel. When we are inside of the glass, we need to get to the next non-glass voxel, that is what the "FindMaterialExit" method is doing.
+Keeping track of where we are is quite simple at this point, as we can only refract into the glass voxel, and then refract again outside of the voxel. When we are inside of the glass, we need to get to the next non-glass voxel. That is what the "FindMaterialExit" method is doing.
 ```cpp
 if (isInGlass)
 {
@@ -92,7 +92,7 @@ if (isInGlass)
 	mainScene.FindMaterialExit(ray, MaterialType::GLASS);
 }
 ```
-Usually we would traverse the grid by just checking for a non-empty voxel. The modified version would look like this:
+Normally, we would traverse the grid by just checking for a non-empty voxel. The modified version would look like this:
 ```cpp
 
 bool Scene::FindMaterialExit(Ray& ray, MaterialType::MatType matType) const
@@ -153,7 +153,7 @@ bool Scene::FindMaterialExit(Ray& ray, MaterialType::MatType matType) const
 	return false;
 }
 ```
-To create a new ray we compute a new direction for the refracted vector using the previous "Refract" method. For our origin, normally we would offset the intersection point by an epsilon value to avoid self-intersection. I found an article in Raytracing gems that does exactly that, but without using a parameter. It is only using the intersection point and the normal.
+To create a new ray, we compute a new direction for the refracted vector using the previous "Refract" method. For our origin, normally we would offset the intersection point by an epsilon value to avoid self-intersection. I found an article in Raytracing gems that does exactly that, but without using a parameter. It only uses the intersection point and the normal.
 
 
 This is the intersection point we get when we call "ray.IntersectionPoint()".
@@ -167,7 +167,7 @@ _When we call "OffsetRay" with a normal that is pointing outside the voxel._
 ![offset](offsetDOWN.png)
 _When we call "OffsetRay" with a normal that is pointing inside the voxel._
 
-All these vectors are unit vectors. Notice that when we are outside the glass, we want the next ray to start inside, while when we are already inside the glass and we just hit the other side of the voxel, the next refracted ray will get a normal pointing towards the glass, so we also need a negative normal in that case, so it starts outside the glass. This is why we pass the negative normal, that will change when we can reflect inside or outside the glass, but for this implementation it will do fine.
+All these vectors are unit vectors. Notice that when we are outside the glass, we want the next ray to start inside. Hoever, when we are already inside the glass and we just hit the other side of the voxel, the next refracted ray will get a normal pointing towards the glass. Therefore, in that case, we also need a negative normal, so that the ray can start outside the glass. This is why we pass the negative normal, which will change when we can reflect inside or outside the glass (but for this implementation it will do fine).
 ```cpp
 
 float3 resultingDirection = Refract(ray.D, ray.GetNormal(), refractionRatio);
@@ -225,7 +225,7 @@ _A refract only sphere of voxel_
 
 ## Getting reflections
 
-In real life glass also reflects light, so we would like our voxel sphere to also have that effect, like in this render:
+In real life, glass also reflects light, so we would like our voxel sphere to also have that effect, like in this render:
 
 ![sphere vox](reflectingLight.png)
 
@@ -246,7 +246,7 @@ $$
 \end{align*}
 $$
 
-Thus, we need to change our code, we will not always refract in and out of the material:
+Thus, we need to change our code (we will not always refract in and out of the material):
 
 ```cpp
 float cosTheta = min(dot(-ray.D, ray.GetNormal()), 1.0f);
@@ -282,10 +282,10 @@ newRay.isInsideGlass = isInGlass;
 return Trace(newRay, depth - 1) * color;
 ```
 
-What is important here is to keep track of where we are, if we reflect we do not need to move the ray from the environment it is already in. If we are inside glass, we are just going to reflect inside it. If we are outside of it, we are still reflecting outside, so we do not need to change the "isInGlass" boolean.
+What is important here is to keep track of where we are. If we reflect, we do not need to move the ray from the environment it is already in. If we are inside glass, we are just going to reflect inside it. If we are outside of it, we are still reflecting outside, so we do not need to change the "isInGlass" boolean.
 
 
-With this change we get reflection when refraction is impossible, which means at the edges:
+With this change, we get reflection when refraction is impossible, which means at the edges:
 ![edge](REFLECTIONSSS.png)
 > You could also add fresnel to your non-metal or metal materials for a bit more realism.
 {: .prompt-tip }
@@ -311,7 +311,7 @@ $$
 t_p = \frac{2n_1 \cos(\theta_i)}{n_1 \cos(\theta_t) + n_2 \cos(\theta_i)}
 $$
 
-As you can see this is quite hard to read and to compute, this is why I am going to use the Schilick Approximation:
+As you can see, this is quite hard to read and to compute, this is why I am going to use the Schilick Approximation:
 
 
 **Schlick Approximation:**
