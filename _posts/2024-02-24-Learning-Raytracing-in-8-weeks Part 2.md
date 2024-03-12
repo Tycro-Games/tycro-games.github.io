@@ -167,7 +167,7 @@ _When we call "OffsetRay" with a normal that is pointing outside the voxel._
 ![offset](offsetDOWN.png)
 _When we call "OffsetRay" with a normal that is pointing inside the voxel._
 
-All these vectors are unit vectors. Notice that when we are outside the glass, we want the next ray to start inside. Hoever, when we are already inside the glass and we just hit the other side of the voxel, the next refracted ray will get a normal pointing towards the glass. Therefore, in that case, we also need a negative normal, so that the ray can start outside the glass. This is why we pass the negative normal, which will change when we can reflect inside or outside the glass (but for this implementation it will do fine).
+All these vectors are unit vectors. Notice that when we are outside the glass, we want the next ray to start inside. However, when we are already inside the glass and we just hit the other side of the voxel, the next refracted ray will get a normal pointing towards the glass. Therefore, in that case, we also need a negative normal, so that the ray can start outside the glass. This is why we pass the negative normal, which will change when we can reflect inside or outside the glass (but for this implementation it will do fine).
 ```cpp
 
 float3 resultingDirection = Refract(ray.D, ray.GetNormal(), refractionRatio);
