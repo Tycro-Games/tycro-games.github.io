@@ -111,7 +111,10 @@ float3 Renderer::AreaLightEvaluation(Ray& ray, Scene& scene, SphereAreaLightData
 
 //learn more about how this works here:
 //https://www.physicsforums.com/threads/luminance-of-a-lambertian-sphere-formula.449703/
-		const float3 lightIntensity = max(0.0f, cosTheta) * lightData.color /  (radius * radius) * PI;
+//basically it scales with the area
+		const float3 lightIntensity = cosTheta * lightData.color * lightData.colorMultiplier * (radius * radius) *
+	PI4 / (dst *
+		dst);
 
 
 		if (cosTheta <= 0)
