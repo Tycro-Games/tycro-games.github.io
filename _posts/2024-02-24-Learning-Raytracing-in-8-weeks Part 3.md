@@ -219,6 +219,9 @@ Without considering the rotation parameter, this code is quite self-explanatory.
 ## Getting the "right" normals
 We got the inverse matrices transforming the ray and we are blessed with the following normals:
 ![normals worng](wrongNormals.png)
+
+
+
 I will be delighted to see your own renders at this point. I do not remember what I did to get normals that are so broken, but feel free to send yours to my email down below.
 
 What is going so wrong is that the normals are still in object space. Going back to our traversal, our ray is still transformed with the inverse of the volume when we compute the normal, the solution, as you have probably have seen from earlier, is to transform the normal back with the matrix:
