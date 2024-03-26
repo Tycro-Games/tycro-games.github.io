@@ -152,7 +152,7 @@ bool Scene::Setup3DDDA(Ray& ray, DDAState& state) const
 	return true;
 }
 ```
-This code can now work with any bounds now, not just the original which always assumed the bounds (0,0,0) and (1,1,1). However, this method is lacking rotations. I thought it will still be valuable in case you do not need rotations.
+This code can now work with any bounds now, not just the original which always assumed the bounds (0,0,0) and (1,1,1). It is also important to keep in mind, that now you could have different resolutions per volume. However, this method is lacking rotations. I thought it will still be valuable in case you do not need rotations.
 Another way to solve this (a more complete way), is to move the ray, not the voxel. Every object could then be at the default 0 and 1 bounds, with their own matrices that will define their position, scale and rotation. The ray will need the inverse matrix of the volume to get the correct result. Here is some code that shows this concept:
 ```cpp
 //create a backup
