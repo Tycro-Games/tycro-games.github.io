@@ -1,6 +1,6 @@
 ---
 title: Learning-Raytracing-in-8-weeks | Transforming voxel volumes | Part 3
-date: 2024-03-02 14:10:00 +0200
+date: 2024-03-24 14:10:00 +0200
 categories: [Learning, Log, Raytracing]
 tags: [blog, programming, c++, raytracing, graphics, voxels]
 math: true
@@ -159,7 +159,7 @@ bool Scene::Setup3DDDA(Ray& ray, DDAState& state) const
 	return true;
 }
 ```
-This code can now work with any bounds now, not just the original which always assumed the bounds (0,0,0) and (1,1,1). It is also important to keep in mind, that now you could have different resolutions per volume. However, this method is lacking rotations. I thought it will still be valuable in case you do not need rotations.
+This code can work with any bounds now, not just the original which always assumed the bounds (0,0,0) and (1,1,1). It is also important to keep in mind that now you could have different resolutions per volume. However, this method is lacking rotations. I thought it will still be valuable in case you do not need rotations.
 Another way to solve this (a more complete way), is to move the ray, not the voxel. Every object could then be at the default 0 and 1 bounds, with their own matrices that will define their position, scale and rotation. The ray will need the inverse matrix of the volume to get the correct result. Here is some code that shows this concept:
 ```cpp
 //create a backup
@@ -185,7 +185,7 @@ backupRay.t = ray.t;
 //copy the old data back
 backupRay.CopyToPrevRay(ray);
 ```
-As easy as it gets, there are still some build-in functions that I call here I did not explain. I would be best if you looked into the implementations from the template directly, [here](https://github.com/jbikker/voxpopuli/blob/main/template/tmpl8math.cpp). To compute the Dsign correctly I did some bit magic, because it is a bit faster than copysign:
+As easy as it gets, there are still some build-in functions that I call here I did not explain. It would be best if you looked into the implementations from the template directly, [here](https://github.com/jbikker/voxpopuli/blob/main/template/tmpl8math.cpp). To compute the Dsign correctly I did some bit magic, because it is a bit faster than copysign:
 ```cpp
 float3 Ray::ComputeDsign(const float3& _D)
 {
@@ -221,7 +221,7 @@ void Scene::SetTransform(const float3& _rotation)
 	invMatrix = matrix.Inverted();
 }
 ```
-Without considering the rotation parameter, this code is quite self-explanatory. We concatenate all these matrices into one and then get the inverse of that. I have not talked yet, about calculating the matrix, but the inverse. Do not worry, the next chapter explains how we are going to use the actual matrix.
+Without considering the rotation parameter, this code is quite self-explanatory. We concatenate all these matrices into one and then get the inverse of that. I have not talked yet about calculating the matrix, but the inverse. Do not worry, the next chapter explains how we are going to use the actual matrix.
 
 ## Getting the "right" normals
 We got the inverse matrices transforming the ray and we are blessed with the following normals:
