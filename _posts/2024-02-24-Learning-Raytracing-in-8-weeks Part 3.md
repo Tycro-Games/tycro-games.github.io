@@ -17,7 +17,7 @@ Here is the overview:
 You can see the repo of my raytracer [here](https://github.com/Tycro-Games/Raytracer-VoxPopuli).
 
 ## Ray tracing in world space
-The template we have received for this project, uses a world space camera that shoots rays that have their origin and direction expressed in world space. In ray tracing this is completely fine, in rasterization, I am not so sure anymore. Adding a voxel volume of arbitrary resolution into this world, defined by the two vectors: **(0, 0, 0)** and **(1, 1, 1)**.
+The template we have received for this project uses a world space camera that shoots rays that have their origin and direction expressed in world space. In ray tracing this is completely fine, however in rasterization, I am not so sure anymore. Here is what adding a voxel volume of arbitrary resolution looks like, defined by the two vectors: **(0, 0, 0)** and **(1, 1, 1)**.
 
 ![01 cube](BoundsVolume.png)
 

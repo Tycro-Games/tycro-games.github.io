@@ -16,7 +16,7 @@ Here is the overview:
 
 You can see the repo of my raytracer [here](https://github.com/Tycro-Games/Raytracer-VoxPopuli).
 
-## Refraction-only glass
+## Refraction only glass
 If you haven't read part 2 of this series already, I talked about how one could apply the law of optics to create some pretty realistic glass in a raytracer. The starting point for smoke is glass with refraction only. In code:
 ```cpp
   {
