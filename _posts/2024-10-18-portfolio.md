@@ -5,6 +5,7 @@ categories: [Portfolio]
 tags: [blog, programming, c++, graphics, voxels]
 math: true
 img_path: /assets/portfolio
+pin: true
 ---
 # Intro
 
