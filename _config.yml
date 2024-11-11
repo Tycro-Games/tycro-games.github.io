@@ -132,6 +132,11 @@ kramdown:
       start_line: 1
 
 collections:
+  projects:
+    output: true
+    permalink: /projects/:title/
+
+
   tabs:
     output: true
     sort_by: order
