@@ -1,0 +1,18 @@
+---
+layout: default
+---
+
+{% include lang.html %}
+
+<article class="px-1">
+  {% assign about_tab = site.tabs | where: "title", "About" | first %}
+
+  {% if about_tab %}
+    <h1 class="dynamic-title">{{ about_tab.title | default: 'About' }}</h1>
+    <div class="content">
+      {{ about_tab.content | markdownify }}
+    </div>
+  {% else %}
+    <p>About tab not found.</p>
+  {% endif %}
+</article>

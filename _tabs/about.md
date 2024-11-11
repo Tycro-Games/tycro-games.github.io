@@ -1,6 +1,16 @@
 ---
 # the default layout is 'page'
 icon: fas fa-info-circle
-order: 4
+order: 0
 ---
-Tycro Games is my dream indie studio which does not exist yet, so I (Bogdan Mocanu) post my projects under this name as well as when I work with others, for now it may only be my alias but in the future it will become the name of the indie studio I work at, or it might just remain a dream, who knows?
+## Bogdan Mocanu
+
+Hello! I’m Bogdan Mocanu, a second-year game programming student at [Breda University of Applied Sciences](https://www.buas.nl/).I specialize in engine programming, with a focus on building tools and systems that serve other game development disciplines.
+
+### Career Goals
+
+My goal is to leverage my skills to work on impactful, innovative games or engines. I’m also open to connecting with other developers and industry professionals.
+
+If you're interested in my work or have any questions, feel free to reach out by sending an [email](mailto:tycro.games@gmail.com).
+
+
