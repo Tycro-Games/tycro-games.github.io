@@ -1,22 +1,26 @@
 ---
-layout: default
+layout: page
+title: "{{ page.title }}"
 ---
 
-<article class="project">
+<!-- Project Detail Page -->
+<article class="project-detail">
   <!-- Project Header Section -->
   <header class="project-header">
     <h1>{{ page.title }}</h1>
     <p class="project-description">{{ page.description }}</p>
-    <a href="{{ page.url }}" class="btn btn-primary">Visit Game</a>
   </header>
 
   <!-- Media Section (Image or Video) -->
   <section class="project-media">
-    {% if page.image %}
-      <div class="project-image">
-        <img src="{{ page.image | relative_url }}" alt="{{ page.title }} Preview">
-      </div>
-    {% endif %}
+    <a href="{{ page.url }}" class="project-image-link">
+      {% if page.image %}
+        <div class="project-image">
+          <img src="{{ page.image | relative_url }}" alt="{{ page.title }} Preview">
+        </div>
+      {% endif %}
+    </a>
+
     {% if page.video %}
       <div class="project-video">
         <iframe width="100%" height="315" src="{{ page.video }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -24,23 +28,47 @@ layout: default
     {% endif %}
   </section>
 
-  <!-- Additional Details Section -->
+  <!-- Project Details Section -->
   <section class="project-details">
-    <h2>Project Details</h2>
+    <h2>About the Project</h2>
     <div class="content">
       {{ content }}
     </div>
   </section>
 
-  <!-- Categories Section -->
-  <section class="project-categories">
-    {% if page.categories %}
+  <!-- Optional: Additional Information or Categories -->
+  {% if page.categories %}
+    <section class="project-categories">
       <h3>Categories</h3>
       <ul class="categories-list">
         {% for category in page.categories %}
           <li><a href="/categories/{{ category | slugify }}">{{ category }}</a></li>
         {% endfor %}
       </ul>
-    {% endif %}
-  </section>
+    </section>
+  {% endif %}
 </article>
+
+<!-- Inline CSS -->
+<style>
+  /* Main Project Detail Styles */
+  .project-detail {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .project-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .project-header h1 {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+
+  .project-header .project-description {
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 10

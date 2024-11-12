@@ -14,9 +14,9 @@ timezone: Europe/Amsterdam
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Tycro Dev # the main title
+title: Mocanu Bogdan # the main title
 
-tagline: Indie games and other cool projects # it will display as the sub-title
+tagline: My personal blog and portfolio # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
   My website where you can find all my socials and relevant projects.
