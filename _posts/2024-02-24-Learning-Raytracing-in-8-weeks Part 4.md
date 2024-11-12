@@ -63,7 +63,7 @@ If you haven't read part 2 of this series already, I talked about how one could 
   }
 ```
 And in practice it looks like:
-![refract](refractOnly.png)
+![refract]({{ page.img_path }}refractOnly.png)
 
 ## Beer's Law
 Mathematically:
@@ -217,7 +217,7 @@ Absorption is another real number we need to provide for our material, thus, the
 }
 ```
 Now our material becomes denser if the ray had to travel a bigger distance:
-![beer](beer.png)
+![beer]({{ page.img_path }}beer.png)
 _please ignore that nan pixel there_
 
 We are nearly done with this smoke material. The only thing that lacks is density. ["Raytracing The Next Week"](https://raytracing.github.io/books/RayTracingTheNextWeek.html#volumes) has a brief explanation on that.
@@ -239,16 +239,16 @@ The simplest version of that I could think of:
  ```
  This little code snippet will make the ray move inside the volume and get a random direction, based on how much the distance the ray traveled and how "thick" or dense the cloud is. It might seem a bit magical at first, but some visual explanation goes a long way.
 
- ![smallCloud](smallCloud.png)
+ ![smallCloud]({{ page.img_path }}smallCloud.png)
  _0.9 density_
 
 
- ![midCloud](midCLoud.png)
+ ![midCloud]({{ page.img_path }}midCLoud.png)
  _2.7 density_
 
 
  
- ![highCloud](highCloud.png)
+ ![highCloud]({{ page.img_path }}highCloud.png)
  _24.7 density_
 
 ## Getting the cloud
@@ -333,7 +333,7 @@ void Scene::GenerateSomeSmoke(float frequency = 0.001f)
 ```
 You might need to figure out the right frequency for voxel resolution. Here is mine with 64^3 voxels:
 
-![alt text](cloudNoDOF.png)
+![alt text]({{ page.img_path }}cloudNoDOF.png)
 _perlin noise of 0.163_
 
 
@@ -361,7 +361,7 @@ Now to really sell this simple cloud, we need some depth of field, DOF for short
       return {rayOrigin, rayDirection};
     }
 ```
-![cloud](finCloud.png)
+![cloud]({{ page.img_path }}finCloud.png)
 _Isn't that a convincing looking cloud?_
 
 ---

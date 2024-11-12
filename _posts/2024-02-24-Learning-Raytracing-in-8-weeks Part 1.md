@@ -4,7 +4,7 @@ date: 2024-02-24 14:10:00 +0200
 categories: [Learning, Log, Raytracing]
 tags: [blog, programming, c++, raytracing, graphics, voxels]
 math: true
-img_path: /assets/assets-2024-02-24
+img_path: /assets/assets-2024-02-24/
 ---
 # Intro
 Hello, this is the second article of an 8 part series where I write down what I've learned about Raytracing on the CPU with voxels (which is of course in C++). I have used [this](https://github.com/jbikker/voxpopuli) template to which I have added features and refactored over the span of the 8 weeks.
@@ -18,11 +18,11 @@ You can see the repo of my raytracer [here](https://github.com/Tycro-Games/Raytr
 
 ## Simple Area lights
 Hello, this is the first of an 8 part series where I write down what I've learned about Raytracing on the CPU with voxels (which is of course in C++). 
-![State of my raytracer](RaytracerSoftShadows.png)
+![State of my raytracer]({{ page.img_path }}RaytracerSoftShadows.png)
 
 ## The humble Point Light
 The first step towards implementing an area light is starting with something that is a bit easier. In this context, Point Lights are the perfect candidate. We cast a ray towards a voxel: if we hopefully hit something, we need to answer the binary question of whether or not we are in the shadow.
-![drawing](MyDrawingLight.png)
+![drawing]({{ page.img_path }}MyDrawingLight.png)
 
 ---
 
@@ -59,7 +59,7 @@ float3 Renderer::PointLightEvaluate(Ray& ray, Scene& scene, PointLightData light
 }
 ```
 I will walk you through the code, but first, let's see how it looks:
-![Hard shadows](hardShadows.png)
+![Hard shadows]({{ page.img_path }}hardShadows.png)
 
 
 As you can see, this code results in some hard shadows because of our "yes" or "no" answer to the shadow question.
@@ -82,7 +82,7 @@ That means that in code we multiply the cosine between the normal of the point a
 ```
 
 All that is left is to construct a shadow ray and check whether it is occluded or not. In other words, we check if there is something between our point and the light. If there is, then we are in shadow, if not, we multiply by the color of the object and by the light intensity based on the previous formula.
-![block](blocksRay.png)
+![block]({{ page.img_path }}blocksRay.png)
 
  In case you want a more detailed walkthough over how point lights are defined, ogldev has a more in depth tutorial [here](https://ogldev.org/www/tutorial20/tutorial20.html).
 
@@ -181,7 +181,7 @@ void Tick(){
 }
 ```
 For a slightly longer and visual explanation of an accumulator, watch [Sebastian Lague's Raytracing segment](https://youtu.be/Qz0KTGYJtUk?si=isQTw4moO400gsLL&t=1103).
-![soft shadows](SoftShadows.png)
+![soft shadows]({{ page.img_path }}SoftShadows.png)
 _We have soft shadows now!_
 
 ## What are we actually doing?

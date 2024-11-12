@@ -17,7 +17,7 @@ Here is the overview:
 You can see the repo of my raytracer [here](https://github.com/Tycro-Games/Raytracer-VoxPopuli).
 
 ## Glass in a raytracer
-![sphere of voxels](sphereOfVoxels.png)
+![sphere of voxels]({{ page.img_path }}sphereOfVoxels.png)
 _A sphere of glass made out of voxels_
 
 Glass has been done many times in most real raytracers. You can even find a great explanation along with some code that does the trick from Peter Shirley's well known tutorial, [Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html#dielectrics). 
@@ -64,12 +64,12 @@ The algorithm I have in my project is based on [this](https://www.researchgate.n
 
 This image is from a nice [video](https://www.youtube.com/watch?v=gXSHtBZFxEI) explaining the traversal.
 
-![Voxel explanation](voxelExplanation.png)
+![Voxel explanation]({{ page.img_path }}voxelExplanation.png)
 
 ## Some code at last
 
 This is what we are going to do:
-![drawing](drawing.png)
+![drawing]({{ page.img_path }}drawing.png)
 Observe how the beam of light (purple) bends in the environment and then rotates to the same angle as it was before we got there. By using the other IOR ratio on the refracted ray inside we get the previos entering ray.
 
 
@@ -162,14 +162,14 @@ To create a new ray, we compute a new direction for the refracted vector using t
 
 
 This is the intersection point we get when we call "ray.IntersectionPoint()".
-![intersection](IPOINT.png)
+![intersection]({{ page.img_path }}IPOINT.png)
 
 
-![offset](OFFSETUP.png)
+![offset]({{ page.img_path }}OFFSETUP.png)
 _When we call "OffsetRay" with a normal that is pointing outside the voxel._
 
 
-![offset](offsetDOWN.png)
+![offset]({{ page.img_path }}offsetDOWN.png)
 _When we call "OffsetRay" with a normal that is pointing inside the voxel._
 
 All these vectors are unit vectors. Notice that when we are outside the glass, we want the next ray to start inside. However, when we are already inside the glass and we just hit the other side of the voxel, the next refracted ray will get a normal pointing towards the glass. Therefore, in that case, we also need a negative normal, so that the ray can start outside the glass. This is why we pass the negative normal, which will change when we can reflect inside or outside the glass (but for this implementation it will do fine).
@@ -225,14 +225,14 @@ return Trace(newRay, depth - 1) * color;
 ```
 And a render:
 
-![sphere vox](refractOnly.png)
+![sphere vox]({{ page.img_path }}refractOnly.png)
 _A refract only sphere of voxel_
 
 ## Getting reflections
 
 In real life, glass also reflects light, so we would like our voxel sphere to also have that effect, like in this render:
 
-![sphere vox](reflectingLight.png)
+![sphere vox]({{ page.img_path }}reflectingLight.png)
 
 Snell's formula might have no solutions, which means we can't refract at all.
 
@@ -291,7 +291,7 @@ What is important here is to keep track of where we are. If we reflect, we do no
 
 
 With this change, we get reflection when refraction is impossible, which means at the edges:
-![edge](REFLECTIONSSS.png)
+![edge]({{ page.img_path }}REFLECTIONSSS.png)
 > You could also add fresnel to your non-metal or metal materials for a bit more realism.
 {: .prompt-tip }
 
@@ -363,19 +363,19 @@ else
 We have already computed everything we need for the Schilick formula, we just need to plug the right parameters in and we are good to go.
 
 ## One last render
-![render](render.png)
+![render]({{ page.img_path }}render.png)
 
 Keep in mind that you can change the IOR of your material:
 
-![ior1](ior1.png)
+![ior1]({{ page.img_path }}ior1.png)
 _IOR of 1_
 
 A good rule of thumb is that an IOR of 1 should look like air (not taking into account the reflections).
 
-![ior 1.45](IOR145.png)
+![ior 1.45]({{ page.img_path }}IOR145.png)
 _IOR of 1.45_
 
-![ior max](IOR245.png)
+![ior max]({{ page.img_path }}IOR245.png)
 _IOR of 2.4_
 
 

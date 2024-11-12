@@ -19,7 +19,7 @@ You can see the repo of my raytracer [here](https://github.com/Tycro-Games/Raytr
 ## Ray tracing in world space
 The template we have received for this project uses a world space camera that shoots rays that have their origin and direction expressed in world space. In ray tracing this is completely fine, however in rasterization, I am not so sure anymore. Here is what adding a voxel volume of arbitrary resolution looks like, defined by the two vectors: **(0, 0, 0)** and **(1, 1, 1)**.
 
-![01 cube](BoundsVolume.png)
+![01 cube]({{ page.img_path }}BoundsVolume.png)
 
 If we move the camera, everything still works properly, but what if we wanted to **translate, rotate or scale** this volume?
 
@@ -225,7 +225,7 @@ Without considering the rotation parameter, this code is quite self-explanatory.
 
 ## Getting the "right" normals
 We got the inverse matrices transforming the ray and we are blessed with the following normals:
-![normals worng](wrongNormals.png)
+![normals worng]({{ page.img_path }}wrongNormals.png)
 
 
 
@@ -263,7 +263,7 @@ float3 Ray::GetNormalVoxel(const uint32_t worldSize, const mat4& matrix) const
 The nicest part about this code is that it is nearly identical to the [original](https://github.com/jbikker/voxpopuli/blob/18c19bc58532857cf4cfa6ddcd9231a24237d193/template/scene.cpp#L3-L15). We are just transforming the normal with the matrix and normalizing the result.
 
 ## Transform away
-![rotate](Rotations.gif)
+![rotate]({{ page.img_path }}Rotations.gif)
 
 ---
 
