@@ -1,6 +1,12 @@
 ---
 layout: page
 title: "{{ page.title }}"
+panel_includes:
+  - toc
+tail_includes:
+  - related-posts
+  - post-nav
+  - comments
 ---
 
 <!-- Project Detail Page -->
@@ -36,17 +42,7 @@ title: "{{ page.title }}"
     </div>
   </section>
 
-  <!-- Optional: Additional Information or Categories -->
-  {% if page.categories %}
-    <section class="project-categories">
-      <h3>Categories</h3>
-      <ul class="categories-list">
-        {% for category in page.categories %}
-          <li><a href="/categories/{{ category | slugify }}">{{ category }}</a></li>
-        {% endfor %}
-      </ul>
-    </section>
-  {% endif %}
+
 </article>
 
 <!-- Inline CSS -->
