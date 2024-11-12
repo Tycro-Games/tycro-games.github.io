@@ -4,8 +4,6 @@ icon: fas fa-info-circle
 order: 0
 ---
 
-## Bogdan Mocanu
-
 Hello! I’m Bogdan Mocanu, a game programming student at [Breda University of Applied Sciences](https://www.buas.nl/). I specialize in engine programming, with a focus on building tools and systems that serve other game development disciplines.
 
 ### Career Goals
