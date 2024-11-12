@@ -14,7 +14,7 @@ My goal is to leverage my skills to work on impactful, innovative games or engin
 
 ### Other passions
 
-Outside of coding, I enjoy practicing calisthenics, playing indie and grand strategy games, and music. I’m always eager to connect with fellow developers and industry professionals.
+Outside of coding, I enjoy practicing calisthenics, playing indie and grand strategy games, and music.
 
 ### Contact me
 If you're interested in my work or have any questions, feel free to reach out by sending an [email](mailto:tycro.games@gmail.com).
