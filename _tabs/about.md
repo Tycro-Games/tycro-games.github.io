@@ -16,4 +16,4 @@ Outside of coding, I enjoy practicing **calisthenics** 💪, playing **indie** a
 
 ### Contact Me
 
-If you’re interested in my work or have any questions, feel free to reach out via **email** 📧.
+If you’re interested in my work or have any questions, feel free to reach out via [email](mailto:tycro.games@gmail.com).
