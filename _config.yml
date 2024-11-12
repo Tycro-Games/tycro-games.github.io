@@ -157,20 +157,23 @@ defaults:
       path: _drafts
     values:
       comments: false
+
   - scope:
       path: ""
       type: tabs # see `site.collections`
     values:
       layout: page
       permalink: /:title/
-    - scope:
+
+  - scope:
       path: assets/img/favicons
     values:
       swcache: true
-    - scope:
-        path: assets/js/dist
-      values:
-        swcache: true
+
+  - scope:
+      path: assets/js/dist
+    values:
+      swcache: true
 
 sass:
   style: compressed
