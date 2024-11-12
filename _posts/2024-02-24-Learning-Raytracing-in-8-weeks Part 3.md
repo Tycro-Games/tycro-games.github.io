@@ -3,8 +3,8 @@ title: Learning-Raytracing-in-8-weeks | Transforming voxel volumes | Part 3 🔄
 date: 2024-03-24 14:10:00 +0200
 categories: [Learning 📚, Log 📖, Raytracing 🌐]
 tags: [blog 📝, programming 💻, c++, raytracing 🌟, graphics 🎨, voxels 🔳]
-math: true ➗
-img_path: /assets/assets-2024-03-24/ 🖼️
+math: true
+img_path: /assets/assets-2024-03-24/
 ---
 
 # Intro
