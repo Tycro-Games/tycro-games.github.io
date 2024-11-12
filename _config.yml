@@ -121,6 +121,7 @@ baseurl: ""
 # ------------ The following options are not recommended to be modified ------------------
 
 kramdown:
+  footnote_backlink: "&#8617;&#xfe0e;"
   syntax_highlighter: rouge
   syntax_highlighter_opts: # Rouge Options › https://github.com/jneen/rouge#full-options
     css_class: highlight
@@ -135,7 +136,6 @@ collections:
   projects:
     output: true
     permalink: /projects/:title/
-
 
   tabs:
     output: true
@@ -152,6 +152,7 @@ defaults:
       # DO NOT modify the following parameter unless you are confident enough
       # to update the code of all other post links in this project.
       permalink: /posts/:title/
+      
   - scope:
       path: _drafts
     values:
@@ -162,14 +163,14 @@ defaults:
     values:
       layout: page
       permalink: /:title/
-  - scope:
+    - scope:
       path: assets/img/favicons
     values:
       swcache: true
-  - scope:
-      path: assets/js/dist
-    values:
-      swcache: true
+    - scope:
+        path: assets/js/dist
+      values:
+        swcache: true
 
 sass:
   style: compressed
@@ -190,7 +191,7 @@ exclude:
   - tools
   - README.md
   - LICENSE
-  - rollup.config.js
+  - "*.config.js"
   - package*.json
 
 jekyll-archives:
@@ -201,7 +202,6 @@ jekyll-archives:
   permalinks:
     tag: /tags/:name/
     category: /categories/:name/
-
 analytics:
   provider: "google-gtag"
   google:
