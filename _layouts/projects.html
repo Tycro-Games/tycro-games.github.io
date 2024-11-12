@@ -3,7 +3,8 @@ layout: page
 ---
 
 <div class="projects-container">
-  {% for project in site.projects %}
+{% assign sorted_projects = site.projects | sort: 'date' | reverse %}
+  {% for project in sorted_projects %}
     <article class="project-card">
       <!-- Project card with image and description -->
       <a href="{{ project.url }}" class="project-card-link">
