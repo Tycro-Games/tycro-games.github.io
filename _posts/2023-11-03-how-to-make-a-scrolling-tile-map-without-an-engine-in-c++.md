@@ -1,10 +1,11 @@
 ---
-title: How to make a Scrolling Tile Map without an engine in C++
+title: How to make a Scrolling Tile Map without an engine in C++ 🗺️
 date: 2023-11-03 14:10:00 +0200
-categories: [Tutorials]
-tags: [blog, tutorial, programming, c++]
-img_path: /assets/assets-2023-11-01/
+categories: [Tutorials 📚]
+tags: [blog 📝, tutorial 📖, programming 💻, c++]
+img_path: /assets/assets-2023-11-01/ 🖼️
 ---
+
 ## Prerequisites for this tutorial:  
 - Visual studio, [here](https://www.3dgep.com/cpp-fast-track-1-getting-started/) is a step by step tutorial to download it, you can get the latest version of this IDE which is 2022 at the time of writing this.
 - [Basic template](https://github.com/jbikker/tmpl8), explained below.

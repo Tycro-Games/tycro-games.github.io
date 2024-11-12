@@ -1,11 +1,12 @@
 ---
-title: Learning-Raytracing-in-8-weeks | Area Lights | Part 1
+title: Learning-Raytracing-in-8-weeks | Area Lights | Part 1 💡
 date: 2024-02-24 14:10:00 +0200
-categories: [Learning, Log, Raytracing]
-tags: [blog, programming, c++, raytracing, graphics, voxels]
+categories: [Learning 📚, Log 📖, Raytracing 🌐]
+tags: [blog 📝, programming 💻, c++, raytracing 🌟, graphics 🎨, voxels 🔳]
 math: true
-img_path: /assets/assets-2024-02-24/
+img_path: /assets/assets-2024-02-24/ 🖼️
 ---
+
 # Intro
 Hello, this is the second article of an 8 part series where I write down what I've learned about Raytracing on the CPU with voxels (which is of course in C++). I have used [this](https://github.com/jbikker/voxpopuli) template to which I have added features and refactored over the span of the 8 weeks.
 Here is the overview:
