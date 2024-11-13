@@ -1,5 +1,5 @@
 ---
-title: Learning-Raytracing-in-8-weeks | Area Lights | Part 1 💡
+title: Learning-Raytracing-in-8-weeks | Area Lights | Part 1
 date: 2024-02-24 14:10:00 +0200
 categories: [Learning 📚, Log 📖, Raytracing 🌐]
 tags: [blog 📝, programming 💻, c++, raytracing 🌟, graphics 🎨, voxels 🔳]
