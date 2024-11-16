@@ -63,7 +63,7 @@ I initially tried using the 2D tile editor in Unreal Engine, but I found [Tiled]
   <div style="flex: 1; font-size: 1.5em; display: flex; align-items: center;">
     Incorporated an A* pathfinding algorithm to generate roads between specified points. The algorithm avoids obstacle objects, ensuring that roads go around the island's gameplay objectives or props.
   </div>
-  <img src="/assets/portfolio/blockD/A*Unity.gif" style="flex-shrink: 0; max-width: 50%; object-fit: contain;" alt="A* Pathfinding for Road Generation" />
+  <img src="/assets/portfolio/blockD/AUnity.gif" style="flex-shrink: 0; max-width: 50%; object-fit: contain;" alt="A* Pathfinding for Road Generation" />
 </div>
 ---
 
