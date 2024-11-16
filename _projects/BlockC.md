@@ -7,15 +7,22 @@ categories: [💻C++, Raytracing 🌟 ,🎓University, Graphics 🎨, Voxels �
 main_category: University Projects
 date: 2024-04-02
 ---
-## 🛠️ Technologies Used:
-- **C++**: Developed core game logic and the raytracing algorithm.
-- **GLFW**: Managed graphics rendering, window handling, and input events to streamline the interface.
-- **ImGui**: Used to create an user interface for real-time control over raytracing parameters like light intensity and reflection settings.
+
 ## 🎓 About the Block
 
 This project was part of my university curriculum, where the goal was to implement a raytracing engine in 8 weeks using the provided [template](https://github.com/jbikker/voxpopuli), focusing on voxel-based rendering. I designed and developed the core raytracing algorithm, which runs entirely on the CPU, allowing it to simulate lighting effects like shadows, reflections, and refractions. 
 
 The project served as my introduction into graphics programming.
+
+## 📂 Source Code & Template
+
+The game is based on a template I received during the block, which you can find [here on GitHub](https://github.com/Tycro-Games/Raytracer-VoxPopuli).
+
+## 🛠️ Technologies Used:
+- **C++**: Developed core game logic and the raytracing algorithm.
+- **GLFW**: Managed graphics rendering, window handling, and input events to streamline the interface.
+- **ImGui**: Used to create an user interface for real-time control over raytracing parameters like light intensity and reflection settings.
+
 
 ## ⚙️ Key Highlights:
 ---
@@ -74,6 +81,3 @@ An exploration of Beer’s Law to simulate light absorption for semi-transparent
 
 <iframe frameborder="0" src="https://itch.io/embed/2621651" width="552" height="167"><a href="https://tycro-dev.itch.io/raytracing-block-c">Block C Raytracing | The Wall Crawler by Tycro Games</a></iframe>
 
-## 📂 Source Code & Template
-
-The game is based on a template I received during the block, which you can find [here on GitHub](https://github.com/Tycro-Games/Raytracer-VoxPopuli).

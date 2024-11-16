@@ -13,14 +13,18 @@ date: 2022-12-28
 
 **AUSS** is a **top-down shooter** developed for my **Breda University** intake, using **C++** and **SDL2**. The project embraces the theme **"Bounce"**, where the core mechanic revolves around shooting projectiles that reflect on the tiles in the level.
 
-## 🛠️ Technologies Used:
-- **C++**: Game logic and core programming
-- **SDL2**: Graphics, window management, and input handling
 
 ## 🎓 About the Intake
 
 The **Creative Media & Game Technologies** program at **Breda University of Applied Sciences** has a selective admission process, where applicants showcase their skills through a hands-on project. The "Bounce" theme challenged me to combine creative thinking with technical development.
 
+## 📂 Source Code & Template
+
+The game is based on a template I received during the intake, which you can find [here on GitHub](https://github.com/Tycro-Games/AUSS).
+
+## 🛠️ Technologies Used:
+- **C++**: Game logic and core programming
+- **SDL2**: Graphics, window management, and input handling
 
 ## ⚙️ Key Highlights:
 - **Wave System**: The game is structured in **waves of enemies**. Players need to clear the current wave to move to the next, and the game progressively becomes more challenging. The **enemy spawner** becomes increasingly difficult with each wave. 
@@ -36,6 +40,4 @@ The **Creative Media & Game Technologies** program at **Breda University of Appl
 
 <iframe frameborder="0" src="https://itch.io/embed/1607830" width="552" height="167"><a href="https://tycro-dev.itch.io/auss">An Unrealistic Spaceship Simulator by Tycro Games</a></iframe>
 
-## 📂 Source Code & Template
 
-The game is based on a template I received during the intake, which you can find [here on GitHub](https://github.com/Tycro-Games/AUSS).

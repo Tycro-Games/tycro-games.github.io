@@ -13,6 +13,10 @@ This project was a collaboration between students at **Breda University of Appli
 
 The tool was developed using **C++** and integrated into **Unreal Engine**. The initial prototype was built in **Unity**.
 
+## 📂 Source Code
+
+This project was hosted on **Perforce** as part of a collaborative workflow, and the source code is not publicly available.
+
 ## 🛠️ Skills Developed
 - **C++ Development**: Implemented the tool’s core logic and Unreal Engine integration.  
 - **Agile Methodology**: Worked iteratively in a team, conducting regular stand-ups and sprints.  
@@ -71,6 +75,3 @@ I initially tried using the 2D tile editor in Unreal Engine, but I found [Tiled]
 In addition to creating the procedural tool, I also created the trailer for this project.
 <iframe width="1120" height="650" src="https://www.youtube.com/embed/zk-24I7OJf8?si=GfJ0t553i__HbgYu" title="Game Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-## 📂 Source Code
-
-This project was hosted on **Perforce** as part of a collaborative workflow, and the source code is not publicly available.
