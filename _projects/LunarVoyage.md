@@ -1,6 +1,6 @@
 ---
 layout: project
-title: Lunar Voyage
+title: A Tower Defense made in Unity | Lunar Voyage
 description: A 2D prototype made in Unity focused on dynamic pathfinding.
 image: /assets/portfolio/lunar-voyage/lunar-voyage.png
 categories: [💻Unity, C#, 🧭A* Pathfinding, ⚙️Prototype, 🛠️Tools, 🎮Gameplay Programming]

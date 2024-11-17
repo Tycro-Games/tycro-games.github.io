@@ -1,9 +1,9 @@
 ---
 layout: project
-title: "University Intake Project | An Unrealistic Spaceship Simulator"
-description: "A C++ and SDL2 project built for Breda University's intake with a 'Bounce' theme."
+title: "A 2D top down game made in C++ and SDL2 | An Unrealistic Spaceship Simulator"
+description: "A C++ and SDL2 project built for Breda University's intake, having the theme 'Bounce'."
 image: /assets/portfolio/auss-preview.png
-categories: [C++, 🎮Gameplay Programming, 🎓University]
+categories: [C++, 🎮Gameplay Programming, 🎓University Intake]
 main_category: Personal Projects
 date: 2022-12-28
 ---
