@@ -3,7 +3,7 @@ layout: project
 title: "Raytracing on the CPU"
 description: "CPU based Raytracer for voxels in C++"
 image: /assets/assets-2024-03-02/render.png
-categories: [C++, Raytracing 🌟 ,🎓University, Graphics 🎨, Voxels 🔳]
+categories: [C++, 🌟Raytracing  ,🎓University, 🎨Graphics , 🔳Voxels ]
 main_category: University Projects
 date: 2024-04-02
 ---

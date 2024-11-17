@@ -1,9 +1,9 @@
 ---
 layout: project
-title: Custom Game Engine Experimentation
-description: Showcasing the development of a cross-platform engine demo with features including particle systems, ECS architecture, inspector hierarchies, and GLTF support.
+title: Custom Game Engine
+description: Showcasing the development of a cross-platform engine demo with features including particle systems, ECS architecture, inspector hierarchies, and GLTF support for 3D models.
 image: assets/portfolio/Y2/A/preview.png
-categories: [C++, 🔧Engine Development, 🌍Cross-Platform]
+categories: [C++, 🔧Engine Development, 🌍Cross-Platform, 🎓University, 🛠️Tools]
 
 main_category: University Projects
 date: 2024-11-08
