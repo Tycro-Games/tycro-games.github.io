@@ -22,7 +22,7 @@ Grand Strategy games are a niche genre that appeal only to a smaller portion of 
 In this article I will explain how one can tackle the **rendering** challenges involved when creating a typical Grand strategy game from Paradox Interactive such as Europa Universalis 4. By the end of the article you are going to have a procedural landmass, water and two map modes that you can switch between.
 
 ### Showcase what we are going to do
-
+// video
 
 ### Body
 
@@ -46,13 +46,13 @@ Show some relevant eu4 snippets with:
 ### Conclusion
 *Summarize what the article has been about, future ideas for the project. Problems that you encountered that were not discussed in the body.*
 
-Basic starting point for creating a technologies that aid in creation of grand strategy games.
+Basic starting point for rendering that could serve a Grand Strategy engine.
 
 Future ideas:
 
-- Tesselation shaders to generate the mesh
 - Pipeline for generating procedural grand strategy worlds
 - Rivers and lakes
 - Foliage and cities
-- Political map mode
+- Infrastructure for creating cities based on provinces
+- Spline based borders as well as text
 
