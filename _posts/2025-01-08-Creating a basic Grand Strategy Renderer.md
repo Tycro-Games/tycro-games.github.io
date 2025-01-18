@@ -1,5 +1,5 @@
 ---
-title: TO DO
+title: Creating a basic Grand Strategy Renderer
 date: 2025-01-08 14:10:00 +0200
 categories: [Learning 📚, Log 📖, Raytracing 🌐]
 tags: [blog 📝, programming 💻, c++, 🔀procedural Generation , 🎓university, 🎨graphics , 🌍Grand Strategy]
@@ -18,7 +18,7 @@ Some ideas:
 ### Introduction
 *Explain what the audience can expect out of this article. Explain what you are going to explain.*
 
-How to create in OpenGL a procedural mesh that can serve as a basis for more complex grand strategy map modes.
+
 
 ### Body
 *This can be thought of as the story of the project. What are did you set out to create? What did you actually get done? What features does it have?*
