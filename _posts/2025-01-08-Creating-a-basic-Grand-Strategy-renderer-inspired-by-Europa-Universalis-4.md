@@ -13,7 +13,7 @@ img_path: /assets/assets-2025-01-08/
 
 ## This is where I need to establish the relevance of grand strategy games!
 
-Grand Strategy games (GTG) are a niche genre that appeal only to a smaller portion of the strategy audience. Their complex simulations of the world make it a hard genre to get into as well as a difficult one to develop for. The complex systems that guide diplomacy, economy and even history are being utilized more than just entertainment. The area of research around these games revolves around "Serious Games" for history, economy and medieval diplomacy. Here are a few research papers discussing those topics:
+Grand Strategy games (GTG) are a niche genre that appeal only to a smaller portion of the strategy audience. Their complex simulations of the world make it a hard genre to get into as well as a difficult one to develop for. The complex systems that guide diplomacy, economy and even history are being utilized for more than just entertainment. The area of research around these games revolves around "Serious Games" for history, economy and medieval diplomacy. Here are a few research papers discussing those topics:
 - [Grand Strategy Games As A Pedagogical Tool For Introductory Economics: A Student's Perspective](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4986923#paper-references-widget)
 - [Simulating medieval connections Grand strategy games and social network analysis](https://jhnr.net/articles/81/files/660bbe5c7c0b0.pdf)
 - [Grand Strategy Games and Economies](https://www.diva-portal.org/smash/get/diva2:1686298/FULLTEXT01.pdf)
@@ -22,7 +22,7 @@ Grand Strategy games (GTG) are a niche genre that appeal only to a smaller porti
 
 ## Current state of tools for grand strategy
 
-Most resources on the internet are providing information on how to create GTG games in an already established engine such as Unity, Godot or Unreal Engine. In this article my aim is to make the rendering aspect of this genre easier to approach, in order to contribute towards making engines and tools for creating GTG more accessible towards game developers.
+Most resources on the internet are providing information on how to create GTG games in an already established engine such as Unity, Godot or Unreal Engine. In this article, my aim is to make the rendering aspect of this genre easier to approach, thereby contributing towards the development of engines and tools that make the creation of GTGs more accessible for game developers.
 
 ## This is what I will present in my article
 
@@ -52,7 +52,7 @@ I am going to use C++ and OpenGL for showcasing the concepts, using other langua
 
 ![heightmap_texture_of_the_world]({{ page.img_path }}heightmap.bmp)
 
-This texture can be used to extract the height data from a single channel in order to create a 3D mesh. We can create this mesh by by populating the OpenGL buffers:
+This texture can be used to extract the height data from a single channel in order to create a 3D mesh. We can create this mesh by populating the OpenGL buffers:
 ```cpp
 
 mesh->SetAttribute(Mesh::Attribute::Position, meshVertices);
@@ -71,7 +71,7 @@ A procedural mesh for terrain can be thought of as a plane, which needs to have 
 
 ## Possible mesh optimizations
 
-In EU4 the heightmap is `5632x2048`, that 11,536,896 in vertices and 23,047,808 triangles. This is too much geometry to render and most of it will not even be visible. If you do not mind creating a low resolution mesh and downscale the image or resizing the image to something smaller you can skip this optimization step.
+In EU4 the heightmap is `5632x2048`, that is 11,536,896 in vertices and 23,047,808 triangles. This is too much geometry to render and most of it will not even be visible. If you do not mind creating a low resolution mesh and downscaling or resizing the image to something smaller, you can skip this optimization step.
 
 ### GeoMipMapping | CPU optimization
 #### Description
