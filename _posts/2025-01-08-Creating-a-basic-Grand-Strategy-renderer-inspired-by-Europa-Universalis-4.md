@@ -125,7 +125,7 @@ uniform vec3 base_colors[MAX_LAYERS];
 uniform float base_color_stength[MAX_LAYERS]; 
 //define where this layer starts and where the previous one ends, [0, 1]
 uniform float base_heights[MAX_LAYERS]; 
-//linear blend for two layers, [0, 1]
+//linear blend between this and the previous layer, [0, 1]
 uniform float base_blends[MAX_LAYERS]; 
 //will scale the uv coordinates of the texture
 uniform float base_scale[MAX_LAYERS]; 
@@ -155,7 +155,15 @@ We can get the minimum and maximum when we are creating the buffers on the CPU, 
   }
     
 ```
-To map each layer, we need to get a percentage for the vertex height using the inverse lerp function.
+To map each layer, we need to get a percentage for the vertex height using the inverse lerp function. This percentage will define the draw strength using the blend, you can see how this looks below:
+
+![noBlend]({{ page.img_path }}noBlend.png)
+_No Blending_
+![Blend]({{ page.img_path }}blend.png)
+_With Blending_
+
+Shader code for getting the draw strength:
+
 ```cpp
 
 float inverse_lerp(float a, float b, float value){
@@ -168,30 +176,40 @@ void texture_terrain(out vec4 color, out vec3 normal)
   float hPercent = inverse_lerp(min_max_height.x, min_max_height.y, height);
 
     for (int i = 0; i < MAX_LAYERS; i++){
-            //get how much of this layer we should draw
-            float drawStrength = inverse_lerp(-base_blends[i]/2 - EPSILON, base_blends[i]/2, hPercent - base_heights[i]);
-            //early return
-            if (drawStrength < EPSILON)
-            {
-                continue;
-            }
-            //get our color
-            vec3 baseCol = base_colors[i] * base_color_stength[i];
-
-            //triplanar albedo and normal sample, we will get to triplanar sampling soon!
-            vec4 textureColor = triplanar_uv(v_position, v_normal, base_scale[i], s_diffMap,i) * (1.0 - base_color_stength[i]);
-
-            vec3 textureNormal = triplanar_normal(v_position, v_normal, base_scale[i], s_normMap, i);  
-
-            
-            
-            //final color
-            color = color * (1.0 - drawStrength) + vec4((baseCol + textureColor.rgb) * drawStrength, 1.0);
-        
-            //final normal
-            normal = normalize(mix(normal, textureNormal, drawStrength));
-
+        //get how much of this layer we should draw [0, 1]
+        //EPISILON = a very small float to prevent divison by 0
+        float drawStrength = inverse_lerp(-base_blends[i]/2 - EPSILON, base_blends[i]/2, hPercent - base_heights[i]);
+        //early return
+        if (drawStrength < EPSILON)
+        {
+            continue;
         }
+        //color and texture albedo
+
+        //normals
+
+        //using draw strength for final color and normal
+         
+        }
+```
+
+Computing the color is easy
+```cpp
+   //get our color
+  vec3 baseCol = base_colors[i] * base_color_stength[i];
+
+  //sample texture albedo
+  
+  //sample texture normal
+
+  
+  
+  //final color
+  color = color * (1.0 - drawStrength) + vec4((baseCol + textureColor.rgb) * drawStrength, 1.0);
+
+  //final normal
+  normal = normalize(mix(normal, textureNormal, drawStrength));
+
 ```
 #### How Grand Strategy games look & article outline?
 
