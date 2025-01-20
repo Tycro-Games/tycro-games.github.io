@@ -55,11 +55,15 @@ The layer textures can be found below, in the order used for the shader code:
 - [third](https://polyhaven.com/a/rock_face)
 - [forth](https://polyhaven.com/a/snow_02)
 
+> To follow along you need a province and color map, as well as the layer pairs (diffuse + normal).
+{: .prompt-info }
+
 ## Introducing a heightmap
 
 ![heightmap_texture_of_the_world]({{ page.img_path }}heightmap.bmp)
 _Heightmap from EU4_
 This texture can be used to extract the height data from a single channel in order to create a 3D mesh. We can create this mesh by populating the OpenGL buffers:
+
 ```cpp
 
 mesh->SetAttribute(Mesh::Attribute::Position, meshVertices);
@@ -69,6 +73,7 @@ mesh->SetAttribute(Mesh::Attribute::Texture, meshUVs);
 mesh->SetAttribute(Mesh::Attribute::Normal, meshNormals);
 
 ```
+
 A procedural mesh for terrain can be thought of as a plane, which needs to have at least the same number of vertices as the resolution of the heightmap. We will then read the data of the heightmap texture and add it to the y axis. There are numerous tutorials that will provide code and explanations on how to achieve this.
 - [OGLDEV](https://youtu.be/xoqESu9iOUE?si=HWXc-EfHuPOQWhgq)
 - [LearnOpenGL](https://learnopengl.com/Guest-Articles/2021/Tessellation/Height-map)
@@ -119,11 +124,12 @@ I would recommend first using the CPU optimization and then, going for tesselati
 
 ## Texturing
 ### Assets outline
-This is a high level overview of all textures I used in my renderer. I will provide the needed assets for this tutorial.
+This is a high level overview of all textures I used in my renderer. You can download all assets needed to follow along [here](#assets-outline).
 ![asset_diagram]({{ page.img_path }}file_structure(1).png)
-> To follow along you need a province and color map, as well as the layer pairs (diffuse + normal).
-{: .prompt-info }
+
+
 The easiest way I found to texture the whole terrain is based on the height. That means we need to provide some extra information for each vertex to the fragment shader. We define a number of layers; sand, grass, mountain and snow. A layer will have the following properties:
+
 ```cpp
 //each vertex should pass its height to the fragment shader
 in float height;
@@ -166,6 +172,7 @@ We can get the minimum and maximum when we are creating the buffers on the CPU, 
   }
     
 ```
+
 To map each layer, we need to get a percentage for the vertex height using the inverse lerp function. This percentage will define the draw strength using the blend, you can see how this looks below:
 
 ![noBlend]({{ page.img_path }}noBlend.png)
@@ -230,7 +237,87 @@ int i = Texture index we want to sample
 vec4 value = texture(s_diffMap, vec3(uv,i));
 ```
 
+### Creating texture arrays
+To create texture arrays you can do:
+
+```cpp
+    // diffuse
+    glGenTextures(1, &m_materialDifuseArray);
+    //saves the id
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m_materialDifuseArray);
+
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+    //the same for normals
+```
+
+Then you can add each texture to the proper texture array in the order they need to be rendered. Keep in mind, that before binding them, you need to do this once for each array at the start, or as soon as a texture array is changed (if you support that at runtime):
+
+```cpp
+void bee::internal::ReadGLTexture(std::vector<uint8_t>& data, unsigned int index)
+{
+    const GLuint textureID = index;
+    glBindTexture(GL_TEXTURE_2D, textureID);
+
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+//you need to call for diffuse and normal array
+void Renderer::FinalizeTextureArray(std::vector<std::shared_ptr<Texture>> textures, uint32_t arrayLocation)
+{
+  //the code assumes all textures have the same resolution
+    const auto width = textures[0]->Image->GetWidth();
+
+    const auto height = textures[0]->Image->GetHeight();
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, arrayLocation);
+    // diffuse and normal maps
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, width, height, static_cast<GLsizei>(textures.size()));
+
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    //all 4 channels RGBA
+    std::vector<uint8_t> data(width * height * 4);
+
+    for (int i = 0; i < textures.size(); ++i)
+    {
+        //will bind individual textures to be added to the array
+        bee::internal::ReadGLTexture(data, textures[i]->Image->GetTextureId());
+
+        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
+    }
+
+    // Generate mipmaps
+    glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+}
+```
+
+Before rendering, binding them is pretty straightforward:
+```cpp
+void bee::internal::BindTextureArray(GLuint id, GLint location)
+{
+    glActiveTexture(GL_TEXTURE0 + location);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, id);
+
+    glUniform1i(location, location);
+}
+//before drawing
+bee::internal::BindTextureArray(m_materialDifuseArray, TEXTURE_ARRAY_LOCATION);
+bee::internal::BindTextureArray(m_materialNormalArray, NORMAL_TEXTURE_ARRAY_LOCATION);
+
+```
+Now we can carry on, creating the height layers.
+
 Below, there is the last part of the shader code when texturing the terrain.
+
 ```cpp
    //get our color
   vec3 baseCol = base_colors[i] * base_color_stength[i];
@@ -257,7 +344,8 @@ The result looks somehow better when we try scaling the textures by some factor.
 _Triplanar sampling for the diffuse and normal textures_
 
 As the name implies, we have to sample each texture three times on each axis.
-```c
+
+```cpp
 vec4 triplanar(vec3 pos, vec3 normal, float scale, sampler2DArray textures, int idx){
     
     vec2 uv_x=(pos.zy*scale);
@@ -277,9 +365,10 @@ vec4 triplanar(vec3 pos, vec3 normal, float scale, sampler2DArray textures, int 
     return dx * weights.x + dy * weights.y + dz * weights.z;
 }
 ```
+
 To get the normals we are essentially doing the same thing we did above, however, we need to compute the tangent matrix which is a bit out of scope to explain properly here. If you want to get a deeper understanding I recommend reading [this](https://bgolus.medium.com/normal-mapping-for-a-triplanar-shader-10bf39dca05a) article by Ben Golus.
 
-```c
+```cpp
 //map the normals to [-1, 1]
 vec3 unpack_normal(vec4 packedNormal){
     vec3 normal = packedNormal.rgb * 2.0 - 1.0;
@@ -332,17 +421,20 @@ vec3 triplanar_normal(vec3 pos, vec3 normal, float scale, sampler2DArray texture
     return outputNormal;
 }
 ```
+
 We can enhance the look of our world by using a color map, which we will sample across the whole mesh.
 ![colormap]({{ page.img_path }}colormap_spring.bmp)
 _Color map from EU4_
 ![alt text]({{ page.img_path }}no_color_map.png)
-```c
+
+```cpp
 //stores the result in mat.albedo (vec4) and normal (vec3)
 texture_terrain(mat.albedo, normal);
 //we multiply by the texture the previous result
 mat.albedo = mat.albedo * texture(s_diffuse,v_texture);
 
 ```
+
 ### MENTION DOWNSIDES PERFORMANCE and 45 angle
 
 ![alt text]({{ page.img_path }}color_map.png)
@@ -350,10 +442,103 @@ mat.albedo = mat.albedo * texture(s_diffuse,v_texture);
 ![spain]({{ page.img_path }}col_map_spain.png)
 
 The color map gives a much more detailed look to our terrain. We could even add an interpolation factor to control how strong the effect of the colormap is.
-```c
+
+```cpp
 mat.albedo = mix(mat.albedo, mat.albedo * texture(s_diffuse, v_texture), colorMapStrength);
 ```
 
+## Creating borders
+
+- Using the province map create a virtual texture, mark edges with white
+- 
+![province_map]({{ page.img_path }}provinces.bmp)
+
+This is code for terrain borders
+```cpp
+vec4 CreateTerrainBorders(){
+    float borderScale= 0.5;
+    vec2 texelSize = borderScale  / vec2(textureSize(s_provinceMap, 0));
+    //province pixel color
+    vec4 center = texture(s_provinceMap, v_texture1);
+
+    vec4 left = texture(s_provinceMap, v_texture1 + vec2(-texelSize.x, 0.0));
+    vec4 right = texture(s_provinceMap, v_texture1 + vec2(texelSize.x, 0.0));
+    vec4 up = texture(s_provinceMap, v_texture1 + vec2(0.0, texelSize.y));
+    vec4 down = texture(s_provinceMap, v_texture1 + vec2(0.0, -texelSize.y));
+
+    bool isEdge = any(notEqual(center, left)) || 
+                any(notEqual(center, right)) || 
+                any(notEqual(center, up)) || 
+                any(notEqual(center, down));
+
+    float provinceColorFactor = 0.6;
+    //the edges will be a color between black and the province color
+    vec4 color = isEdge? mix(vec4(0.0), center, provinceColorFactor): center;
+
+
+    return color;
+}
+```
+
+### Generating a DF Texture from the province map
+- compute shader explanation
+### This is code for province map borders
+This time we are using the generated texture
+```cpp
+vec4 CreatePoliticalBorders(){
+    float borderScale = 0.5;
+    vec2 texelSize = borderScale  / vec2(textureSize(s_provinceMap, 0));
+    //province pixel color
+    vec4 center = texture(s_provinceMap, v_texture1);
+
+    vec4 left = texture(s_provinceMap, v_texture1 + vec2(-texelSize.x, 0.0));
+    vec4 right = texture(s_provinceMap, v_texture1 + vec2(texelSize.x, 0.0));
+    vec4 up = texture(s_provinceMap, v_texture1 + vec2(0.0, texelSize.y));
+    vec4 down = texture(s_provinceMap, v_texture1 + vec2(0.0, -texelSize.y));
+
+    bool isEdge = any(notEqual(center, left)) || 
+                any(notEqual(center, right)) || 
+                any(notEqual(center, up)) || 
+                any(notEqual(center, down));
+
+    //sample Distance Field texture and normalize
+    float a = texture(s_bordersMap, v_texture1).r / length(20);
+    //the texture might still have pixels that are not normalized due to the naive approach for creating it
+    if(a > 1.0){
+        a = 1.0;
+    }
+
+    float thick= 0.8;
+    float soft= 0.99;
+    //https://www.youtube.com/watch?v=1b5hIMqz_wM
+    a = smoothstep(1.0 - thick - soft, 1.0- thick + soft, a);
+
+    float provinceColorFactor = 0.6;
+    //the edges will be a color between black and the province color
+    vec4 color = isEdge? mix(vec4(0.0), center, provinceColorFactor) : center;
+    //apply gradient
+    color*=a;
+
+    return color;
+}
+```
+
+
+In the end we can create two different function for drawing borders depending on the map mode, which can be a boolean for now:
+```cpp
+  //if this uniform is true, we have to draw the province map
+  if(use_province_texture){
+    //no need to apply terrain texturing
+    //applies gradient and only samples province map
+      mat.albedo = CreatePoliticalBorders();
+  }
+  //draw the terrain with borders over it
+  else{
+    //we will texture using the layers before this
+    //province borders are maintain the previous color from texturing by multiplying with 1
+    mat.albedo *= CreateTerrainBorders();
+  }
+```
 ### Could also do texture bombing here ???
 
 #### How Grand Strategy games look & article outline?
