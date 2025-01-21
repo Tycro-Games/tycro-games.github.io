@@ -7,10 +7,6 @@ math: true
 img_path: /assets/assets-2025-01-08/
 ---
 
-
-### Introduction
-*Explain what the audience can expect out of this article. Explain what you are going to explain.*
-
 ## This is where I need to establish the relevance of grand strategy games!
 
 Grand Strategy games (GTG) are a niche genre that appeal only to a smaller portion of the strategy audience. Their complex simulations of the world make it a hard genre to get into as well as a difficult one to develop for. The complex systems that guide diplomacy, economy and even history are being utilized for more than just entertainment. The area of research around these games revolves around "Serious Games" for history, economy and medieval diplomacy. Here are a few research papers discussing those topics:
@@ -32,13 +28,9 @@ In this article I will explain how one can tackle the **rendering** challenges i
 By the end of the article you are going to have a procedural landmass, water and two map modes that you can switch between.
 
 ### Showcase what we are going to do
-// video
+![alt text](../assets/assets-2025-01-08/showcase.gif)
 I am going to use C++ and OpenGL for showcasing the concepts, using other languages and graphics API should be possible for all that we will discuss. It is expected that the reader knows some OpenGL.
 
-
-### Body
-
-*This can be thought of as the story of the project. What are did you set out to create? What did you actually get done? What features does it have?*
 
 #### Outline
 1. Generating procedural mesh [ ]
@@ -421,10 +413,13 @@ vec3 triplanar_normal(vec3 pos, vec3 normal, float scale, sampler2DArray texture
     return outputNormal;
 }
 ```
+As you may already noticed, with Triplanar Mapping we have to do 6 more reads, which does affect performance substantially. I believe there are more efficient approaches to achieve the same thing, however, the simplicity of Triplanar Mapping makes it a decent solution.
 
 We can enhance the look of our world by using a color map, which we will sample across the whole mesh.
+
 ![colormap]({{ page.img_path }}colormap_spring.bmp)
 _Color map from EU4_
+
 ![alt text]({{ page.img_path }}no_color_map.png)
 
 ```cpp
@@ -435,32 +430,24 @@ mat.albedo = mat.albedo * texture(s_diffuse,v_texture);
 
 ```
 
-### MENTION DOWNSIDES PERFORMANCE and 45 angle
-
-![alt text]({{ page.img_path }}color_map.png)
+![eu4_colormap]({{ page.img_path }}color_map.png)
 
 ![spain]({{ page.img_path }}col_map_spain.png)
 
-The color map gives a much more detailed look to our terrain. We could even add an interpolation factor to control how strong the effect of the colormap is.
 
-```cpp
-mat.albedo = mix(mat.albedo, mat.albedo * texture(s_diffuse, v_texture), colorMapStrength);
-```
+## Creating borders from the province map
 
-## Creating borders
-
-- Using the province map create a virtual texture, mark edges with white
-- 
+EU4 provides a handmade voronoi diagram where each province has a unique color. We can compute the edges by checking each pixel's neighbors, if they do not share the same color than we have an edge.
 ![province_map]({{ page.img_path }}provinces.bmp)
 
-This is code for terrain borders
 ```cpp
 vec4 CreateTerrainBorders(){
     float borderScale= 0.5;
+    //we can use this factor to scale the borders
     vec2 texelSize = borderScale  / vec2(textureSize(s_provinceMap, 0));
     //province pixel color
     vec4 center = texture(s_provinceMap, v_texture1);
-
+    //get pixels
     vec4 left = texture(s_provinceMap, v_texture1 + vec2(-texelSize.x, 0.0));
     vec4 right = texture(s_provinceMap, v_texture1 + vec2(texelSize.x, 0.0));
     vec4 up = texture(s_provinceMap, v_texture1 + vec2(0.0, texelSize.y));
@@ -472,17 +459,25 @@ vec4 CreateTerrainBorders(){
                 any(notEqual(center, down));
 
     float provinceColorFactor = 0.6;
-    //the edges will be a color between black and the province color
-    vec4 color = isEdge? mix(vec4(0.0), center, provinceColorFactor): center;
-
+    //we are going to multiply by the previous color of the terrain
+    vec4 color = isEdge ? mix(vec4(0.0), vec4(1.0), provinceColorFactor): vec4(1.0);
 
     return color;
 }
 ```
 
-### Generating a DF Texture from the province map
-- compute shader explanation
-### This is code for province map borders
+![province_terrain]({{ page.img_path }}province_border.png)
+_border scale of 0.2_
+
+![province_terrain]({{ page.img_path }}province_thick.png)
+_border scale of 0.5_
+
+### Making a simple political mode
+
+![no_filter](../assets/assets-2025-01-08/gradient_no_filter.png)
+_Filter set to nearest neighbor so the effect is easier to see_
+
+Adding province borders is the same as before, only the output will return the color of the map, instead of white.
 This time we are using the generated texture
 ```cpp
 vec4 CreatePoliticalBorders(){
@@ -501,73 +496,184 @@ vec4 CreatePoliticalBorders(){
                 any(notEqual(center, up)) || 
                 any(notEqual(center, down));
 
-    //sample Distance Field texture and normalize
-    float a = texture(s_bordersMap, v_texture1).r / length(20);
-    //the texture might still have pixels that are not normalized due to the naive approach for creating it
-    if(a > 1.0){
-        a = 1.0;
-    }
-
-    float thick= 0.8;
-    float soft= 0.99;
-    //https://www.youtube.com/watch?v=1b5hIMqz_wM
-    a = smoothstep(1.0 - thick - soft, 1.0- thick + soft, a);
-
+    //gradient code
+    ...
     float provinceColorFactor = 0.6;
     //the edges will be a color between black and the province color
     vec4 color = isEdge? mix(vec4(0.0), center, provinceColorFactor) : center;
     //apply gradient
-    color*=a;
 
     return color;
 }
 ```
 
 
-In the end we can create two different function for drawing borders depending on the map mode, which can be a boolean for now:
+
+![_provinceOnly]({{ page.img_path }}province_only.png)
+
+_terrain with the province map and borders_
+
+To create a gradient we are going to use compute shaders in OpenGL. If you have never used them before you can read [this](https://learnopengl.com/Guest-Articles/2022/Compute-Shaders/Introduction) article to get up to speed.
+
+We need to create a new virtual image in OpenGL, after that we can go through or first pass, which will generate a texture with the province borders:
 ```cpp
-  //if this uniform is true, we have to draw the province map
-  if(use_province_texture){
-    //no need to apply terrain texturing
-    //applies gradient and only samples province map
-      mat.albedo = CreatePoliticalBorders();
-  }
-  //draw the terrain with borders over it
-  else{
-    //we will texture using the layers before this
-    //province borders are maintain the previous color from texturing by multiplying with 1
-    mat.albedo *= CreateTerrainBorders();
-  }
+#version 460 core
+
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout(rgba32f, binding = 0) uniform image2D imgOutput;
+layout(binding = 1) uniform sampler2D s_provinceMap;
+
+void main(){
+
+
+    ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+    
+    ivec2 textureSize = textureSize(s_provinceMap, 0);
+    
+    vec2 texelSize = 1.0 / vec2(texSize); 
+    vec2 uv = (vec2(pixelCoords) + 0.5) * texelSize; 
+    
+    // Sample neighboring pixels
+    vec4 center = texture(s_provinceMap, uv);
+    vec4 left = texture(s_provinceMap, uv + vec2(-texelSize.x, 0.0));
+    vec4 right = texture(s_provinceMap, uv + vec2(texelSize.x, 0.0));
+    vec4 up = texture(s_provinceMap, uv + vec2(0.0, texelSize.y));
+    vec4 down = texture(s_provinceMap, uv + vec2(0.0, -texelSize.y));
+   
+    
+    // Check if current pixel is on an edge
+    bool isEdge = any(notEqual(center, left)) ||
+                  any(notEqual(center, right)) ||
+                  any(notEqual(center, up)) ||
+                  any(notEqual(center, down));
+
+    
+    // Write result to output image
+    vec4 result = isEdge ? vec4(1.0): vec4(0.0);
+    imageStore(imgOutput, pixelCoords, result);
+}
 ```
-### Could also do texture bombing here ???
+The texture would look something like this:
 
-#### How Grand Strategy games look & article outline?
+![black_lines](../assets/assets-2025-01-08/blac_lines.png)
 
-Show some relevant eu4 snippets with:
-## P1
-- Optimization techniques for the mesh: 
-  - Tesselation shaders
-  - Geo mipmapping
-  - Frustum Culling
+To run the compute shader we have to run the following code on the CPU:
+```cpp
+    
+    m_bordersCompute->Activate();
+    //bind the province map
+    internal::SetTexture(provinceTexture, 1);
+    //bind the output image
+    glBindImageTexture(0, edgeDetectionTexture->GetTextureId(), 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+    //start the compute
+    glDispatchCompute(edgeDetectionTexture->Image->GetWidth(), edgeDetectionTexture->Image->GetHeight(), 1);
+    //waits for the compute shader to finish
+    glMemoryBarrier(GL_ALL_BARRIER_BITS);
+```
 
-### P2
-- Terrain mesh and texturing with bombing triplanar, extra work for Height based blending and splatting
-- using a color map for texturing
-- map modes
-  - how one might implement this using multiple shaders instead of only one
-  - Gradient with compute shaders for the borders
-### Short Extra
-- simple and easy water to add
+To create a Distance Field texture we are going to use a naive approach to this that works well enough. We are going to encode the distance to the closest edge in each pixel by checking pixels around it based on a range variable.
 
-### Conclusion
+```cpp
+#version 460 core
+
+//this is going to be slow without utilizing work groups
+layout (local_size_x = 8, local_size_y = 8) in;
+layout(binding = 0, rgba32f) readonly uniform image2D edgeMap;
+layout(binding = 1, rgba32f) writeonly uniform image2D dfOutput;
+
+void main() {
+    ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+    
+    ivec2 texSize = imageSize(edgeMap);
+    
+    //early return
+    if (pixelCoords.x >= texSize.x || pixelCoords.y >= texSize.y) {
+        return;
+    }
+    
+    //initialize the minimum distance
+    float minDistance = float(texSize.x * texSize.y);
+    //this is an approximation
+    int range = 70;
+    for (int y = -range; y <= range; ++y) {
+        for (int x = -range; x <= range; ++x) {
+
+            ivec2 neighborCoords = pixelCoords + ivec2(x, y);
+
+            //outside the image
+            if (neighborCoords.x < 0 || neighborCoords.x >= texSize.x ||
+                neighborCoords.y < 0 || neighborCoords.y >= texSize.y) {
+                continue;
+            }
+           float edgeValue = imageLoad(edgeMap, neighborCoords).r;
+            
+            //you would have to adjust the threshold if you are doing another blur pass on the edge texture
+            if (edgeValue > 0.1) { 
+                float distance = length(vec2(x, y));
+                minDistance = min(minDistance, distance);
+            }
+        }
+    }
+    //write output
+    //minDistance needs to be normalized for proper output
+    imageStore(sdOutput, pixelCoords, vec4(minDistance, 0.0, 0.0, 1.0));
+
+}
+```
+
+To run the second pass we are doing nearly the same thing as before.
+
+```cpp
+    m_sdTexture->Activate();
+
+    glBindImageTexture(0, edgeDetectionTexture->GetTextureId(), 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA32F);
+    glBindImageTexture(1, outputTexture->GetTextureId(), 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+    //in order to improve performance for this I am using work groups
+    int numGroupsX = provinceTexture->Image->GetWidth() / 8 + 1;
+    int numGroupsY = provinceTexture->Image->GetHeight() / 8 + 1;
+    glDispatchCompute(numGroupsX, numGroupsY, 1);
+
+    glMemoryBarrier(GL_ALL_BARRIER_BITS);
+```
+
+![distance_field](../assets/assets-2025-01-08/DistanceField.png)
+
+Back in the fragment shader, we can add sample from the Distance Field texture in order to get a gradient:
+
+```cpp
+{
+    //same code as above
+    ...
+    //sample Distance Field texture and normalize
+    float normalization = 20;
+    float a = texture(s_bordersMap, v_texture1).r / normalization;
+    //the texture might still have pixels that are not normalized due to the naive approach for creating it
+    if(a > 1.0){
+        a = 1.0;
+    }
+    //common way to sample a SDF texture
+    //https://www.youtube.com/watch?v=1b5hIMqz_wM
+    float thick= 0.8;
+    float soft= 0.99;
+    a = smoothstep(1.0 - thick - soft, 1.0- thick + soft, a);
+    //apply the gradient
+    color*=a;
+    return color;
+}
+
+```
+
+## Conclusion
 *Summarize what the article has been about, future ideas for the project. Problems that you encountered that were not discussed in the body.*
 
-Basic starting point for rendering that could serve a Grand Strategy engine.
+In this article I wrote about texturing techniques common when creating Grand Strategy maps which I developed over eight weeks for my university project at BUAS, in the CMGT, programming track. I hope this was useful for your and if you would like to develop this further, here are some ideas:
 
-Future ideas:
-
-- Pipeline for generating procedural grand strategy worlds
+- Pipeline for generating procedural grand strategy worlds (as in the New Worlds DLC from EU4)
 - Rivers and lakes
 - Foliage and cities
-- Infrastructure for creating cities based on provinces
-- Spline based borders as well as text
+- Spline based borders
+
+
+![alt text](../assets/assets-2025-01-08/logo.png)
+Thanks for reading my article. If you have any feedback or questions, please feel free to email me at bogdan.game.development@gmail.com .
+
