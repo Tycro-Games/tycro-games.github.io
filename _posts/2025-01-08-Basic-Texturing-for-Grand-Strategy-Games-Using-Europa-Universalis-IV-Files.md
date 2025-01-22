@@ -5,9 +5,7 @@ categories: [Tutorials 📚, Graphics 🎨]
 tags: [blog 📝, programming 💻, c++, 🔀procedural Generation , 🎓university, 🎨graphics , 🔺OpenGL, 🌍grand strategy]
 math: true
 img_path: /assets/assets-2025-01-08/
-image:
-  path: /assets/assets-2025-01-08/cover.png
-  alt: Gif of a Grand Strategy Renderer
+
 ---
 
 Most resources on the internet are providing information on how to create GTG games in an already established engine such as Unity, Godot or Unreal Engine. In this article, my aim is to make the ***rendering*** aspect of this genre easier to approach, thereby contributing towards the development of engines and tools that make the creation of GTGs more accessible.
@@ -15,24 +13,50 @@ Most resources on the internet are providing information on how to create GTG ga
 In this article I will explain how to texture a procedural mesh used in typical Grand Strategy games, like Europa Universalis 4 (EU4). Keep in mind that this article serves more as a base to improve upon, rather than a complete solution for texturing.
 
 ![alt text](../assets/assets-2025-01-08/showcase.gif)
-I am going to use C++ and OpenGL for showcasing the concepts, using other languages and graphics API should be possible for all that we will discuss. It is expected that the reader knows some OpenGL.
+
+## Prerequisites
+
+I am going to use C++ and OpenGL for showcasing the concepts in code. I am expecting the reader has some understanding of graphics programming. I will not explain how to procedurally generate a mesh from this heightmap:
+
+![heightmap_texture_of_the_world]({{ page.img_path }}heightmap.bmp)
+_Heightmap from EU4_
+
+### Creating the mesh on the CPU
+
+I will provide the sources I used to generate my own procedural mesh below:
+
+- [OGLDEV](https://youtu.be/xoqESu9iOUE?si=HWXc-EfHuPOQWhgq)
+- [LearnOpenGL](https://learnopengl.com/Guest-Articles/2021/Tessellation/Height-map)
+
+> If you do not mind creating a low resolution mesh and downscaling or resizing the image to something smaller, you can skip this optimization step.
+{: .prompt-warning }
+
+### Optimizations 
+
+Dividing the mesh into patches and having different levels of detail (LOD) picked based on the camera distance is a common approach towards rendering the mesh more performant. I recommend trying [GeoMipMapping](https://www.youtube.com/watch?v=08dApu_vS4c) which creates LODs for patches on the CPU.
+
+- [OGLDEV](https://www.youtube.com/watch?v=08dApu_vS4c)
+- [paper](https://flipcode.com/archives/article_geomipmaps.pdf)
+
+Another option is to use Tesselation Shaders. This will be a bit more advanced to set up with OpenGL, however, it might be faster than the previous option.
+
+- [OGLDEV](https://youtu.be/GgW3MVOP8_A?si=E2KBs9SAsol77p3p)
+- [LearnOpenGL](https://learnopengl.com/Guest-Articles/2021/Tessellation/Tessellation)
 
 ## Background
 
 Grand Strategy games (GTG) are a niche genre that appeal only to a smaller portion of the strategy audience. Their complex simulations of the world make it a hard genre to get into as well as a difficult one to develop for. The complex systems that guide diplomacy, economy and even history are being utilized for more than just entertainment. The area of research around these games has become more active in the recent years. Grand Strategy games might also be "Serious Games" and will aid in teaching history, economy and medieval diplomacy. Here are a few research papers exploring these topics:
+
 - [Grand Strategy Games As A Pedagogical Tool For Introductory Economics: A Student's Perspective](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4986923#paper-references-widget)
 - [Simulating medieval connections Grand strategy games and social network analysis](https://jhnr.net/articles/81/files/660bbe5c7c0b0.pdf)
 - [Grand Strategy Games and Economies](https://www.diva-portal.org/smash/get/diva2:1686298/FULLTEXT01.pdf)
 - [Digitising Diplomacy: Grand Strategy Video Games as an Introductory Tool for Learning Diplomacy and International Relations](https://www.academia.edu/75509526/Digitising_Diplomacy_Grand_Strategy_Video_Games_as_an_Introductory_Tool_for_Learning_Diplomacy_and_International_Relations)
 
-
-
-
-
-
 ## Assets used in this tutorial
+
 All maps, except for the layers, are from EU4 which you can download [here](https://eu4.paradoxwikis.com/Map_modding).
-The layer textures can be found below, in the order used for the shader code:
+The layer textures can be found below, in the order that they are used:
+
 - [first](https://polyhaven.com/a/coast_sand_02)
 - [second](https://polyhaven.com/a/aerial_grass_rock)
 - [third](https://polyhaven.com/a/rock_face)
@@ -41,75 +65,12 @@ The layer textures can be found below, in the order used for the shader code:
 > To follow along you need a province and color map, as well as the layer pairs (diffuse + normal).
 {: .prompt-info }
 
-## Introducing a heightmap
-
-![heightmap_texture_of_the_world]({{ page.img_path }}heightmap.bmp)
-_Heightmap from EU4_
-This texture can be used to extract the height data from a single channel in order to create a 3D mesh. We can create this mesh by populating the OpenGL buffers:
-
-```cpp
-
-mesh->SetAttribute(Mesh::Attribute::Position, meshVertices);
-mesh->SetIndices(meshIndices);
-mesh->SetAttribute(Mesh::Attribute::Texture, meshUVs);
-//vertex normals
-mesh->SetAttribute(Mesh::Attribute::Normal, meshNormals);
-
-```
-
-A procedural mesh for terrain can be thought of as a plane, which needs to have at least the same number of vertices as the resolution of the heightmap. We will then read the data of the heightmap texture and add it to the y axis. There are numerous tutorials that will provide code and explanations on how to achieve this.
-- [OGLDEV](https://youtu.be/xoqESu9iOUE?si=HWXc-EfHuPOQWhgq)
-- [LearnOpenGL](https://learnopengl.com/Guest-Articles/2021/Tessellation/Height-map)
-
-
-![wireframe]({{ page.img_path }}3D_wireframe.png)
-
-## Possible mesh optimizations
-
-In EU4 the heightmap is `5632x2048`, that is 11,536,896 in vertices and 23,047,808 triangles. This is too much geometry to render and most of it will not even be visible. If you do not mind creating a low resolution mesh and downscaling or resizing the image to something smaller, you can skip this optimization step.
-
-### GeoMipMapping | CPU optimization
-#### Description
-This approach lowers the data sent to the GPU by dividing the mesh into patches. These patches are then simplified by generating lower resolution versions and changing each patch
-LOD based on the camera distance.
-
-#### Downsides
-
-- All the LODs need to be precomputed at the beginning of the application which can take some time depending on the resolution.
-- The terrain needs to be a certain resolution in order to be evenly divided into patches, so our `5632x2048` becomes an odd resolution like `5633x2049`. You might need to experiment with this.
-
-#### Summary
-
-1. Divide terrain into a fixed size for patches
-2. Generate LOD versions of these patches
-3. Create a separate LOD for the sides of a patch to prevent cracks
-4. Map each LOD to a patch based on the camera distance at runtime
-
-Implementation [OGLDEV](https://youtu.be/08dApu_vS4c?si=g1to5Or1cZcz84BN)
-https://www.flipcode.com/archives/article_geomipmaps.pdf
-
-### Tesselation Shaders | GPU optimizations
-
-Tessellation shaders are used to subdivide geometry by adding two passes between vertex and fragment shaders, control and evaluation tesselation shaders.
-
-#### Downsides
-
-- In practice it is harder to implement than something like GeoMipMapping
-
-#### Summary
-
-1. Precompute vertex position (without the y component) and UVs on the CPU
-2. In the tessellation control shader the subdivision levels will be set for each patch, based on the camera distance
-3. In the tessellation evaluation shader height is sampled from the provided map, uvs and vertex positions are interpolated.
-4. The normals can be calculated in the fragment shader based on the heightmap values
-
-I would recommend first using the CPU optimization and then, going for tesselation shaders. In my experience, adding CPU based optimization already improved performance by 4 times compared to the naive way of generating the procedural mesh.
-
-## Texturing
 ### Assets outline
+
 This is a high level overview of all textures I used in my renderer. You can download all assets needed to follow along [here](#assets-outline).
 ![asset_diagram]({{ page.img_path }}file_structure(1).png)
 
+## Texturing based on height
 
 The easiest way I found to texture the whole terrain is based on the height. That means we need to provide some extra information for each vertex to the fragment shader. We define a number of layers; sand, grass, mountain and snow. A layer will have the following properties:
 
@@ -160,6 +121,7 @@ To map each layer, we need to get a percentage for the vertex height using the i
 
 ![noBlend]({{ page.img_path }}noBlend.png)
 _No Blending_
+
 ![Blend]({{ page.img_path }}blend.png)
 _With Blending_
 
@@ -221,12 +183,12 @@ vec4 value = texture(s_diffMap, vec3(uv,i));
 ```
 
 ### Creating texture arrays
+
 To create texture arrays you can do:
 
 ```cpp
     // diffuse
     glGenTextures(1, &m_materialDifuseArray);
-    //saves the id
     glBindTexture(GL_TEXTURE_2D_ARRAY, m_materialDifuseArray);
 
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -237,7 +199,7 @@ To create texture arrays you can do:
     //the same for normals
 ```
 
-Then you can add each texture to the proper texture array in the order they need to be rendered. Keep in mind, that before binding them, you need to do this once for each array at the start, or as soon as a texture array is changed (if you support that at runtime):
+Then you can add each texture to the proper texture array in the order they need to be rendered. Keep in mind, that before binding them, you need to do this once for each array at the start, or as soon as a texture array is changed (if you support texture changing at runtime):
 
 ```cpp
 void bee::internal::ReadGLTexture(std::vector<uint8_t>& data, unsigned int index)
@@ -284,6 +246,7 @@ void Renderer::FinalizeTextureArray(std::vector<std::shared_ptr<Texture>> textur
 ```
 
 Before rendering, binding them is pretty straightforward:
+
 ```cpp
 void bee::internal::BindTextureArray(GLuint id, GLint location)
 {
@@ -297,14 +260,14 @@ bee::internal::BindTextureArray(m_materialDifuseArray, TEXTURE_ARRAY_LOCATION);
 bee::internal::BindTextureArray(m_materialNormalArray, NORMAL_TEXTURE_ARRAY_LOCATION);
 
 ```
-Now we can carry on, creating the height layers.
 
-Below, there is the last part of the shader code when texturing the terrain.
+Below, there is the last part of the shader code when texturing the terrain with the layers.
 
 ```cpp
    //get our color
   vec3 baseCol = base_colors[i] * base_color_stength[i];
   //sample texture albedo
+  vec4 textureColor = triplanar(v_position, v_normal, base_scale[i], s_diffMap,i) * (1.0 - base_color_stength[i]);
   //sample texture normal
 
   //final color
@@ -404,6 +367,7 @@ vec3 triplanar_normal(vec3 pos, vec3 normal, float scale, sampler2DArray texture
     return outputNormal;
 }
 ```
+
 As you may already noticed, with Triplanar Mapping we have to do 6 more reads, which does affect performance substantially. I believe there are more efficient approaches to achieve the same thing, however, the simplicity of Triplanar Mapping makes it a decent solution.
 
 We can enhance the look of our world by using a color map, which we will sample across the whole mesh.
@@ -470,6 +434,7 @@ _Filter set to nearest neighbor so the effect is easier to see_
 
 Adding province borders is the same as before, only the output will return the color of the map, instead of white.
 This time we are using the generated texture
+
 ```cpp
 vec4 CreatePoliticalBorders(){
     float borderScale = 0.5;
@@ -507,6 +472,7 @@ _terrain with the province map and borders_
 To create a gradient we are going to use compute shaders in OpenGL. If you have never used them before you can read [this](https://learnopengl.com/Guest-Articles/2022/Compute-Shaders/Introduction) article to get up to speed.
 
 We need to create a new virtual image in OpenGL, after that we can go through or first pass, which will generate a texture with the province borders:
+
 ```cpp
 #version 460 core
 
@@ -544,11 +510,13 @@ void main(){
     imageStore(imgOutput, pixelCoords, result);
 }
 ```
+
 The texture would look something like this:
 
 ![black_lines](../assets/assets-2025-01-08/blac_lines.png)
 
 To run the compute shader we have to run the following code on the CPU:
+
 ```cpp
     
     m_bordersCompute->Activate();
@@ -655,6 +623,7 @@ Back in the fragment shader, we can add sample from the Distance Field texture i
 ```
 
 ## Conclusion
+
 *Summarize what the article has been about, future ideas for the project. Problems that you encountered that were not discussed in the body.*
 
 In this article I wrote about texturing techniques common when creating Grand Strategy maps which I developed over eight weeks for my university project at BUAS, in the CMGT, programming track. I hope this was useful for your and if you would like to develop this further, here are some ideas:
