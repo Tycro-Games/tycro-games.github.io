@@ -19,7 +19,7 @@ In this article I will explain how to texture a procedural mesh used in typical 
 I am going to use C++ and OpenGL for showcasing the concepts in code. I am expecting the reader has some understanding of graphics programming. I will not explain how to procedurally generate a mesh from this heightmap:
 
 ![heightmap_texture_of_the_world]({{ page.img_path }}heightmap.bmp)
-_Heightmap from EU4_
+*Heightmap from EU4*
 
 ### Creating the mesh on the CPU
 
@@ -31,7 +31,7 @@ I will provide the sources I used to generate my own procedural mesh below:
 > If you do not mind creating a low resolution mesh and downscaling or resizing the image to something smaller, you can skip this optimization step.
 {: .prompt-warning }
 
-### Optimizations 
+### Optimizations
 
 Dividing the mesh into patches and having different levels of detail (LOD) picked based on the camera distance is a common approach towards rendering the mesh more performant. I recommend trying [GeoMipMapping](https://www.youtube.com/watch?v=08dApu_vS4c) which creates LODs for patches on the CPU.
 
@@ -120,10 +120,10 @@ We can get the minimum and maximum when we are creating the buffers on the CPU, 
 To map each layer, we need to get a percentage for the vertex height using the inverse lerp function. This percentage will define the draw strength using the blend, you can see how this looks below:
 
 ![noBlend]({{ page.img_path }}noBlend.png)
-_No Blending_
+*No Blending*
 
 ![Blend]({{ page.img_path }}blend.png)
-_With Blending_
+*With Blending*
 
 Shader code for getting the draw strength:
 
@@ -279,15 +279,15 @@ Below, there is the last part of the shader code when texturing the terrain with
 ```
 
 ![no_triplanar](<{{ page.img_path }}noTriplanar.png>)
-_Texturing by sampling the diffuse and normal textures with no texture scaling_
+*Texturing by sampling the diffuse and normal textures with no texture scaling*
 
-![alt](<{{ page.img_path }}texWithScaling.png>) 
-_Texturing by sampling the diffuse and normal textures with texture scaling_
+![alt](<{{ page.img_path }}texWithScaling.png>)
+*Texturing by sampling the diffuse and normal textures with texture scaling*
 
 The result looks somehow better when we try scaling the textures by some factor. To make the texturing look better we can use triplanar mapping:
 
 ![alt text](<{{ page.img_path }}triplanar.png>)
-_Triplanar sampling for the diffuse and normal textures_
+*Triplanar sampling for the diffuse and normal textures*
 
 As the name implies, we have to sample each texture three times on each axis.
 
@@ -368,14 +368,14 @@ vec3 triplanar_normal(vec3 pos, vec3 normal, float scale, sampler2DArray texture
 }
 ```
 
-As you may already noticed, with Triplanar Mapping we have to do 6 more reads, which does affect performance substantially. I believe there are more efficient approaches to achieve the same thing, however, the simplicity of Triplanar Mapping makes it a decent solution.
+As you may already noticed, with Triplanar Mapping we have to do 6 more texture reads, which does affect performance substantially. I believe there are more efficient approaches to achieve the same thing, however, the simplicity of Triplanar Mapping makes it a decent solution for the time being.
 
-We can enhance the look of our world by using a color map, which we will sample across the whole mesh.
+We can enhance the look of our world by using a color map, which we can sample across the whole mesh.
 
 ![colormap]({{ page.img_path }}colormap_spring.bmp)
-_Color map from EU4_
+*Color map from EU4*
 
-![alt text]({{ page.img_path }}no_color_map.png)
+![no_colormap]({{ page.img_path }}no_color_map.png)
 
 ```cpp
 //stores the result in mat.albedo (vec4) and normal (vec3)
@@ -388,7 +388,6 @@ mat.albedo = mat.albedo * texture(s_diffuse,v_texture);
 ![eu4_colormap]({{ page.img_path }}color_map.png)
 
 ![spain]({{ page.img_path }}col_map_spain.png)
-
 
 ## Creating borders from the province map
 
@@ -422,18 +421,17 @@ vec4 CreateTerrainBorders(){
 ```
 
 ![province_terrain]({{ page.img_path }}province_border.png)
-_border scale of 0.2_
+*border scale of 0.2*
 
 ![province_terrain]({{ page.img_path }}province_thick.png)
-_border scale of 0.5_
+*border scale of 0.5*
 
-### Making a simple political mode
+### Making a "political" mode
 
 ![no_filter](../assets/assets-2025-01-08/gradient_no_filter.png)
-_Filter set to nearest neighbor so the effect is easier to see_
+*Filter set to nearest neighbor so the effect is easier to see*
 
-Adding province borders is the same as before, only the output will return the color of the map, instead of white.
-This time we are using the generated texture
+Adding province borders is the same as before.
 
 ```cpp
 vec4 CreatePoliticalBorders(){
@@ -458,20 +456,22 @@ vec4 CreatePoliticalBorders(){
     //the edges will be a color between black and the province color
     vec4 color = isEdge? mix(vec4(0.0), center, provinceColorFactor) : center;
     //apply gradient
-
+    ...
+    //color will be set directly as the albedo
     return color;
 }
 ```
 
-
-
 ![_provinceOnly]({{ page.img_path }}province_only.png)
 
-_terrain with the province map and borders_
+*terrain with the province map and borders*
 
 To create a gradient we are going to use compute shaders in OpenGL. If you have never used them before you can read [this](https://learnopengl.com/Guest-Articles/2022/Compute-Shaders/Introduction) article to get up to speed.
 
-We need to create a new virtual image in OpenGL, after that we can go through or first pass, which will generate a texture with the province borders:
+We need to create a new virtual image in OpenGL, after that we can go through or first pass, which will generate a texture with the province borders that we already rendered:
+
+> We are doing the same work twice for the edge detection. Once every frame in the fragment shader, and once at the beginning of the application for the border texture. It would be better apply some image processing for the border texture in order to replace the fragment shader edge detection.
+{: .prompt-info }
 
 ```cpp
 #version 460 core
@@ -490,7 +490,7 @@ void main(){
     vec2 texelSize = 1.0 / vec2(texSize); 
     vec2 uv = (vec2(pixelCoords) + 0.5) * texelSize; 
     
-    // Sample neighboring pixels
+    // sample neighboring pixels
     vec4 center = texture(s_provinceMap, uv);
     vec4 left = texture(s_provinceMap, uv + vec2(-texelSize.x, 0.0));
     vec4 right = texture(s_provinceMap, uv + vec2(texelSize.x, 0.0));
@@ -498,20 +498,20 @@ void main(){
     vec4 down = texture(s_provinceMap, uv + vec2(0.0, -texelSize.y));
    
     
-    // Check if current pixel is on an edge
+    // check if current pixel is on an edge
     bool isEdge = any(notEqual(center, left)) ||
                   any(notEqual(center, right)) ||
                   any(notEqual(center, up)) ||
                   any(notEqual(center, down));
 
     
-    // Write result to output image
+    // write result to output image
     vec4 result = isEdge ? vec4(1.0): vec4(0.0);
     imageStore(imgOutput, pixelCoords, result);
 }
 ```
 
-The texture would look something like this:
+The texture would look like this:
 
 ![black_lines](../assets/assets-2025-01-08/blac_lines.png)
 
@@ -574,13 +574,13 @@ void main() {
         }
     }
     //write output
-    //minDistance needs to be normalized for proper output
+    //minDistance needs to be normalized for proper output in the fragment shader
     imageStore(sdOutput, pixelCoords, vec4(minDistance, 0.0, 0.0, 1.0));
 
 }
 ```
 
-To run the second pass we are doing nearly the same thing as before.
+To run the second pass we are doing nearly the same thing as before, with the addition of using the work groups for better performance.
 
 ```cpp
     m_sdTexture->Activate();
@@ -597,7 +597,11 @@ To run the second pass we are doing nearly the same thing as before.
 
 ![distance_field](../assets/assets-2025-01-08/DistanceField.png)
 
-Back in the fragment shader, we can add sample from the Distance Field texture in order to get a gradient:
+
+> This technique is something I wrote after reading [this](https://www.intel.com/content/www/us/en/developer/articles/technical/optimized-gradient-border-rendering-in-imperator-rome.html) paper one on how Imperator: Rome creates its gradient using a Distance Field texture.
+{: .prompt-info }
+
+Back in the fragment shader, we can add a sample from the Distance Field texture in order to get a gradient:
 
 ```cpp
 {
@@ -622,18 +626,16 @@ Back in the fragment shader, we can add sample from the Distance Field texture i
 
 ```
 
-## Conclusion
+## Final Words and Future Ideas
 
-*Summarize what the article has been about, future ideas for the project. Problems that you encountered that were not discussed in the body.*
 
-In this article I wrote about texturing techniques common when creating Grand Strategy maps which I developed over eight weeks for my university project at BUAS, in the CMGT, programming track. I hope this was useful for your and if you would like to develop this further, here are some ideas:
+In this article I wrote about texturing techniques common when creating a Grand Strategy renderer. The project I was developing at the time of writing spans over eight weeks and it for my university project at BUAS, in the CMGT, programming track. I hope this was useful for your and if you would like to develop this further, here are some ideas:
 
 - Pipeline for generating procedural grand strategy worlds (as in the New Worlds DLC from EU4)
 - Rivers and lakes
 - Foliage and cities
 - Spline based borders
 
+![buas logo](../assets/assets-2025-01-08/logo.png)
 
-![alt text](../assets/assets-2025-01-08/logo.png)
-Thanks for reading my article. If you have any feedback or questions, please feel free to email me at bogdan.game.development@gmail.com .
-
+Thanks for reading my article. If you have any feedback or questions, please feel free to email me at <bogdan.game.development@gmail.com>.
