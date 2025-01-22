@@ -132,7 +132,7 @@ Shader code for getting the draw strength:
 float inverse_lerp(float a, float b, float value){
    return clamp((value-a)/(b-a),0.0,1.0);
 }
-
+//this function is based on this video from Sebastian Lague https://www.youtube.com/watch?v=XjH-UoyaTgs
 void texture_terrain(out vec4 color, out vec3 normal)
 
   //[0, 1]
@@ -156,7 +156,7 @@ void texture_terrain(out vec4 color, out vec3 normal)
         }
 ```
 
-All that is left to do is to get the color and normals from the texture. Since we need as many textures as there are layers it would be better to reduce branching as much as possible. Below you can see how it differs to using `sampler2DArrays`. You can also use texture atlases to achieve the same thing.
+All that is left to do is to get the color and normals from the texture. Since we need as many texture pairs as there are layers it would be better to reduce branching as much as possible. Below you can see the differences between `sampler2D` and `sampler2DArrays`. You can also use `texture atlases` to achieve the same thing.
 
 ```cpp
 //diffuse
@@ -173,7 +173,7 @@ in vec2 uv;
 //to sample we do
 vec4 value = texture(s_diff1, uv);
 
-//We can use texture arrays and bundle all textures inside from the CPU
+//we can use texture arrays and bundle all textures inside from the CPU
 uniform sampler2DArray s_diffMap;
 uniform sampler2DArray s_normMap;
 
