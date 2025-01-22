@@ -1,43 +1,34 @@
 ---
-title: Creating a basic Grand Strategy Renderer inspired by Europa Universalis 4
+title: Basic Texturing for Grand Strategy Games Using Europa Universalis IV Files
 date: 2025-01-08 14:10:00 +0200
 categories: [Tutorials 📚, Graphics 🎨]
 tags: [blog 📝, programming 💻, c++, 🔀procedural Generation , 🎓university, 🎨graphics , 🔺OpenGL, 🌍grand strategy]
 math: true
 img_path: /assets/assets-2025-01-08/
+image:
+  path: /assets/assets-2025-01-08/cover.png
+  alt: Gif of a Grand Strategy Renderer
 ---
 
-## This is where I need to establish the relevance of grand strategy games!
+Most resources on the internet are providing information on how to create GTG games in an already established engine such as Unity, Godot or Unreal Engine. In this article, my aim is to make the ***rendering*** aspect of this genre easier to approach, thereby contributing towards the development of engines and tools that make the creation of GTGs more accessible.
 
-Grand Strategy games (GTG) are a niche genre that appeal only to a smaller portion of the strategy audience. Their complex simulations of the world make it a hard genre to get into as well as a difficult one to develop for. The complex systems that guide diplomacy, economy and even history are being utilized for more than just entertainment. The area of research around these games revolves around "Serious Games" for history, economy and medieval diplomacy. Here are a few research papers discussing those topics:
+In this article I will explain how to texture a procedural mesh used in typical Grand Strategy games, like Europa Universalis 4 (EU4). Keep in mind that this article serves more as a base to improve upon, rather than a complete solution for texturing.
+
+![alt text](../assets/assets-2025-01-08/showcase.gif)
+I am going to use C++ and OpenGL for showcasing the concepts, using other languages and graphics API should be possible for all that we will discuss. It is expected that the reader knows some OpenGL.
+
+## Background
+
+Grand Strategy games (GTG) are a niche genre that appeal only to a smaller portion of the strategy audience. Their complex simulations of the world make it a hard genre to get into as well as a difficult one to develop for. The complex systems that guide diplomacy, economy and even history are being utilized for more than just entertainment. The area of research around these games has become more active in the recent years. Grand Strategy games might also be "Serious Games" and will aid in teaching history, economy and medieval diplomacy. Here are a few research papers exploring these topics:
 - [Grand Strategy Games As A Pedagogical Tool For Introductory Economics: A Student's Perspective](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4986923#paper-references-widget)
 - [Simulating medieval connections Grand strategy games and social network analysis](https://jhnr.net/articles/81/files/660bbe5c7c0b0.pdf)
 - [Grand Strategy Games and Economies](https://www.diva-portal.org/smash/get/diva2:1686298/FULLTEXT01.pdf)
 - [Digitising Diplomacy: Grand Strategy Video Games as an Introductory Tool for Learning Diplomacy and International Relations](https://www.academia.edu/75509526/Digitising_Diplomacy_Grand_Strategy_Video_Games_as_an_Introductory_Tool_for_Learning_Diplomacy_and_International_Relations)
 
 
-## Current state of tools for grand strategy
-
-Most resources on the internet are providing information on how to create GTG games in an already established engine such as Unity, Godot or Unreal Engine. In this article, my aim is to make the rendering aspect of this genre easier to approach, thereby contributing towards the development of engines and tools that make the creation of GTGs more accessible for game developers.
-
-## This is what I will present in my article
-
-In this article I will explain how one can tackle the **rendering** challenges involved when creating a typical Grand strategy game from Paradox Interactive such as Europa Universalis 4 (EU4).
 
 
-By the end of the article you are going to have a procedural landmass, water and two map modes that you can switch between.
 
-### Showcase what we are going to do
-![alt text](../assets/assets-2025-01-08/showcase.gif)
-I am going to use C++ and OpenGL for showcasing the concepts, using other languages and graphics API should be possible for all that we will discuss. It is expected that the reader knows some OpenGL.
-
-
-#### Outline
-1. Generating procedural mesh [ ]
-2. Texturing terrain [x]
-3. ~Simple water rendering~?
-4. Province borders [x]
-5. Adding another map mode [x]
 
 ## Assets used in this tutorial
 All maps, except for the layers, are from EU4 which you can download [here](https://eu4.paradoxwikis.com/Map_modding).
