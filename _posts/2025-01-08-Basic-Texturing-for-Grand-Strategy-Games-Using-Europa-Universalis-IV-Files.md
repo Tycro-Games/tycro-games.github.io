@@ -616,7 +616,7 @@ Back in the fragment shader, we can add a sample from the Distance Field texture
 
 ## Final Words and Future Ideas
 
-In this article I wrote about texturing techniques common when creating a Grand Strategy renderer. When I wrote this, I was developing my university project at BUAS, in the CMGT, programming track. It spanned over eight weeks and it served as a basis for writing this article. I hope this was useful for you and if you would like to develop this further, here are some ideas:
+In this article I wrote about texturing techniques common when creating a Grand Strategy renderer. At the time of writing, I was developing my university project at BUAS, in the CMGT, programming track. It spanned over eight weeks and it served as a basis for writing this article. I hope this was useful for you and if you would like to develop this further, here are some ideas:
 
 - Pipeline for generating procedural grand strategy worlds (as in the New Worlds DLC from EU4)
 - Rivers and lakes
