@@ -374,6 +374,7 @@ As you may have already noticed, with Triplanar Mapping we have to do 6 more tex
 
 ![no_colormap]({{ page.img_path }}no_color_map.png)
 _No color map applied_
+
 We can enhance the look of our world by using a color map, which we can sample across the whole mesh.
 
 ```cpp
@@ -385,7 +386,7 @@ mat.albedo = mat.albedo * texture(s_diffuse,v_texture);
 ```
 
 ![eu4_colormap]({{ page.img_path }}color_map.png)
-_Color map applied_
+*Color map applied*
 
 
 ## Creating borders from the province map
