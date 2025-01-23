@@ -370,12 +370,13 @@ vec3 triplanar_normal(vec3 pos, vec3 normal, float scale, sampler2DArray texture
 
 As you may already noticed, with Triplanar Mapping we have to do 6 more texture reads, which does affect performance substantially. I believe there are more efficient approaches to achieve the same thing, however, the simplicity of Triplanar Mapping makes it a decent solution for the time being.
 
-We can enhance the look of our world by using a color map, which we can sample across the whole mesh.
 
 ![colormap]({{ page.img_path }}colormap_spring.bmp)
 *Color map from EU4*
 
 ![no_colormap]({{ page.img_path }}no_color_map.png)
+_No color map applied_
+We can enhance the look of our world by using a color map, which we can sample across the whole mesh.
 
 ```cpp
 //stores the result in mat.albedo (vec4) and normal (vec3)
@@ -386,13 +387,15 @@ mat.albedo = mat.albedo * texture(s_diffuse,v_texture);
 ```
 
 ![eu4_colormap]({{ page.img_path }}color_map.png)
-
+_Color map applied_
 ![spain]({{ page.img_path }}col_map_spain.png)
 
 ## Creating borders from the province map
 
-EU4 provides a handmade voronoi diagram where each province has a unique color. We can compute the edges by checking each pixel's neighbors, if they do not share the same color than we have an edge.
 ![province_map]({{ page.img_path }}provinces.bmp)
+*Province map from EU4*
+
+EU4 provides a handmade voronoi diagram where each province has a unique color. We can compute the edges by checking each pixel's neighbors, if they do not share the same color than we have an edge.
 
 ```cpp
 vec4 CreateTerrainBorders(){
