@@ -13,7 +13,7 @@ Most resources on the internet are providing information on how to create GTG ga
 In this article I will explain how to texture a procedural mesh used in typical Grand Strategy games, like Europa Universalis 4 (EU4). Keep in mind that this article serves more as a base to improve upon, rather than a complete solution for texturing.
 
 ![alt text](../assets/assets-2025-01-08/showcase.gif)
-
+_Showcase what_
 ## Prerequisites
 
 I am going to use C++ and OpenGL for showcasing the concepts in code. I am expecting the reader has some understanding of graphics programming. I will not explain how to procedurally generate a mesh from this heightmap:
@@ -224,10 +224,8 @@ void Renderer::FinalizeTextureArray(std::vector<std::shared_ptr<Texture>> textur
     glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, width, height, static_cast<GLsizei>(textures.size()));
 
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
+    //the other glTexParameteri functions
+    ...
     //all 4 channels RGBA
     std::vector<uint8_t> data(width * height * 4);
 
@@ -342,9 +340,8 @@ vec3 triplanar_normal(vec3 pos, vec3 normal, float scale, sampler2DArray texture
     vec2 uv_z = (pos.xy * scale);
 
     //the normal texture in [-1, 1] range
-    vec3 tangentNormalX=unpack_normal(texture_UV(textures,vec3(uv_x,idx)));
-    vec3 tangentNormalY=unpack_normal(texture_UV(textures,vec3(uv_y,idx)));
-    vec3 tangentNormalZ=unpack_normal(texture_UV(textures,vec3(uv_z,idx)));
+    vec3 tangentNormalX = unpack_normal(texture_UV (textures, vec3(uv_x, idx)) );
+    //the other two axis
     
     //I am using reoriented normal mapping, but there are many ways to blend normals that you can try: https://blog.selfshadow.com/publications/blending-in-detail/
 
@@ -388,7 +385,7 @@ mat.albedo = mat.albedo * texture(s_diffuse,v_texture);
 
 ![eu4_colormap]({{ page.img_path }}color_map.png)
 _Color map applied_
-![spain]({{ page.img_path }}col_map_spain.png)
+
 
 ## Creating borders from the province map
 
@@ -438,21 +435,8 @@ Adding province borders is the same as before.
 
 ```cpp
 vec4 CreatePoliticalBorders(){
-    float borderScale = 0.5;
-    vec2 texelSize = borderScale  / vec2(textureSize(s_provinceMap, 0));
-    //province pixel color
-    vec4 center = texture(s_provinceMap, v_texture1);
-
-    vec4 left = texture(s_provinceMap, v_texture1 + vec2(-texelSize.x, 0.0));
-    vec4 right = texture(s_provinceMap, v_texture1 + vec2(texelSize.x, 0.0));
-    vec4 up = texture(s_provinceMap, v_texture1 + vec2(0.0, texelSize.y));
-    vec4 down = texture(s_provinceMap, v_texture1 + vec2(0.0, -texelSize.y));
-
-    bool isEdge = any(notEqual(center, left)) || 
-                any(notEqual(center, right)) || 
-                any(notEqual(center, up)) || 
-                any(notEqual(center, down));
-
+    //exactly the same code as above
+    ...
     //gradient code
     ...
     float provinceColorFactor = 0.6;
