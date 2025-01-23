@@ -4,8 +4,7 @@ icon: fas fa-info-circle
 order: 0
 ---
 
-Hello! I’m **Bogdan Mocanu**, a game programming student at **Breda University of Applied Sciences**. I specialize in **engine programming**, with a focus on building tools and systems that serve other game development disciplines.
-
+Hello! I’m **Bogdan Mocanu**, a game programming student at **Breda University of Applied Sciences**. I specialize in **graphics programming**. In my freetime I enjoy building tools and engines.
 ### Career Goals
 
 My goal is to leverage my skills to work on impactful, innovative games or engines. I’m also open to connecting with other developers and industry professionals.
