@@ -68,8 +68,9 @@ The layer textures can be found below, in the order that they are used:
 ### Assets outline
 
 This is a high level overview of all textures I used in my renderer. You can download all assets needed to follow along [here](#assets-outline).
-![asset_diagram]({{ page.img_path }}file_structure(1).png)
 
+![asset_diagram]({{ page.img_path }}file_structure(1).png)
+_Diagram of assets used in the renderer_
 ## Texturing based on height
 
 The easiest way I found to texture the whole terrain is based on the height. That means we need to provide some extra information for each vertex to the fragment shader. We define a number of layers; sand, grass, mountain and snow. A layer will have the following properties:
@@ -282,7 +283,7 @@ Below, there is the last part of the shader code when texturing the terrain with
 ![alt](<{{ page.img_path }}texWithScaling.png>)
 *Texturing by sampling the diffuse and normal textures with texture scaling*
 
-The result looks somehow better when we try scaling the textures by some factor. To make the texturing look better we can use triplanar mapping:
+The result looks somewhat better when we try scaling the textures by some factor. To make the texturing look better we can use triplanar mapping:
 
 ![alt text](<{{ page.img_path }}triplanar.png>)
 *Triplanar sampling for the diffuse and normal textures*
@@ -365,7 +366,7 @@ vec3 triplanar_normal(vec3 pos, vec3 normal, float scale, sampler2DArray texture
 }
 ```
 
-As you may already noticed, with Triplanar Mapping we have to do 6 more texture reads, which does affect performance substantially. I believe there are more efficient approaches to achieve the same thing, however, the simplicity of Triplanar Mapping makes it a decent solution for the time being.
+As you may have already noticed, with Triplanar Mapping we have to do 6 more texture reads, which does affect performance substantially. I believe there are more efficient approaches to achieve the same thing, however, the simplicity of Triplanar Mapping makes it a decent solution for the time being.
 
 
 ![colormap]({{ page.img_path }}colormap_spring.bmp)
@@ -378,7 +379,7 @@ We can enhance the look of our world by using a color map, which we can sample a
 ```cpp
 //stores the result in mat.albedo (vec4) and normal (vec3)
 texture_terrain(mat.albedo, normal);
-//we multiply by the texture the previous result
+//we multiply the previous result by the texture color
 mat.albedo = mat.albedo * texture(s_diffuse,v_texture);
 
 ```
@@ -455,9 +456,9 @@ vec4 CreatePoliticalBorders(){
 
 To create a gradient we are going to use compute shaders in OpenGL. If you have never used them before you can read [this](https://learnopengl.com/Guest-Articles/2022/Compute-Shaders/Introduction) article to get up to speed.
 
-We need to create a new virtual image in OpenGL, after that we can go through or first pass, which will generate a texture with the province borders that we already rendered:
+We need to create a new virtual image in OpenGL, after that we can go through the first pass, which will generate a texture with the province borders that we already rendered:
 
-> We are doing the same work twice for the edge detection. Once every frame in the fragment shader, and once at the beginning of the application for the border texture. It would be better apply some image processing for the border texture in order to replace the fragment shader edge detection.
+> We are doing the same work twice for the edge detection. Once every frame in the fragment shader, and once at the beginning of the application for the border texture. It would be better to apply some image processing for the border texture in order to replace the fragment shader edge detection.
 {: .prompt-info }
 
 ```cpp
@@ -585,7 +586,7 @@ To run the second pass we are doing nearly the same thing as before, with the ad
 ![distance_field](../assets/assets-2025-01-08/DistanceField.png)
 
 
-> This technique is something I wrote after reading [this](https://www.intel.com/content/www/us/en/developer/articles/technical/optimized-gradient-border-rendering-in-imperator-rome.html) paper one on how Imperator: Rome creates its gradient using a Distance Field texture.
+> This technique is something I wrote after reading [this](https://www.intel.com/content/www/us/en/developer/articles/technical/optimized-gradient-border-rendering-in-imperator-rome.html) paper on on how Imperator: Rome creates its gradient using a Distance Field texture.
 {: .prompt-info }
 
 Back in the fragment shader, we can add a sample from the Distance Field texture in order to get a gradient:
@@ -615,8 +616,7 @@ Back in the fragment shader, we can add a sample from the Distance Field texture
 
 ## Final Words and Future Ideas
 
-
-In this article I wrote about texturing techniques common when creating a Grand Strategy renderer. The project I was developing at the time of writing spans over eight weeks and it for my university project at BUAS, in the CMGT, programming track. I hope this was useful for your and if you would like to develop this further, here are some ideas:
+In this article I wrote about texturing techniques common when creating a Grand Strategy renderer. When I wrote this, I was developing my university project at BUAS, in the CMGT, programming track. It spanned over eight weeks and it served as a basis for writing this article. I hope this was useful for you and if you would like to develop this further, here are some ideas:
 
 - Pipeline for generating procedural grand strategy worlds (as in the New Worlds DLC from EU4)
 - Rivers and lakes
