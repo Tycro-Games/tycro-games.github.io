@@ -218,7 +218,7 @@ Thanks for reading my article. If you have any feedback or questions, please fee
 
 
 
-
+![alt text](../assets/portfolio/logo.png)
 
 
 

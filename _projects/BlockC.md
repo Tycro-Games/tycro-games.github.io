@@ -85,3 +85,5 @@ An exploration of Beer’s Law to simulate light absorption for semi-transparent
 ## 🎮 Play on itch.io
 
 <iframe frameborder="0" src="https://itch.io/embed/2621651" width="552" height="167"><a href="https://tycro-dev.itch.io/raytracing-block-c">Block C Raytracing | The Wall Crawler by Tycro Games</a></iframe>
+
+![alt text](../assets/portfolio/logo.png)

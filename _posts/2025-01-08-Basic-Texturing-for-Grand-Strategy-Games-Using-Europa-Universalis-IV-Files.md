@@ -13,7 +13,7 @@ Most resources on the internet are providing information on how to create GTG ga
 In this article I will explain how to texture a procedural mesh used in typical Grand Strategy games, like Europa Universalis 4 (EU4). Keep in mind that this article serves more as a base to improve upon, rather than a complete solution for texturing.
 
 ![alt text](../assets/assets-2025-01-08/showcase.gif)
-_Showcase what_
+
 ## Prerequisites
 
 I am going to use C++ and OpenGL for showcasing the concepts in code. I am expecting the reader has some understanding of graphics programming. I will not explain how to procedurally generate a mesh from this heightmap:
@@ -624,6 +624,7 @@ In this article I wrote about texturing techniques common when creating a Grand 
 - Foliage and cities
 - Spline based borders
 
-![buas logo](../assets/assets-2025-01-08/logo.png)
 
 Thanks for reading my article. If you have any feedback or questions, please feel free to email me at <bogdan.game.development@gmail.com>.
+
+![buas logo](../assets/assets-2025-01-08/logo.png)

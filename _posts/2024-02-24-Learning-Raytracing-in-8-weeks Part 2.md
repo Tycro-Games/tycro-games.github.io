@@ -438,3 +438,4 @@ A cornercase that you need to keep in mind is that when we get outside the voxel
 
 Thanks for reading my article. If you have any feedback or questions, please feel free to share them in the comments or email me at bogdan.game.development@gmail.com. 
 
+![alt text](../assets/portfolio/logo.png)

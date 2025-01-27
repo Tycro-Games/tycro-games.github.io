@@ -1,28 +1,28 @@
 ---
 layout: project
-title: Custom Game Engine
-description: Showcasing the development of a cross-platform engine demo with features including particle systems, ECS architecture, inspector hierarchies, and GLTF support for 3D models.
-image: assets/portfolio/Y2/A/preview.png
-categories: [C++, 🔧Engine Development, 🌍Cross-Platform, 🎓University, 🛠️Tools]
+title: Grand Strategy Renderer
+description: A basic renderer inspired by Europa Universalis IV
+image: assets/assets-2025-01-08/showcase.gif
+categories: [C++, 🎓University, 🎨Graphics ]
 
 main_category: University Projects
-date: 2024-11-08
+date: 2025-01-27
 ---
+
 
 ## 📂 Source Code
 
 Unfortunately, due to NDA restrictions, I am unable to share the codebase.
 
-## 🛠️ Skills Developed
+## 🛠️ Skills and Technologies used
 
-- **Cross-Platform Development**: Integrated with PS5 and PC platforms using the "pimpl" technique to ensure clean separation between interface and implementation.
+- **Custom Educational Engine**: I worked with the
   
 - **Core Engine Systems**: Gained hands-on experience with ECS architecture, importing 3D models, and serialization using libraries like [`entt`](https://github.com/skypjack/entt) and [cereal](https://github.com/USCiLab/cereal).
 - **ImGui Engine Windows**: Utilized [ImGui](https://github.com/ocornut/imgui) to create \\ engine windows for managing game entities, resources, and scene data, enabling a more user-friendly interface for debugging and development tasks.
 
 - **Entity Hierarchies**: Managed complex entity structures and streamlined workflows via an inspector window for enhanced productivity.
   
-- **Engine Architecture**: Designed a clean, extensible API to allow smooth interaction between game systems and tools.
 
 ## Demo
 <iframe width="751" height="460" src="https://www.youtube.com/embed/WFJyYSXYuOM?si=PgACObtNaUXSW1hL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
