@@ -67,15 +67,15 @@ The game is based on a template I received during the block, which you can find 
 
 ## 📚 Project Articles
 
-Throughout the project, I documented my learning and development process in a series of articles. These posts dive deeper into the various aspects of building a CPU-based raytracer and cover aspects of this project in detail:
+Throughout the project, I documented my learning and development process in a series of articles. These posts dive into the various aspects of building a CPU-based raytracer and cover aspects of this project:
 
 1. **[Learning-Raytracing-in-8-weeks | Area Lights | Part 1](https://tycro-games.github.io/posts/Learning-Raytracing-in-8-weeks-Part-1/)**
 -n introduction to the project, focusing on area lights and realistic shadow casting.
-2. **[Learning-Raytracing-in-8-weeks | Glass made out of voxels | Part 2](https://tycro-games.github.io/posts/Learning-Raytracing-in-8-weeks-Part-2/)**
+1. **[Learning-Raytracing-in-8-weeks | Glass made out of voxels | Part 2](https://tycro-games.github.io/posts/Learning-Raytracing-in-8-weeks-Part-2/)**
 Techniques for simulating glass effects in a voxel-based raytracer.
-3. **[Learning-Raytracing-in-8-weeks | Transforming voxel volumes | Part 3](https://tycro-games.github.io/posts/Learning-Raytracing-in-8-weeks-Part-3/)**
+1. **[Learning-Raytracing-in-8-weeks | Transforming voxel volumes | Part 3](https://tycro-games.github.io/posts/Learning-Raytracing-in-8-weeks-Part-3/)**
 A discussion on implementing transformations within voxel volumes.
-4. **[Learning-Raytracing-in-8-weeks | Simple Smoke with Beer’s Law | Part 4](https://tycro-games.github.io/posts/Learning-Raytracing-in-8-weeks-Part-4/)**
+1. **[Learning-Raytracing-in-8-weeks | Simple Smoke with Beer’s Law | Part 4](https://tycro-games.github.io/posts/Learning-Raytracing-in-8-weeks-Part-4/)**
 An exploration of Beer’s Law to simulate light absorption for semi-transparent objects like smoke.
 
 <!-- ## 🎥 Watch the Showcase
@@ -86,4 +86,4 @@ An exploration of Beer’s Law to simulate light absorption for semi-transparent
 
 <iframe frameborder="0" src="https://itch.io/embed/2621651" width="552" height="167"><a href="https://tycro-dev.itch.io/raytracing-block-c">Block C Raytracing | The Wall Crawler by Tycro Games</a></iframe>
 
-![alt text](../assets/portfolio/logo.png)
+![alt text](/assets/portfolio/logo.png)

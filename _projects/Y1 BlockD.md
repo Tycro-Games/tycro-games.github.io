@@ -82,4 +82,4 @@ I initially tried using the 2D tile editor in Unreal Engine, but I found [Tiled]
 In addition to creating the procedural tool, I also created the trailer for this project.
 <iframe width="1120" height="650" src="https://www.youtube.com/embed/zk-24I7OJf8?si=GfJ0t553i__HbgYu" title="Game Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-![alt text](../assets/portfolio/logo.png)
+![alt text](/assets/portfolio/logo.png)

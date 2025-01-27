@@ -18,7 +18,7 @@ Unfortunately, due to NDA restrictions, I am unable to share the codebase.
 - **Cross-Platform Development**: Integrated with PS5 and PC platforms using the "pimpl" technique to ensure clean separation between interface and implementation.
   
 - **Core Engine Systems**: Gained hands-on experience with ECS architecture, importing 3D models, and serialization using libraries like [`entt`](https://github.com/skypjack/entt) and [cereal](https://github.com/USCiLab/cereal).
-- **ImGui Engine Windows**: Utilized [ImGui](https://github.com/ocornut/imgui) to create \\ engine windows for managing game entities, resources, and scene data, enabling a more user-friendly interface for debugging and development tasks.
+- **ImGui Engine Windows**: Utilized [ImGui](https://github.com/ocornut/imgui) to create engine windows for managing game entities, resources, and scene data, enabling a more user-friendly interface for debugging and development tasks.
 
 - **Entity Hierarchies**: Managed complex entity structures and streamlined workflows via an inspector window for enhanced productivity.
   
@@ -103,4 +103,4 @@ Unfortunately, due to NDA restrictions, I am unable to share the codebase.
 
 ---
 
-![alt text](../assets/portfolio/logo.png)
+![alt text](/assets/portfolio/logo.png)
