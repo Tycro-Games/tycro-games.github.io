@@ -1,9 +1,9 @@
 ---
 layout: project
 title: Grand Strategy Renderer
-description: A basic renderer inspired by Europa Universalis IV
+description: A custom terrain/map renderer inspired by Europa Universalis IV, featuring procedural terrain generation, height-based texturing, and province map visualization. 
 image: assets/assets-2025-01-08/showcase.gif
-categories: [C++, 🎓University, 🎨Graphics ]
+categories: [C++, 🎓University, 🎨Graphics, 🗺️Grand Strategy, 🔀Procedural Generation]
 
 main_category: University Projects
 date: 2025-01-27
@@ -13,8 +13,8 @@ date: 2025-01-27
 
 ## 🛠️ Skills and Technologies
 
-- **Custom Educational Engine**: I worked with the Bee engine, used internally at Breda University of Applied Sciences  for the CMGT track.
-- **Europa Universalis IV Files**: Utilized EU4 assets, including heightmaps and textures. You can find the assets [here](https://eu4.paradoxwikis.com/Map_modding).
+- **Custom Educational Engine**: Developed using the Bee engine, a proprietary tool used at Breda University of Applied Sciences for the CMGT programming track.
+- **Europa Universalis IV Assets**: Utilized EU4's map assets, including the heightmap and textures, to create a terrain rendering system inspired by the game's visual style. Assets can be found [here](https://eu4.paradoxwikis.com/Map_modding).
 - **Procedural Terrain Mesh**: Optimized terrain rendering with GeoMipMapping on the CPU.
 - **Height based texturing**: Implemented a configurable layer system using a color map for terrain texturing.
 - **Compute Shaders**: Using compute shaders in OpenGL, a Distance Field texture is generated for the political map mode.
@@ -42,7 +42,7 @@ _Political Map mode combined with the terrain texturing_
 
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
   <div style="flex: 1; font-size: 1.2em; display: flex; align-items: center;">
-    The terrain textures are applied based on height. Using pairs of textures (diffuse + normal) and a color map.
+    Terrain textures are applied by height using diffuse and normal maps, with a color map for tinting.
   </div>
   <img src="/assets/assets-2025-01-08/color_map.png" style="flex-shrink: 0; max-width: 50%; object-fit: contain;" alt="Height Map Texturing" />
 </div>
@@ -86,7 +86,7 @@ _Political Map mode combined with the terrain texturing_
 
   <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
     <div style="font-size: 1.2em; font-weight: bold;">
-      Gradient Effect Visualization:
+      Effect Visualization:
     </div>
     <div>
     </div>
@@ -94,7 +94,7 @@ _Political Map mode combined with the terrain texturing_
   </div>
 
 </div>
-*Filter set to nearest neighbor so the effect is easier to see*
+*Filter set to nearest neighbor for clearer visualization of the gradient effect*
 
 ---
 

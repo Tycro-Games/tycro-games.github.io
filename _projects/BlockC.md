@@ -1,7 +1,7 @@
 ---
 layout: project
 title: "Raytracing on the CPU"
-description: "CPU based Raytracer for voxels in C++"
+description: "A CPU-based voxel raytracer implemented in C++, featuring realistic lighting effects such as shadows, reflections, refractions, and light absorption using Beer’s Law."
 image: /assets/assets-2024-03-02/render.png
 categories: [C++, 🌟Raytracing  ,🎓University, 🎨Graphics , 🔳Voxels ]
 main_category: University Projects

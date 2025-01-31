@@ -1,7 +1,7 @@
 ---
 layout: project
 title: Custom Game Engine
-description: Showcasing the development of a cross-platform engine demo with features including particle systems, ECS architecture, inspector hierarchies, and GLTF support for 3D models.
+description: A cross-platform engine demo featuring particle systems, ECS architecture, inspector hierarchies, and GLTF 3D model support.
 image: assets/portfolio/Y2/A/preview.png
 categories: [C++, 🔧Engine Development, 🌍Cross-Platform, 🎓University, 🛠️Tools]
 
