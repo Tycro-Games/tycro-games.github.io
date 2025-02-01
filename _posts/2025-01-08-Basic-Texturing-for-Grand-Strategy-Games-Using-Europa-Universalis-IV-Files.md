@@ -60,14 +60,14 @@ The layer textures can be found below, in the order that they are used:
 - [first](https://polyhaven.com/a/coast_sand_02)
 - [second](https://polyhaven.com/a/aerial_grass_rock)
 - [third](https://polyhaven.com/a/rock_face)
-- [forth](https://polyhaven.com/a/snow_02)
+- [fourth](https://polyhaven.com/a/snow_02)
 
 > To follow along you need a province and color map, as well as the layer pairs (diffuse + normal).
 {: .prompt-info }
 
 ### Assets outline
 
-This is a high level overview of all textures I used in my renderer. You can download all assets needed to follow along [here](#assets-outline).
+This is a high level overview of all textures I used in my renderer.
 
 ![asset_diagram]({{ page.img_path }}file_structure(1).png)
 _Diagram of assets used in the renderer_
@@ -134,7 +134,7 @@ float inverse_lerp(float a, float b, float value){
    return clamp((value-a)/(b-a),0.0,1.0);
 }
 //this function is based on this video from Sebastian Lague https://www.youtube.com/watch?v=XjH-UoyaTgs
-void texture_terrain(out vec4 color, out vec3 normal)
+void texture_terrain(out vec4 color, out vec3 normal){
 
   //[0, 1]
   float hPercent = inverse_lerp(min_max_height.x, min_max_height.y, height);
@@ -155,6 +155,7 @@ void texture_terrain(out vec4 color, out vec3 normal)
         //using draw strength for final color and normal
          
         }
+}
 ```
 
 All that is left to do is to get the color and normals from the texture. Since we need as many texture pairs as there are layers it would be better to reduce branching as much as possible. Below you can see the differences between `sampler2D` and `sampler2DArrays`. You can also use `texture atlases` to achieve the same thing.
@@ -171,15 +172,16 @@ uniform sampler2D s_nor2;
 //vert uvs
 in vec2 uv;
 
-//to sample we do
+//to sample 
 vec4 value = texture(s_diff1, uv);
 
 //we can use texture arrays and bundle all textures inside from the CPU
 uniform sampler2DArray s_diffMap;
 uniform sampler2DArray s_normMap;
 
-//to sample we do
-int i = Texture index we want to sample
+// where i is the index of the texture we want to use
+int i;
+...
 vec4 value = texture(s_diffMap, vec3(uv,i));
 ```
 
@@ -394,7 +396,7 @@ mat.albedo = mat.albedo * texture(s_diffuse,v_texture);
 ![province_map]({{ page.img_path }}provinces.bmp)
 *Province map from EU4*
 
-EU4 provides a handmade voronoi diagram where each province has a unique color. We can compute the edges by checking each pixel's neighbors, if they do not share the same color than we have an edge.
+EU4 provides a handmade voronoi diagram where each province has a unique color. We can compute the edges by checking each pixel's neighbors, if they do not share the same color then we have an edge.
 
 ```cpp
 vec4 CreateTerrainBorders(){
@@ -607,7 +609,7 @@ Back in the fragment shader, we can add a sample from the Distance Field texture
     //https://www.youtube.com/watch?v=1b5hIMqz_wM
     float thick= 0.8;
     float soft= 0.99;
-    a = smoothstep(1.0 - thick - soft, 1.0- thick + soft, a);
+    a = smoothstep(1.0 - thick - soft, 1.0 - thick + soft, a);
     //apply the gradient
     color*=a;
     return color;
