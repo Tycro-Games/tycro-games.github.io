@@ -1,6 +1,6 @@
 ---
 layout: posts
 icon: fas fa-stream
-order: 2
+order: 1
 # Index page
 ---
