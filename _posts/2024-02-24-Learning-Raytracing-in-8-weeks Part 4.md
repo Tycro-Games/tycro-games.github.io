@@ -69,6 +69,7 @@ If you haven't read part 2 of this series already, I talked about how one could 
 ```
 
 And in practice it looks like:
+
 ![refract]({{ page.img_path }}refractOnly.png)
 
 ## Beer's Law

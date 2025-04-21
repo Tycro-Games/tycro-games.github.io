@@ -66,7 +66,7 @@ layout: page
 
 /* Project Card */
 .project-card {
-  background-color: #fff;
+  background-color: var(--project-card-bg);  /* Use the background color variable */
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -96,19 +96,20 @@ layout: page
   flex-grow: 1; /* Ensure content takes remaining space */
   flex-direction: column;
   flex-grow: 1; /* Ensure content takes available space */
+  background-color: var(--project-info-bg);  /* Use the project info background color variable */
+  color: var(--text-color);  /* Use the text color variable */
 }
 
 .project-info h3 {
   font-size: 1.4rem; /* Slightly larger for readability */
   font-weight: bold;
   margin-bottom: 8px; /* Add spacing below title */
-  color: #000;
 }
 
 .project-info p {
   font-size: 1rem; /* Standard size for better readability */
-  color: #333;
   margin-bottom: 10px; /* Adjust spacing between content */
+  color: var(--text-color);  /* Use the text color variable */
 }
 
 /* Read More Button */
