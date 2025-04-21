@@ -1454,7 +1454,12 @@ search {
     font-size: 1.03rem;
   }
 }
-
+@media (min-width: 1200px) {
+  .col-xl-9 {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+}
 @media all and (min-width: 1400px) {
   #back-to-top {
     right: calc((100vw - $sidebar-width - 1140px) / 2 + 3rem);
@@ -1486,7 +1491,7 @@ search {
 
   main.col-12,
   #tail-wrapper {
-    padding-right: 4.5rem !important;
+    padding-right: 0.0rem !important;
   }
 
   #back-to-top {

@@ -8,8 +8,10 @@ img_path: /assets/assets-2024-04-08/
 ---
 
 # Intro
+
 Hello, this is the second article of an 8 part series where I write down what I've learned about Raytracing on the CPU with voxels (which is of course in C++). I have used [this](https://github.com/jbikker/voxpopuli) template to which I have added features and refactored over the span of the 8 weeks.
 Here is the overview:
+
 - [Part 1 Area Lights](https://tycro-games.github.io/posts/Learning-Raytracing-in-8-weeks-Part-1/)
 - [Part 2 Glass](https://tycro-games.github.io/posts/Learning-Raytracing-in-8-weeks-Part-2/)
 - [Part 3 Transforms](https://tycro-games.github.io/posts/Learning-Raytracing-in-8-weeks-Part-3/)
@@ -18,7 +20,9 @@ Here is the overview:
 You can see the repo of my raytracer [here](https://github.com/Tycro-Games/Raytracer-VoxPopuli).
 
 ## Refraction only glass
+
 If you haven't read part 2 of this series already, I talked about how one could apply the law of optics to create some pretty realistic glass in a raytracer. The starting point for smoke is glass with refraction only. In code:
+
 ```cpp
   {
     float3 color{1};
@@ -63,12 +67,13 @@ If you haven't read part 2 of this series already, I talked about how one could 
     return Trace(newRay, depth - 1) * color;
   }
 ```
+
 And in practice it looks like:
 ![refract]({{ page.img_path }}refractOnly.png)
 
 ## Beer's Law
-Mathematically:
 
+Mathematically:
 
 $$
 A = \epsilon \cdot c \cdot l
@@ -85,6 +90,7 @@ $$
 $$
 
 Distance is one of the variables used, so let's start by adding that into the code:
+
 ```cpp
       float distanceTraveled = 0;
       if (isInGlass)
@@ -102,7 +108,7 @@ Distance is one of the variables used, so let's start by adding that into the co
 
         ray.rD = float3(1 / ray.D.x, 1 / ray.D.y, 1 / ray.D.z);
         ray.Dsign = ray.ComputeDsign(ray.D);
-		//we are going to use this boolean later
+  //we are going to use this boolean later
         voxelVolumes[voxIndex].FindSmokeExit(ray);
         backupRay.t = ray.t;
         backupRay.CopyToPrevRay(ray);
@@ -174,8 +180,10 @@ bool Scene::FindSmokeExit(Ray& ray) const
   return false;
 }
 ```
+
 Very similarly to the logic of the glass, however, getting the t value through the Ray struct is very important this time.
 Absorption is another real number we need to provide for our material, thus, the code manangin the ray inside the smoke will become:
+
 ```cpp
  if (isInGlass)
  {
@@ -201,7 +209,9 @@ Absorption is another real number we need to provide for our material, thus, the
    distanceTraveled = ray.t;
  }
  ```
+
  Now we are ready to plug in the equation behind the maths:
+
  ```cpp
  float3 Renderer::Absorption(const float3& color, float intensity, float distanceTraveled)
 {
@@ -217,12 +227,16 @@ Absorption is another real number we need to provide for our material, thus, the
   return {expf(exponent.x), expf(exponent.y), expf(exponent.z)};
 }
 ```
+
 Now our material becomes denser if the ray had to travel a bigger distance:
+
 ![beer]({{ page.img_path }}beer.png)
+
 _please ignore that nan pixel there_
 
 We are nearly done with this smoke material. The only thing that lacks is density. ["Raytracing The Next Week"](https://raytracing.github.io/books/RayTracingTheNextWeek.html#volumes) has a brief explanation on that.
 The simplest version of that I could think of:
+
 ```cpp
  //simple density functions, we are going to use the resulting ray to create a new one
  //Random float has the range [0, 1)
@@ -238,22 +252,22 @@ The simplest version of that I could think of:
    ray.t = 0;
  }
  ```
+
  This little code snippet will make the ray move inside the volume and get a random direction, based on how much the distance the ray traveled and how "thick" or dense the cloud is. It might seem a bit magical at first, but some visual explanation goes a long way.
 
  ![smallCloud]({{ page.img_path }}smallCloud.png)
  _0.9 density_
 
-
  ![midCloud]({{ page.img_path }}midCLoud.png)
  _2.7 density_
 
-
- 
  ![highCloud]({{ page.img_path }}highCloud.png)
  _24.7 density_
 
 ## Getting the cloud
+
 After having a decent looking material, we still have to create some kind of cloud shape for our voxels. The answear is unsurprisingly noise, specifically, **perlin noise**. On top of that, I liked adding various materials of different densities to create the impressions that smoke is more thick towards the center and gradually fades out:
+
 ```cpp
 void Scene::GenerateSomeSmoke(float frequency = 0.001f)
 {
@@ -332,16 +346,19 @@ void Scene::GenerateSomeSmoke(float frequency = 0.001f)
   }
 }
 ```
+
 You might need to figure out the right frequency for voxel resolution. Here is mine with 64^3 voxels:
 
 ![alt text]({{ page.img_path }}cloudNoDOF.png)
 _perlin noise of 0.163_
 
-
 > If you wonder "why the black parts?", it is the bounds limit of the ray, increase it and it will probably go away. Alternatively, you could change the return color if the maximum depth is reached to see if it is actually happening because of the low limit.
 {: .prompt-tip }
+
 ## DOF
+
 Now to really sell this simple cloud, we need some depth of field, DOF for short. In raytracing this is trivially implemented like so:
+
 ```cpp
 //generate primary rays
     Ray GetPrimaryRay(const float x, const float y) const
@@ -349,7 +366,7 @@ Now to really sell this simple cloud, we need some depth of field, DOF for short
       //conceptually used https://youtu.be/Qz0KTGYJtUk?si=9en1nLsgxqQyoGW2&t=2113
       const float u = x * (1.0f / SCRWIDTH);
       const float v = y * (1.0f / SCRHEIGHT);
-	  //go through the virtual screen
+   //go through the virtual screen
       const float3 P = topLeft + u * (topRight - topLeft) + v * (bottomLeft - topLeft);
       //defocusJitter is the amount of jitter we want to add to the focal point
       const float2 jitter = RandomPointInCircle() * defocusJitter / SCRWIDTH;
@@ -358,15 +375,15 @@ Now to really sell this simple cloud, we need some depth of field, DOF for short
 
       const float3 rayOrigin = camPos + jitter.x * right + jitter.y * up;
       const float3 rayDirection = (focalPoint - rayOrigin);
-	  //creates a ray
+   //creates a ray
       return {rayOrigin, rayDirection};
     }
 ```
+
 ![cloud]({{ page.img_path }}finCloud.png)
 _Isn't that a convincing looking cloud?_
 
 ---
-
 
 Thanks for reading my article. If you have any feedback or questions, please feel free to share them in the comments or email me [here](javascript:location.href = 'mailto:' + ['bogdan.game.development.','gmail.com'].join('@')).
 
