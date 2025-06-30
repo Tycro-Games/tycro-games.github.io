@@ -9,7 +9,7 @@ date: 2024-07-15
 ---
 ## 🎓 About the Project
 
-This project was a collaboration between students at **Breda University of Applied Sciences**. I focused on creating a **procedural coastline generation tool** for artists and designers.
+This project was made in a team of 12 students(4 programmers, 3 designers and 5 artists). I focused on creating a **procedural coastline generation tool** for artists and designers.
 
 The tool was developed using **C++** and integrated into **Unreal Engine**. The initial prototype was built in **Unity**.
 
