@@ -4,7 +4,7 @@ title: "A 2D top down game made in C++ and SDL2 | An Unrealistic Spaceship Simul
 description: "A C++ and SDL2 project built for Breda University's intake, having the theme 'Bounce'."
 image: /assets/portfolio/auss-preview.png
 categories: [C++, 🎮Gameplay Programming, 🎓University Intake]
-main_category: Personal Projects
+main_category: Archive Projects
 date: 2022-12-28
 ---
 

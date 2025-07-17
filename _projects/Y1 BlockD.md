@@ -1,9 +1,9 @@
 ---
 layout: project
-title: "Procedural Coastline Generation Tool in Unreal Engine"
+title: "Procedural Coastline Generation Tool in Unreal Engine | Game"
 description: "A Wave Function Collapse (WFC)-based tool for artists and designers to generate island coastlines procedurally."
 image: /assets/portfolio/blockd-preview.png
-categories: [C++, 🌊Unreal Engine , 🔀Procedural Generation , 🎓University, 🛠️Tools ]
+categories: [C++, 🌊Unreal Engine , 🔀Procedural Generation , 🎓University, 🛠️Tools, 👥Team Project]
 main_category: University Projects
 date: 2024-07-15
 ---

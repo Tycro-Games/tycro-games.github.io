@@ -3,7 +3,7 @@ layout: project
 title: "Raytracing on the CPU"
 description: "A CPU-based voxel raytracer implemented in C++, featuring realistic lighting effects such as shadows, reflections, refractions, and light absorption using Beer’s Law."
 image: /assets/assets-2024-03-02/render.png
-categories: [C++, 🌟Raytracing  ,🎓University, 🎨Graphics , 🔳Voxels ]
+categories: [C++, 🌟Raytracing  ,🎓University, 🎨Graphics , 🔳Voxels, 👤Solo Project]
 main_category: University Projects
 date: 2024-04-02
 ---
@@ -65,7 +65,7 @@ The game is based on a template I received during the block, which you can find 
   - **Multithreading**: Using multithreading to distribute ray calculations across multiple CPU cores.
   - **SIMD (Single Instruction, Multiple Data)**: Applied SIMD instructions to process multiple rays simultaneously, increasing speed.
 
-## 📚 Project Articles
+## 📚 Project Articles (with code!)
 
 Throughout the project, I documented my learning and development process in a series of articles. These posts dive into the various aspects of building a CPU-based raytracer and cover aspects of this project:
 
