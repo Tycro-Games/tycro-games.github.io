@@ -1,6 +1,6 @@
 ---
 layout: project
-title: GSG | Grand Strategy Renderer
+title: Grand Strategy Renderer
 description: A custom terrain/map renderer inspired by Europa Universalis IV, featuring procedural terrain generation, height-based texturing, and province map visualization. 
 image: assets/assets-2025-01-08/showcase.gif
 categories: [C++, 🎓University, 🎨Graphics, 🗺️Grand Strategy, 🔀Procedural Generation, 👤Solo Project]
@@ -22,6 +22,7 @@ date: 2025-01-27
 ## ⚙️ Key Highlights
 
 ![alt text](/assets/portfolio/2BlockB/week7.png)
+
 _Political Map mode combined with the terrain texturing_
 
 ---
