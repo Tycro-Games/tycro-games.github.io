@@ -136,8 +136,7 @@ Although I focused mostly on production, I also contributed as a developer—mai
 
 ## 🎥 Trailer
 
-<iframe width="1120" height="650" src="https://youtu.be/EN-oXI_JE1o?si=Dsmw-7efPROeQPul" title="Game Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
+<iframe width="1120" height="650" src="https://www.youtube.com/embed/EN-oXI_JE1o?si=sIhCHjMPHE09ErHL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 ## 📂 Source Code
 
 Unfortunately, due to NDA restrictions, I am unable to share the codebase.
