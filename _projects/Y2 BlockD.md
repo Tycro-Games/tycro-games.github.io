@@ -22,7 +22,6 @@ date: 2025-07-15
 
 This project was created by a team of 12 students (9 programmers and 3 artists). Without a dedicated designer, I stepped up as a first time producer—leading meetings, resolving conflicts, managing releases, and supporting workflow improvements.
 
-
 ## 📋 Producer Experience & Reflections
 
 - Used Scrum methodology to run team meetings, track progress, and manage tasks/risks.
@@ -33,9 +32,35 @@ This project was created by a team of 12 students (9 programmers and 3 artists).
 - Found planning and managing scope pretty tough, but learned a lot from it.
 - Balanced coding with leading the team, gaining valuable experience for future lead or indie projects.
 
-## ⚙️ Key Highlights
+## 💻 Dev Contributions
 
+Although I focused mostly on production, I also contributed as a developer—mainly on bug fixes and in-engine usability tools.
 
+<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+
+  <div style="flex: 1 1 45%; max-width: 500px;">
+    <video src="/assets/portfolio/Y2/D/buggy.mp4" style="width: 100%;" autoplay muted loop playsinline title="Collision Bug Example"></video>
+    <p><strong>🐞 Collision Bug (Before)</strong> — A player could fall through the floor due to broken collision logic in certain edge cases.</p>
+  </div>
+
+  <div style="flex: 1 1 45%; max-width: 500px;">
+    <video src="/assets/portfolio/Y2/D/fix bug.mp4" style="width: 100%;" autoplay muted loop playsinline title="Collision Bug Fix"></video>
+    <p><strong>✅ Collision Fix (After)</strong> — I tracked down and fixed the floor collision issue, making movement more stable and reliable.</p>
+  </div>
+
+  <div style="flex: 1 1 45%; max-width: 500px;">
+    <video src="/assets/portfolio/Y2/D/camera_shots.mp4" style="width: 100%;" autoplay muted loop playsinline title="Museum View Controls"></video>
+    <p><strong>🖼️ Museum Mode</strong> — Added a simple camera switch so players can view models and artwork from multiple angles in the museum area.</p>
+  </div>
+
+<div style="flex: 1 1 45%; max-width: 500px;">
+  <video src="/assets/portfolio/Y2/D/easy_preview_model.mp4" style="width: 100%;" autoplay muted loop playsinline title="Model Export Preview"></video>
+  <p><strong>📤 Blender to Engine Export</strong> — Demonstrated the workflow of adjusting models in Blender and verifying the changes after export into the engine.</p>
+</div>
+
+</div>
+
+## ⚙️ Highlights of the project
 
 <!-- Cinematic Shots -->
 <h3>🎬 Cinematic Shots</h3>
@@ -100,39 +125,6 @@ This project was created by a team of 12 students (9 programmers and 3 artists).
     <img src="/assets/portfolio/Y2/D/bq_guy.png" alt="Character Portrait" />
   </figure>
 </div>
-
-
-
-## 💻 Dev Contributions
-
-Although I focused mostly on production, I also contributed as a developer—mainly on bug fixes and in-engine usability tools.
-
-<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-
-  <div style="flex: 1 1 45%; max-width: 500px;">
-    <video src="/assets/portfolio/Y2/D/buggy.mp4" style="width: 100%;" autoplay muted loop playsinline title="Collision Bug Example"></video>
-    <p><strong>🐞 Collision Bug (Before)</strong> — A player could fall through the floor due to broken collision logic in certain edge cases.</p>
-  </div>
-
-  <div style="flex: 1 1 45%; max-width: 500px;">
-    <video src="/assets/portfolio/Y2/D/fix bug.mp4" style="width: 100%;" autoplay muted loop playsinline title="Collision Bug Fix"></video>
-    <p><strong>✅ Collision Fix (After)</strong> — I tracked down and fixed the floor collision issue, making movement more stable and reliable.</p>
-  </div>
-
-  <div style="flex: 1 1 45%; max-width: 500px;">
-    <video src="/assets/portfolio/Y2/D/camera_shots.mp4" style="width: 100%;" autoplay muted loop playsinline title="Museum View Controls"></video>
-    <p><strong>🖼️ Museum Mode</strong> — Added a simple camera switch so players can view models and artwork from multiple angles in the museum area.</p>
-  </div>
-
-<div style="flex: 1 1 45%; max-width: 500px;">
-  <video src="/assets/portfolio/Y2/D/easy_preview_model.mp4" style="width: 100%;" autoplay muted loop playsinline title="Model Export Preview"></video>
-  <p><strong>📤 Blender to Engine Export</strong> — Demonstrated the workflow of adjusting models in Blender and verifying the changes after export into the engine.</p>
-</div>
-
-
-</div>
-
-
 
 ## 🎥 Trailer
 
