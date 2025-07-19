@@ -4,6 +4,7 @@ date: 2023-11-03 14:10:00 +0200
 categories: [Tutorials 📚]
 tags: [blog 📝, tutorial 📖, programming 💻, c++]
 img_path: /assets/assets-2023-11-01/
+image: /assets/assets-2023-11-01/stillNeedSrc.png
 ---
 
 ## Prerequisites for this tutorial  
@@ -25,6 +26,7 @@ So for my school project we had to make a simple 2D platformer. The only require
 Minimalistic means you can more or less write to pixels and there are some math functions.
 
 Here is how it looks when you run it the first time:
+
 ![picture of the output of the template]({{ page.img_path }}template.png)
 
 Of course not all mechanics from the project will be explained, but if you are interested in any of them let me know, and I will make specific tutorials.
@@ -33,7 +35,11 @@ Of course not all mechanics from the project will be explained, but if you are i
 
 So there are hundreds of engines that can help you make a game much faster, Why the hassle of not using one? Why remake most of the already established systems that are already fine-tuned to be as efficient and generic as possible?
 
-![unity]({{ page.img_path }}unity.png) ![unreal]({{ page.img_path }}unreal.png) ![godot]({{ page.img_path }}godot.png)
+![unity]({{ page.img_path }}unity.png) 
+
+![unreal]({{ page.img_path }}unreal.png) 
+
+![godot]({{ page.img_path }}godot.png)
 
 The most important reason, for me, at least, is confidence. Remaking all this will make you confident in your abilities as a programmer.
 
@@ -42,10 +48,15 @@ Curiosity is another good reason. Most people use engines on a daily basis, but 
 You may have heard of these titiles which are made inside an in house engine:
 
 ![hades]({{ page.img_path }}hades.png){: w="500" h="400"}
+
 _the indie game Hades_
+
 ![doom]({{ page.img_path }}doom.png){: w="500" h="300"}
+
 _you know DOOM_
+
 ![half life2]({{ page.img_path }}halflife2.png){: w="500" h="300"}
+
 _half life 2_
 
 > The main idea is that some engines are `born` out of games. That's also how Unreal Engine become the engine it is today.
@@ -83,7 +94,9 @@ By the way, you don’t really have to use the stuff provided, if you don’t li
 
 After downloading it, you can press F5 and hopefully a hideous window is going to pop up. This is what it is so nice about this template, it just works.
 _in case you forgot how it is supposed to look like_
+
 ![picture of the output of the template]({{ page.img_path }}template.png)
+
 
 ## Drawing a tile map
 
@@ -92,34 +105,40 @@ A scrolling tile map, it is probably the most used gimmick since 2D games were i
 ### Tile map array
 
 ![grid of array]({{ page.img_path }}gridArray.png)
+
 _Our array should look something like this_
 
 ### Tile map on screen
 
 ![Reality]({{ page.img_path }}reality.png)
+
 _Reality is a bit more colorful_
 Fortunately, in Tiled that is exactly what we get, a tile map that we can export as a CSV file. Better yet, the .tsmx file used for saving the file can be parsed into our game.
 
 Open Tiled and create a new map, you can choose the size of the map, the tile size and the tileset.
 
 ![map]({{ page.img_path }}mapPopUp.png)
+
 > `Hint` maybe top left corner "File"?.
 {: .prompt-tip }
 
 After clicking okay we are going to have a big empty tile map. This is a good time to save your file. Choose a location and a name for it and then you can see that it is saved as a .tmx file. This is the file that we are going to parse into our game. To see what it looks like from the inside, you can open it with any text editor.
 
 ![tiled file with a text editor]({{ page.img_path }}tileInside.png)
+
 _marvelous 0s_
 
 Back into Tiled I will use this free tileset (which I modified for this section so it is easier to see), link [here](https://zegley.itch.io/2d-platformermetroidvania-asset-pack), but you can use any tileset you want.
 ![window of new tileset]({{ page.img_path }}newTile.png)
 
-Click on the tileset button and add a new tileset, you can choose the image and the tile size. Save it somewhere and you are ready to go.  
+Click on the tileset button and add a new tileset, you can choose the image and the tile size. Save it somewhere and you are ready to go.
+
 ![pop up for tileset]({{ page.img_path }}tileSetPopUp.png)
 
 After that it should look similar to this:  
 
 ![tiled set]({{ page.img_path }}tiledWithTileset.png)
+
 _Yep, that is it, you can draw a tile map._  
 
 Now, you can select a tile from the tileset and draw it to our map.
@@ -148,8 +167,11 @@ If you get stucked, or you just want _to make_ it work, I do have a repo for thi
 Ok, now we have to make some code that copies the tile from the palette image to the screen. The image we used earlier to draw to inside Tiled can be reused for this purpose, just be sure to use the .png file, not the one that Tiled uses to represent tile sets.
 
 You should do something like this, before moving on to rendering.
+
 ![code start]({{ page.img_path }}codeStarter.png)
+
 My assets folder looks like this:
+
 ![folderStructure]({{ page.img_path }}folderstructure.png)
 
 Images and our screen is made out of pixels, so we can copy from the source to the screen, or more generally, the destination.

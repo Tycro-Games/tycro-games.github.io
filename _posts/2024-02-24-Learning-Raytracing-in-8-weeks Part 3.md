@@ -5,6 +5,7 @@ categories: [Learning 📚, Log 📖, Raytracing 🌐]
 tags: [blog 📝, programming 💻, c++, raytracing 🌟, graphics 🎨, voxels 🔳]
 math: true
 img_path: /assets/assets-2024-03-24/
+image: /assets/assets-2024-03-24/Rotations.gif
 ---
 
 # Intro

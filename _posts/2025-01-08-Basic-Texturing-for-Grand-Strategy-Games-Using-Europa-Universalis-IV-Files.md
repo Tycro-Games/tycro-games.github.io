@@ -5,7 +5,7 @@ categories: [Tutorials 📚, Graphics 🎨]
 tags: [blog 📝, programming 💻, c++, 🔀procedural Generation , 🎓university, 🎨graphics , 🔺OpenGL, 🌍grand strategy]
 math: true
 img_path: /assets/assets-2025-01-08/
-
+image: /assets/assets-2025-01-08/showcase.gif
 ---
 
 Most resources on the internet are providing information on how to create GTG games in an already established engine such as Unity, Godot or Unreal Engine. In this article, my aim is to make the ***rendering*** aspect of this genre easier to approach, thereby contributing towards the development of engines and tools that make the creation of GTGs more accessible.

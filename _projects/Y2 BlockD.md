@@ -7,10 +7,9 @@ categories: [
   C++,
   🔧 Engine Development,
   🌍 Cross-Platform,
-  🎮 FPS,
 
   🎓 University,
-  🛠️ Pipeline,
+  🛠️ Engine,
   📋 Production,
   👥 Team Project,
 ]
