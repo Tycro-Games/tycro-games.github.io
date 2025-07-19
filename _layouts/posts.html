@@ -59,7 +59,8 @@ layout: page
 .project-card-link {
   display: block;
   text-decoration: none; /* Optional: Removes underline */
-  color: inherit; /* Optional: Inherit text color */
+  color: transparent !important; /* Optional: Inherit text color */
+  border-bottom: transparent !important; /* Optional: Inherit text color */
 }
 
 .projects-container {
@@ -118,26 +119,6 @@ layout: page
   color: var(--text-color);  /* Use the text color variable */
 }
 
-/* Read More Button */
-.read-more-btn-container {
-  text-align: center;
-  margin-top: auto; /* Push to the bottom */
-}
-
-.read-more-btn {
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.read-more-btn:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-}
 
 /* Categories */
 .categories-container {
