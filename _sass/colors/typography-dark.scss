@@ -143,4 +143,29 @@
   --project-info-bg: #3c3244;
   --text-color: #d0c9f3;
     
+.card {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+
+  .card-title,
+  .card-text,
+  .post-excerpt {
+    color: var(--text-color);
+  }
+
+  .text-muted,
+  .text-secondary,
+  .post-meta {
+    color: var(--text-muted-color);
+  }
+
+  a {
+    color: var(--link-color);
+
+    &:hover {
+      color: var(--link-underline-color);
+    }
+  }
+}
+
 }

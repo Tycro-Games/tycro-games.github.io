@@ -7,7 +7,7 @@ img_path: /assets/assets-2023-11-01/
 image: /assets/assets-2023-11-01/stillNeedSrc.png
 ---
 
-## Prerequisites for this tutorial  
+ Prerequisites for this tutorial 
 
 - Visual studio, [here](https://www.3dgep.com/cpp-fast-track-1-getting-started/) is a step by step tutorial to download it, you can get the latest version of this IDE which is 2022 at the time of writing this.
 - [Basic template](https://github.com/jbikker/tmpl8), explained below.

@@ -1,6 +1,5 @@
 ---
 layout: default
-refactor: true
 ---
 
 {% include lang.html %}
@@ -14,71 +13,150 @@ refactor: true
 <!-- Merge pinned and normal posts -->
 {% assign all_posts = all_pinned | concat: all_normal %}
 
-<div id="post-list" class="flex-grow-1 px-xl-1">
-  {% for post in all_posts %}
-    <article class="card-wrapper card">
-      <a href="{{ post.url | relative_url }}" class="post-preview row g-0 flex-md-row-reverse">
-        {% assign card_body_col = '12' %}
+<div class="portfolio-page">
 
-        {% if post.image %}
-          {% assign src = post.image.path | default: post.image %}
-          {% unless src contains '//' %}
-            {% assign src = post.media_subpath | append: '/' | append: src | replace: '//', '/' %}
-          {% endunless %}
+  <div class="projects-container">
+    {% for post in all_posts %}
+      <article class="project-card">
+        <a href="{{ post.url }}" class="project-card-link">
+          {% if post.image %}
+            <div class="project-image">
+              <img src="{{ post.image | relative_url }}" alt="{{ post.title}} Preview" >
+            </div>
+          {% endif %}
+        </a>
 
-          {% assign alt = post.image.alt | xml_escape | default: 'Preview Image' %}
+        <div class="project-info">
+          <h3>{{ post.title }}</h3>
+          <p>
+            {% if post.description %}
+              {{ post.description }}
+            {% else %}
+              {% include post-description.html %}
+            {% endif %}
+          </p>
 
-          {% assign lqip = null %}
-          {% if post.image.lqip %}
-            {% capture lqip %}lqip="{{ post.image.lqip }}"{% endcapture %}
+          {% if post.categories %}
+            <div class="categories-container">
+              {% for cat in post.categories %}
+                <span class="project-category">{{ cat }}</span>
+              {% endfor %}
+            </div>
           {% endif %}
 
-          <div class="col-md-5">
-            <img src="{{ src }}" alt="{{ alt }}" {{ lqip }}>
+          <div class="read-more-btn-container">
+            <button class="read-more-btn" onclick="window.location.href='{{ post.url}}'">Read More</button>
           </div>
-
-          {% assign card_body_col = '7' %}
-        {% endif %}
-
-        <div class="col-md-{{ card_body_col }}">
-          <div class="card-body d-flex flex-column">
-            <h1 class="card-title my-2 mt-md-0">{{ post.title }}</h1>
-
-            <div class="card-text content mt-0 mb-3">
-              <p>{% include post-description.html %}</p>
-            </div>
-
-            <div class="post-meta flex-grow-1 d-flex align-items-end">
-              <div class="me-auto">
-                <!-- posted date -->
-                <i class="far fa-calendar fa-fw me-1"></i>
-                {% include datetime.html date=post.date lang=lang %}
-
-                <!-- categories -->
-                {% if post.categories.size > 0 %}
-                  <i class="far fa-folder-open fa-fw me-1"></i>
-                  <span class="categories">
-                    {% for category in post.categories %}
-                      {{ category }}
-                      {%- unless forloop.last -%},{%- endunless -%}
-                    {% endfor %}
-                  </span>
-                {% endif %}
-              </div>
-
-              {% if post.pin %}
-                <div class="pin ms-1">
-                  <i class="fas fa-thumbtack fa-fw"></i>
-                  <span>{{ site.data.locales[lang].post.pin_prompt }}</span>
-                </div>
-              {% endif %}
-            </div>
-            <!-- .post-meta -->
-          </div>
-          <!-- .card-body -->
         </div>
-      </a>
-    </article>
-  {% endfor %}
+      </article>
+    {% endfor %}
+  </div>
+
 </div>
-<!-- #post-list -->
+
+<style>
+.projects-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid with minimum card width */
+  gap: 20px; /* Adds consistent spacing between cards */
+  grid-auto-rows: auto; /* Cards adjust naturally based on content */
+  padding: 20px; /* Optional: Adds padding around the grid */
+}
+
+/* Project Card */
+.project-card {
+  background-color: var(--project-card-bg);  /* Use the background color variable */
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Full height for consistency */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Project Image */
+.project-image img {
+  width: 100%;
+  height: 60%; /* Larger, proportional image height */
+  object-fit: cover; /* Maintain aspect ratio */
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Project Info */
+.project-info {
+  padding: 15px; /* Increased padding for better spacing */
+  display: flex;
+  flex-grow: 1; /* Ensure content takes remaining space */
+  flex-direction: column;
+  flex-grow: 1; /* Ensure content takes available space */
+  background-color: var(--project-info-bg);  /* Use the project info background color variable */
+  color: var(--text-color);  /* Use the text color variable */
+}
+
+.project-info h3 {
+  font-size: 1.4rem; /* Slightly larger for readability */
+  font-weight: bold;
+  margin-bottom: 8px; /* Add spacing below title */
+}
+
+.project-info p {
+  font-size: 1rem; /* Standard size for better readability */
+  margin-bottom: 10px; /* Adjust spacing between content */
+  color: var(--text-color);  /* Use the text color variable */
+}
+
+/* Read More Button */
+.read-more-btn-container {
+  text-align: center;
+  margin-top: auto; /* Push to the bottom */
+}
+
+.read-more-btn {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.read-more-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Categories */
+.categories-container {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.project-category {
+  background-color: #28a745;
+  color: white;
+  border-radius: 25px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  display: inline-block;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.project-category:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+</style>

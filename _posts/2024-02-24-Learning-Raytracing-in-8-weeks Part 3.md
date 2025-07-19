@@ -8,9 +8,7 @@ img_path: /assets/assets-2024-03-24/
 image: /assets/assets-2024-03-24/Rotations.gif
 ---
 
-# Intro
-
-Hello, this is the second article of an 8 part series where I write down what I've learned about Raytracing on the CPU with voxels (which is of course in C++). I have used [this](https://github.com/jbikker/voxpopuli) template to which I have added features and refactored over the span of the 8 weeks.
+Hello, this is the third article of an 4 part series where I write down what I've learned about Raytracing on the CPU with voxels (which is of course in C++). I have used [this](https://github.com/jbikker/voxpopuli) template to which I have added features and refactored over the span of the 8 weeks.
 Here is the overview:
 
 - [Part 1 Area Lights](https://tycro-games.github.io/posts/Learning-Raytracing-in-8-weeks-Part-1/)
