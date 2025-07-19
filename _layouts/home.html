@@ -20,15 +20,16 @@ layout: page
       <div class="projects-container">
         <!-- Loop through each project in the current category -->
         {% for project in filtered_projects %}
+        <a href="{{ project.url }}" class="project-card-link">
           <article class="project-card">
             <!-- Project card with image and description -->
-            <a href="{{ project.url }}" class="project-card-link">
+            
               {% if project.image %}
                 <div class="project-image">
                   <img src="{{ project.image | relative_url }}" alt="{{ project.title }} Preview">
                 </div>
               {% endif %}
-            </a>
+            
             
             <!-- Project Info -->
             <div class="project-info">
@@ -43,12 +44,9 @@ layout: page
                 </div>
               {% endif %}
               
-              <!-- Read More Button -->
-              <div class="read-more-btn-container">
-                <button class="read-more-btn" onclick="window.location.href='{{ project.url }}'">Read More</button>
-              </div>
             </div>
           </article>
+          </a>
         {% endfor %}
       </div>
     </section>
@@ -84,7 +82,7 @@ layout: page
 /* Project Image */
 .project-image img {
   width: 100%;
-  height: 60%; /* Larger, proportional image height */
+  height: 100%; /* Larger, proportional image height */
   object-fit: cover; /* Maintain aspect ratio */
   border-bottom: 1px solid #f0f0f0;
 }

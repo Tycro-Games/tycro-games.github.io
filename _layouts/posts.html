@@ -1,5 +1,6 @@
 ---
-layout: default
+layout: page
+
 ---
 
 {% include lang.html %}
@@ -17,14 +18,15 @@ layout: default
 
   <div class="projects-container">
     {% for post in all_posts %}
+      <a href="{{ post.url }}" class="project-card-link">
+
       <article class="project-card">
-        <a href="{{ post.url }}" class="project-card-link">
           {% if post.image %}
             <div class="project-image">
               <img src="{{ post.image | relative_url }}" alt="{{ post.title}} Preview" >
             </div>
           {% endif %}
-        </a>
+
 
         <div class="project-info">
           <h3>{{ post.title }}</h3>
@@ -44,17 +46,22 @@ layout: default
             </div>
           {% endif %}
 
-          <div class="read-more-btn-container">
-            <button class="read-more-btn" onclick="window.location.href='{{ post.url}}'">Read More</button>
-          </div>
         </div>
+       
       </article>
+       </a> 
     {% endfor %}
   </div>
 
 </div>
 
 <style>
+.project-card-link {
+  display: block;
+  text-decoration: none; /* Optional: Removes underline */
+  color: inherit; /* Optional: Inherit text color */
+}
+
 .projects-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid with minimum card width */
@@ -83,7 +90,7 @@ layout: default
 /* Project Image */
 .project-image img {
   width: 100%;
-  height: 60%; /* Larger, proportional image height */
+  height: 100%; /* Larger, proportional image height */
   object-fit: cover; /* Maintain aspect ratio */
   border-bottom: 1px solid #f0f0f0;
 }
@@ -156,7 +163,6 @@ layout: default
 
 .project-category:hover {
   background-color: #218838;
-  transform: translateY(-2px);
 }
 
 </style>
