@@ -101,7 +101,7 @@ _Political Map mode combined with the terrain texturing_
 
 
 
-## 📚 Project Article
+## 📚 Project Article (with code!)
 
 As part of the project, we also had to create an article where we share the knowledge we gained over the span of our research and development process.
 

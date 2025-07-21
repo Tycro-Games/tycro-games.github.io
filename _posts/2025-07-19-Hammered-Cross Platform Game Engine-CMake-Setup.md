@@ -5,7 +5,7 @@ categories: [Tutorials 📚, Engine 🔧, Series]
 tags: [🎨graphics , 🔺OpenGL, 🌋 Vulkan, 🔧Engine]
 math: true
 img_path: /assets/assets-2025-07-19/
-image: /assets/assets-2025-07-19/showcase.gif
+
 ---
 
 ## Intro
