@@ -5,7 +5,7 @@ categories: [Tutorials 📚, Engine 🔧, Series]
 tags: [🎨graphics , 🔺OpenGL, 🌋 Vulkan, 🔧Engine]
 math: true
 img_path: /assets/assets-2025-07-19/
-
+image: 
 ---
 
 ## Intro
@@ -62,3 +62,6 @@ Mention how pimpl or polymorphism takes a toll on the performance at runtime.
 
 
 [^make]: [Cmake](https://cmake.org/)
+
+### Source
+
