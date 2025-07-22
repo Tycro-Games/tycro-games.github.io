@@ -1,11 +1,11 @@
 ---
-title: Hammered Engine | Cmake, OpenGL and Vulkan setup
+title: Hammered Engine | Cmake setup
 date: 2025-07-19 14:10:00 +0200
 categories: [Tutorials 📚, Engine 🔧, Series]
 tags: [🎨graphics , 🔺OpenGL, 🌋 Vulkan, 🔧Engine]
 math: true
 img_path: /assets/assets-2025-07-19/
-image: 
+image: /assets/assets-2025-07-19/gl_vk_demo.gif
 ---
 
 ## Intro
@@ -27,29 +27,39 @@ At this point in my development journey I am still trying to figure out a lot of
 This is the breakdown, of what I have done so far:
 
 - using Cmake[^make] I can generate two .exes that use OpenGL and Vulkan, "_gl" and "_vk" as name endings
-- shaders are compiled in the generation step from .glsl to .spv into Vulkan and OpenGL specific binaries, as detailed in the Red Book, chapter two [^glb].
+- shaders are compiled in the generation step from `.glsl` to `.spv` into Vulkan and OpenGL specific binaries, as detailed in the Red Book, chapter two [^glb].
 - running one of them, initializes the selected graphical backend with the following setup: a triangle is rendered, along with an imgui menu that allows changing the compute shader applied to the background
 - an ImGui menu is also present to allow changing from one backend to another, closing the current instance and running the other executable
 
-
 This setup was made using vulkan guide[^vkg], then adapted to OpenGL in order to have the same visual output. I would like to explain how I set-up Cmake for my project and the common "device" interface. I will not go into the graphics implementation yet, since I do not have a good grasp of how I want to build that API yet.
-
 
 ## Cmake
 
 ### What is it?
 
-It is a popular cross-platform builder for C++ projects. The way it works is that it uses text files to define properties of the project. To get something working it is going to be quite basic, but I am also using a few more exotic features in order to make my life easier.
+It is a popular cross-platform builder for C++ projects. The way it works is that it uses text files to define properties of the project[^make].
 
-This can be the name of the project, what kind of cpp version you are using, linking external libraries, including source and header files. 
+This can be the name of the project, what kind of cpp version you are using, linking external libraries, including source and header files and even compiling shaders.
 
 `CmakeLists.txt` files are  are used to write the building logic, I have several of these files at different levels of my project folders:
 
 <video autoplay muted controls width="90%"  src="/assets/assets-2025-07-19/FolderStructure.mp4" title="Title"></video>
 
+I mentioned in the intro section that I would like to build this engine specifically for *simulation games*. It is irrelevant what is the target kind of game for an engine as long as it has a clear purpose, for me that would be a **3D renderer** and a similar game to **Dwarf Fortress**. Taking that into account, the build structure of this engine looks like this:
+
+1. `gl` and `vk` are the OpenGL and Vulkan backends.
+2. the engine is compiled into both backends, each of them using `common` code and libraries as well as API dependent.
+3. the applications then use the engine as a library
+
+<video autoplay muted controls width="90%"  src="/assets/assets-2025-07-19/EngineStructureDiagram.mp4" title="Title"></video>
+
+>This is roughly how the Cmake build process will work
+{: .prompt-info }
+
 ### Building the root
 
 The `CmakeList.txt` that serves as the entry point:
+
 ```cmake
 cmake_minimum_required(VERSION 3.24.0)
 
@@ -76,12 +86,14 @@ list(GET GAME_BACKENDS 0 first_backend)
 # This will be game_gl or game_vk
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT "game_${first_backend}")
 ```
+
 > The utility.cmake file can be found [here](https://github.com/OneBogdan01/hammered-engine/blob/6c75dfc19378b49ca015781f44a8b1a80146832e/cmake_utility/utility.cmake).
 {: .prompt-tip }
 
 ### Building the engine target
 
-Inside this folder there are another two: external and code. The cmake file below links everything together into two targets, each using OpenGL and Vulkan: `hammered_engine_gl` - `hammered_engine_vk`.
+Inside this folder there are another two: external and code. The cmake file below links everything together into two targets, each using OpenGL and Vulkan: `hammered_engine_gl` and `hammered_engine_vk`.
+
 ```cmake
 
 # Add externals and code
@@ -119,7 +131,8 @@ foreach(backend ${GAME_BACKENDS})
 endforeach()
 
 ```
-All the targets inside `target_link_libraries` are going to be set in the external folder. This is why it is added above.
+
+> `target_link_libraries` takes a target and links against the specified libraries. The `PUBLIC` keyword means that these libraries can be accessed by other targets that might depend on the engine, in this case, that would be the "game" target.
 {: .prompt-info }
 
 You might wonder why I set `set_target_properties`, I am using Visual Studio and I like to have my solutions organized in folders:
@@ -130,6 +143,7 @@ You might wonder why I set `set_target_properties`, I am using Visual Studio and
 #### External
 
 This is the folder with all libraries used by the engine, for now these are:
+
 - sdl3
 - vma
 - stb_image
@@ -138,7 +152,8 @@ This is the folder with all libraries used by the engine, for now these are:
 - glad
 - imgui
 
-I will skip most of the code that sets them up, but it can be found on the github repo [^source].
+This is a bare-bones version of the file, the full file can be found on the github repo [^source].
+
 ```cmake
 
 # Header-only libraries
@@ -156,48 +171,36 @@ target_sources(vkbootstrap PRIVATE
 target_include_directories(vkbootstrap PUBLIC vkbootstrap)
 target_link_libraries(vkbootstrap PUBLIC Vulkan::Vulkan $<$<BOOL:UNIX>:${CMAKE_DL_LIBS}>)
 set_property(TARGET vkbootstrap PROPERTY CXX_STANDARD 20)
-set_target_properties(vkbootstrap PROPERTIES FOLDER "engine/external")
+# This is omitted below for brevity
+#set_target_properties(vkbootstrap PROPERTIES FOLDER "engine/external")
 
 # SDL3 has its own cmake files
 add_subdirectory(SDL)  
 get_property(SDL_TARGETS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/SDL PROPERTY BUILDSYSTEM_TARGETS)
-# Add each SDL target to the externals
-foreach(tgt IN LISTS SDL_TARGETS)
-    if (TARGET ${tgt})
-        set_target_properties(${tgt} PROPERTIES FOLDER "engine/external")
-    endif()
-endforeach()
 
 
 # fmt
 add_subdirectory(fmt)
-set_target_properties(fmt PROPERTIES FOLDER "engine/external")
-set_target_properties(fmt PROPERTIES FOLDER "engine/external")
 # glad
 add_library(glad STATIC ${CMAKE_CURRENT_SOURCE_DIR}/glad/src/glad.c)
 target_include_directories(glad PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/glad/include)
-set_target_properties(glad PROPERTIES FOLDER "engine/external")
 
 ```
 
-The second part of this file is used to link common and per backend libraries:
+The second part of this file is used to link common and per backend libraries, I kept the libraries that require a different setup to the others:
 
 ```cmake
 # Common imgui files, used by both backends
 set(IMGUI_CORE
     imgui/imgui.cpp
-    imgui/imgui_demo.cpp
-    imgui/imgui_draw.cpp
-    imgui/imgui_widgets.cpp
-    imgui/imgui_tables.cpp
-    imgui/backends/imgui_impl_sdl3.cpp
+    # and so on
 )
 
 # Links imgui with SDL
 add_library(imgui_core STATIC ${IMGUI_CORE})
 target_include_directories(imgui_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/imgui)
 target_link_libraries(imgui_core PUBLIC SDL3::SDL3)
-set_target_properties(imgui_core PROPERTIES FOLDER "engine/external")
+
 
 # Vulkan specific
 if(ENABLE_VK_BACKEND) 
@@ -205,12 +208,12 @@ if(ENABLE_VK_BACKEND)
         imgui/backends/imgui_impl_vulkan.cpp
     )
     target_link_libraries(imgui_vulkan PUBLIC imgui_core Vulkan::Vulkan)
-    set_target_properties(imgui_vulkan PROPERTIES FOLDER "engine/external")
 endif()
 
 # OpenGL specific
 if(ENABLE_GL_BACKEND) 
 # Same idea as above
+# ...
 
 # Disable library warnings
 # ...
@@ -219,9 +222,10 @@ if(ENABLE_GL_BACKEND)
 
 #### Code
 
-> My code folder is further split into `include` and `source` , containing `.hpp` and `.cpp` files. 
+> My code folder is further split into `include` and `source` , containing `.hpp` and `.cpp` files.
 {: .prompt-info }
 To only include the right code files per backend, I exclude the `platform` folder for the `source` and `include`. Below you can see how I can filter the files:
+
 ```cmake
 foreach(backend ${GAME_BACKENDS})
     set(target_name "hammered_engine_${backend}")
@@ -238,6 +242,25 @@ foreach(backend ${GAME_BACKENDS})
 
 ```
 
+> The `file(GLOB_RECURSE ALL_SOURCES CONFIGURE_DEPENDS)` line, might look a bit complicated, this is the breakdown:
+>
+>
+> `file(GLOB_RECURSE ...)` tells cmake this is a file operation and to look recursively into the directories.
+>
+> `ALL_SOURCES` is where the result is going to be stored.
+>
+> `CONFIGURE_DEPENDS` makes cmake run the config automatically in case a file was added or removed.
+>
+> `${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp` is providing a path with filtering that will return all `.cpp` files found.
+{: .prompt-info }
+
+> In short, `GLOB_RECURSE` can save you the trouble of specifying each file, however,this is advised against on the docs, due to the fact that `CONFIGURE_DEPENDS` may not work for all generators. Keep that in mind, in case you decide to use it.
+{: .prompt-warning  }
+
+[![alt text](../assets/assets-2025-07-19/warn.png)](https://cmake.org/cmake/help/latest/command/file.html#filesystem)
+
+*You can click on the image to open the documentation page*
+
 Afterwards, I can get into the specific folder for each of the APIs:
 
 ```cmake
@@ -253,14 +276,13 @@ Afterwards, I can get into the specific folder for each of the APIs:
         set(PLATFORM_DEFINE "GFX_USE_OPENGL")
     elseif(backend STREQUAL "vk")
     ## The same idea for vulkan
-
-    list(APPEND ENGINE_SOURCES ${PLATFORM_SOURCES})
-    list(APPEND ENGINE_HEADERS ${PLATFORM_HEADERS})
-
+    #...
+    # Append platform vars to the ENGINE_SOURCES and ENGINE_HEADERS 
     add_library(${target_name} STATIC
         ${ENGINE_SOURCES}
         ${ENGINE_HEADERS}
     )
+
 
     target_include_directories(${target_name} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -289,8 +311,9 @@ for vulkan:
 glslangValidator -V shader.vert -o output.spv
 ```
 
->  I chose to put my shaders in the assets folder, which is inside the game folder. 
+> I chose to put my shaders in the assets folder, which is inside the game folder.
 {: .prompt-info }
+
 ```cmake
 
 find_program(GLSL_VALIDATOR glslangValidator HINTS /usr/bin /usr/local/bin $ENV{VULKAN_SDK}/Bin/ $ENV{VULKAN_SDK}/Bin32/)
@@ -341,7 +364,9 @@ The output for each shader will be:
 These can then be loaded depending on the API.
 
 ### Building the executable
+
 This code resides in the utlity.cmake file in order to not clutter the rest of the `CmakeLists.txt` files. It starts by settings some global settings and folders:
+
 ```cmake
 # Configuring some global settings
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -381,7 +406,10 @@ function(configure_assets_for target)
         "${ASSET_SOLUTION_DIR}"
     )
 endfunction()
+```
+
 As I have shown before, I can open the OpenGL backend, close it, and open the Vulkan one. That requires each of the applications to know the path of the other one. In my case, I used a macro:
+
 ```cmake
 # Generic addition of macro per backend as GAME_VK_EXECUTABLE_NAME="game_vk.exe" or GAME_GL_EXECUTABLE_NAME="game_gl.exe"
 function(exec_macro_for target backend)
@@ -420,7 +448,7 @@ function(add_game_backends backends)
 
     # Set compiler flags
     #...
-    This will try to build both backends when trying to run either applications:
+    #This will try to build both backends when trying to run either applications:
     add_custom_target(build_all_backends ALL
         DEPENDS ${game_exes}
     )
@@ -429,13 +457,17 @@ endfunction()
 
 
 ```
+## Final Words
 
-## Device, implementation specific at compile time
+In my next update I will probably showcase how I designed my rendering layer. I hope this article helped you understand more about Cmake and how you can use it in your own projects.
 
-Mention how pimpl or polymorphism takes a toll on the performance at runtime. And it seems weird?
+Thanks for reading my article. If you have any feedback or questions, please feel free to email me at <bogdan.game.development@gmail.com>.
 
 ## References
 
+### Source
+
+[Github repo link to the branch used at the moment of writing](https://github.com/OneBogdan01/hammered-engine/tree/Cmake-opengl-vulkan-set-up)
 ### OpenGL and Vulkan
 
 [^glb]: [Red Book](https://www.amazon.com/OpenGL-Programming-Guide-Official-Learning/dp/0134495497)
@@ -444,9 +476,8 @@ Mention how pimpl or polymorphism takes a toll on the performance at runtime. An
 [^GDCtalk]: [GDC Talk](https://gdcvault.com/play/1023516/High-performance-Low-Overhead-Rendering)
 [^vkg]: [Vulkan Guide chapter 3](https://vkguide.dev/docs/new_chapter_3/building_pipeline/)
 
-
 [^make]: [Cmake](https://cmake.org/)
+[^source]: [Github repo link to the branch used at the moment of writing](https://github.com/OneBogdan01/hammered-engine/tree/Cmake-opengl-vulkan-set-up)
 
-### Source
 
-[^source]: [Github Repo to the branch used at the moment of writing](https://github.com/OneBogdan01/hammered-engine/tree/Cmake-opengl-vulkan-set-up)
+
