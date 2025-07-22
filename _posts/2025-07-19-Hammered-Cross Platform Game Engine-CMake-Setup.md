@@ -457,6 +457,7 @@ endfunction()
 
 
 ```
+
 ## Final Words
 
 In my next update I will probably showcase how I designed my rendering layer. I hope this article helped you understand more about Cmake and how you can use it in your own projects.
@@ -468,6 +469,7 @@ Thanks for reading my article. If you have any feedback or questions, please fee
 ### Source
 
 [Github repo link to the branch used at the moment of writing](https://github.com/OneBogdan01/hammered-engine/tree/Cmake-opengl-vulkan-set-up)
+
 ### OpenGL and Vulkan
 
 [^glb]: [Red Book](https://www.amazon.com/OpenGL-Programming-Guide-Official-Learning/dp/0134495497)
@@ -478,6 +480,3 @@ Thanks for reading my article. If you have any feedback or questions, please fee
 
 [^make]: [Cmake](https://cmake.org/)
 [^source]: [Github repo link to the branch used at the moment of writing](https://github.com/OneBogdan01/hammered-engine/tree/Cmake-opengl-vulkan-set-up)
-
-
-
