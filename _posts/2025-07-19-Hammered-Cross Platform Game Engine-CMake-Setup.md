@@ -12,13 +12,13 @@ image: /assets/assets-2025-07-19/gl_vk_demo.gif
 
 At the end of my second year at university, I had the opportunity to work with custom game technologies. I contributed to cross-platform engines (each took 8 weeks) that ran on [Nintendo](https://tycro-games.github.io/projects/Y2-blockC/) and [PS5](https://tycro-games.github.io/projects/Y2-BlockD/). Over another 8 weeks, I built a [grand strategy renderer](https://tycro-games.github.io/projects/Y2-blockB/) inspired by one of my favorite games, *Europa Universalis IV*.
 
-The experience was educational and practical; however, I often felt constrained by the strict deadlines. I had to compromise to finish on time, just as each project was starting to come together. This is why I decided to start my most ambitious solo project yet: **Hammered**, an engine using OpenGL and Vulkan for simulation games, where I can experiment with graphics, tools and gameplay systems at my own pace, building each addition on top of the last.
+The experience was educational and practical; however, I often felt constrained by the strict deadlines. I had to compromise in order to finish on time, just as each project was starting to come together. This is why I decided to start my most ambitious solo project yet: **Hammered**, an engine using OpenGL and Vulkan for simulation games, where I can experiment with graphics, tools and gameplay systems at my own pace, building each addition on top of the last.
 
 The project is available on github, specifically the branch used when this articles was made can be found [here](https://github.com/OneBogdan01/hammered-engine/tree/Cmake-opengl-vulkan-set-up).
 
 ## Demo
 
-At this point in my development journey I am still trying to figure out a lot of unknowns. For the time being, I want to build a vulkan renderer and use OpenGL as a visual check. If it looks the same with both backend. I also had a long curiosity to experiment with performance on Vulkan and modern OpenGL. I never compared OpenGL with AZDO and Vulkan [^grc][^glAZDO][^GDCtalk] which is something that I am excited to explore (and profile!).
+At this point in my development journey I am still trying to figure out a lot of unknowns. For the time being, I want to build a vulkan renderer and use OpenGL as a visual check. For a long time, I've had the curiosity to experiment with performance on Vulkan and modern OpenGL. I never compared OpenGL with AZDO and Vulkan [^grc][^glAZDO][^GDCtalk] which is something that I am excited to explore (and profile!).
 
 <video autoplay muted controls width="90%" src="/assets/assets-2025-07-19/2025-07-19 18-00-20.mp4" title="Title"></video>
 
