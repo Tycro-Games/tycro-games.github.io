@@ -1,5 +1,6 @@
 ---
-layout: default
+layout: page
+title: "{{ page.title }}"
 refactor: true
 panel_includes:
   - toc
@@ -13,7 +14,7 @@ tail_includes:
 
 {% include toc-status.html %}
 
-<article class="px-1" data-toc="{{ enable_toc }}">
+<article class="project-detail" data-toc="{{ enable_toc }}">
   <header>
     <h1 data-toc-skip>{{ page.title }}</h1>
     {% if page.description %}
@@ -106,9 +107,11 @@ tail_includes:
     </dialog>
   {% endif %}
 
-  <div class="content">
-    {{ content }}
-  </div>
+  <section class="project-details">
+    <div class="content">
+      {{ content }}
+    </div>
+  </section>
 
   <div class="post-tail-wrapper text-muted">
     <!-- categories -->
@@ -161,3 +164,27 @@ tail_includes:
   </div>
   <!-- div.post-tail-wrapper -->
 </article>
+<!-- Inline CSS -->
+<style>
+  /* Main Project Detail Styles */
+  .project-detail {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+
+  }
+
+  .project-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .project-header h1 {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+
+ .project-header .project-description {
+    font-size: 1.2rem;
+    margin-top: 10px; /* Added 'px' for proper unit */
+}
