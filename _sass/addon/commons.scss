@@ -1456,8 +1456,9 @@ search {
 }
 @media (min-width: 1200px) {
   .col-xl-9 {
-    width: 100% !important;
-    flex: 0 0 100% !important;
+    min-width: 75%;
+    max-width: 100%;
+    flex: 1 1 auto;
   }
 }
 @media all and (min-width: 1400px) {
