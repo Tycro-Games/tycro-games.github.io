@@ -147,7 +147,7 @@ You might wonder why I set `set_target_properties`, I am using Visual Studio and
 ![alt text](../assets/assets-2025-07-19/folder.png)
 *resulting project hierarchy*
 
-#### External
+### Building External
 
 This is the folder with all libraries used by the engine, for now these are:
 
@@ -227,7 +227,7 @@ if(ENABLE_GL_BACKEND)
 
 ```
 
-#### Code
+### Building Code
 
 > My code folder is further split into `include` and `source` , containing `.hpp` and `.cpp` files.
 {: .prompt-info }
