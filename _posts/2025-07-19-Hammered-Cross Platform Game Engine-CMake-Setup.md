@@ -16,42 +16,49 @@ The experience was educational and practical; however, I often felt constrained 
 
 The project is available on github, specifically the branch used when this articles was made can be found [here](https://github.com/OneBogdan01/hammered-engine/tree/Cmake-opengl-vulkan-set-up).
 
-## Demo
+### Breakdown
 
-At this point in my development journey I am still trying to figure out a lot of unknowns. For the time being, I want to build a vulkan renderer and use OpenGL as a visual check. For a long time, I've had the curiosity to experiment with performance on Vulkan and modern OpenGL. I never compared OpenGL with AZDO and Vulkan [^grc][^glAZDO][^GDCtalk] which is something that I am excited to explore (and profile!).
-
-<video autoplay muted controls width="90%" src="/assets/assets-2025-07-19/2025-07-19 18-00-20.mp4" title="Title"></video>
-
-*In the next updates, I will save the current state of the engine on close, automatically loading the state when switching between backends*
-
-This is the breakdown, of what I have done so far:
+This is what I have done so far:
 
 - using Cmake[^make] I can generate two .exes that use OpenGL and Vulkan, "_gl" and "_vk" as name endings
 - shaders are compiled in the generation step from `.glsl` to `.spv` into Vulkan and OpenGL specific binaries, as detailed in the Red Book, chapter two [^glb].
 - running one of them, initializes the selected graphical backend with the following setup: a triangle is rendered, along with an imgui menu that allows changing the compute shader applied to the background
 - an ImGui menu is also present to allow changing from one backend to another, closing the current instance and running the other executable
 
-This setup was made using vulkan guide[^vkg], then adapted to OpenGL in order to have the same visual output. I would like to explain how I set-up Cmake for my project and the common "device" interface. I will not go into the graphics implementation yet, since I do not have a good grasp of how I want to build that API yet.
+## Demo
+
+In the video below, I run the application using the generated `.sln` solution. The shaders are compiled before the window is opened:
+
+<video muted controls width="100%" src="/assets/assets-2025-07-19/2025-07-19 18-00-20.mp4" title="Title"></video>
+
+*In the next updates, I will save the current state of the engine on close, automatically loading the state when switching between backends*
+
+At this point in my development journey I am still trying to figure out a lot of unknowns. For the time being, I want to build a Vulkan renderer and use OpenGL as a visual check. For a long time, I've had the curiosity to experiment with performance on Vulkan and modern OpenGL. I never compared OpenGL with AZDO and Vulkan [^grc][^glAZDO][^GDCtalk] which is something that I am excited to explore (and profile!).
+
+>This setup was made using vulkan guide[^vkg], then adapted to OpenGL in order to have the same visual output. I will not go into the graphics implementation yet, since I do not have a good grasp of how I want to build that API yet.
+{: .prompt-info }
 
 ## Cmake
 
-### What is it?
+>For the next section I expect the reader to have some basic understanding of Cmake. If you need a refresher or you never used it before, check [this](https://cmake.org/cmake/help/latest/guide/tutorial/index.html).
+{: .prompt-tip }
 
-It is a popular cross-platform builder for C++ projects. The way it works is that it uses text files to define properties of the project[^make].
+### Project Structure
 
-This can be the name of the project, what kind of cpp version you are using, linking external libraries, including source and header files and even compiling shaders.
+![alt text](../assets/assets-2025-07-19/FolderStructure_ManimCE_v0.19.0.png)
+*Cmake project structure*
 
-`CmakeLists.txt` files are  are used to write the building logic, I have several of these files at different levels of my project folders:
+I mentioned in the intro section that I would like to build this engine specifically for *simulation games*. It is irrelevant what is the target kind of game for an engine as long as it has a clear purpose, for me that would be a **3D renderer** and a similar game to **Dwarf Fortress**. Regardless of the project, I would like to allow the user to switch between backends.
 
-<video autoplay muted controls width="90%"  src="/assets/assets-2025-07-19/FolderStructure.mp4" title="Title"></video>
-
-I mentioned in the intro section that I would like to build this engine specifically for *simulation games*. It is irrelevant what is the target kind of game for an engine as long as it has a clear purpose, for me that would be a **3D renderer** and a similar game to **Dwarf Fortress**. Taking that into account, the build structure of this engine looks like this:
+This is the build structure I came up with:
 
 1. `gl` and `vk` are the OpenGL and Vulkan backends.
-2. the engine is compiled into both backends, each of them using `common` code and libraries as well as API dependent.
-3. the applications then use the engine as a library
+2. the engine is compiled into both backends:`hammered_engine_gl` & `hammered_engine_vk`
+3. each engine backend uses `common` code and external libraries.
+4. in addition, there is specific code & libraries for OpenGL and Vulkan that also get linked into their respective engine backends
+5. `game_gl` & `game_vk` are built on top of their backends
 
-<video autoplay muted controls width="90%"  src="/assets/assets-2025-07-19/EngineStructureDiagram.mp4" title="Title"></video>
+<video muted controls width="100%"  src="/assets/assets-2025-07-19/EngineStructureDiagram.mp4" title="Title"></video>
 
 >This is roughly how the Cmake build process will work
 {: .prompt-info }
@@ -254,7 +261,7 @@ foreach(backend ${GAME_BACKENDS})
 > `${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp` is providing a path with filtering that will return all `.cpp` files found.
 {: .prompt-info }
 
-> In short, `GLOB_RECURSE` can save you the trouble of specifying each file, however,this is advised against on the docs, due to the fact that `CONFIGURE_DEPENDS` may not work for all generators. Keep that in mind, in case you decide to use it.
+> In short, `GLOB_RECURSE` can save you the trouble of specifying each file, however, this is advised against on the docs, due to the fact that `CONFIGURE_DEPENDS` may not work for all generators. Keep that in mind, in case you decide to use it.
 {: .prompt-warning  }
 
 [![alt text](../assets/assets-2025-07-19/warn.png)](https://cmake.org/cmake/help/latest/command/file.html#filesystem)
@@ -302,12 +309,14 @@ endforeach()
 
 ### Building the shaders
 
-At this point the engine is basically ready, each backend has its own library that has common libraries and specific ones depending if it is for OpenGL or Vulkan. The next step is to prepare the shaders. Normally, OpenGL uses `GLSL` which is compiled at run-time. However, there are extensions that allow OpenGL to use `.spv` files, which are prepared offline, as described in the **Red Book** in chapter two [^glb]. It is more to use the same `.glsl` file for Vulkan and OpenGL, the specific differences can be handled used `ifdef`. The last step is to compile to the Vulkan or OpenGL `.spv` variants, using the command line:
+At this point the engine is basically ready, each backend has its own library that has common libraries and specific ones depending on the API. The next step is to prepare the shaders. Normally, OpenGL uses `GLSL` which is compiled at run-time. However, there are extensions that allow OpenGL to use `.spv` files, which are compiled offline, as described in the **Red Book**, chapter two [^glb]. 
+
+It is more convenient to use the same `.glsl` file for both backends, the specific differences can be handled using `ifdef`. The last step is to compile to the Vulkan or OpenGL `.spv` variants, using the command line:
 
 ```
-For opengl:
+# For opengl:
 glslangValidator -G shader.vert -o output.spv
-for vulkan:
+# For vulkan:
 glslangValidator -V shader.vert -o output.spv
 ```
 
@@ -360,8 +369,7 @@ set_target_properties(shaders PROPERTIES FOLDER "utilities")
 The output for each shader will be:
 
 ![alt text](../assets/assets-2025-07-19/shader.png)
-
-These can then be loaded depending on the API.
+*These can then be loaded depending on the API.*
 
 ### Building the executable
 
@@ -421,8 +429,10 @@ function(exec_macro_for target backend)
     endforeach()
 
 endfunction()
+```
 
 Finally, we can generate all the backends applications. At the end, I also create a dummy target which will build both backends at the same time, so it does not have to be done manually:
+
 ```cmake
 function(add_game_backends backends)
     set(game_exes)
