@@ -94,7 +94,7 @@ comments:
     issue_term: # < url | pathname | title | ...>
   # Giscus options › https://giscus.app
   giscus:
-    repo: Tycro-Games/tycro-games
+    repo: Tycro-Games/tycro-games.github.io
     repo_id: R_kgDOI-t6lw
     category: Comments
     category_id: DIC_kwDOI-t6l84Ctby
