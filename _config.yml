@@ -95,7 +95,7 @@ comments:
     repo_id: R_kgDOI-t6lw
     category: Comments
     category_id: DIC_kwDOI-t6l84CtbyF
-    mapping: title
+    mapping: pathname
     input_position: bottom
     lang: en
     reactions_enabled: 1
