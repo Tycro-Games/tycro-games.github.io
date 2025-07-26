@@ -6,6 +6,7 @@ tags: [🎨graphics , 🔺OpenGL, 🌋 Vulkan, 🔧Engine]
 math: true
 img_path: /assets/assets-2025-07-19/
 image: /assets/assets-2025-07-19/gl_vk_demo.gif
+comments: true
 ---
 
 ## Intro
