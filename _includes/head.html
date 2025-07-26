@@ -61,12 +61,41 @@
         data-reactions-enabled="1"
         data-emit-metadata="0"
         data-input-position="top"
-        data-theme="preferred_color_scheme"
         data-lang="en"
         data-loading="lazy"
         crossorigin="anonymous"
         async>
 </script>
+<script>
+  function setGiscusTheme(theme) {
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (!iframe) return;
+    iframe.contentWindow.postMessage({
+      giscus: {
+        setConfig: {
+          theme: theme,
+        }
+      }
+    }, 'https://giscus.app');
+  }
+
+  const userPref = localStorage.getItem('theme');
+  const systemPref = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  const currentTheme = userPref ? userPref : systemPref;
+
+  // Wait for iframe to load then set theme
+  window.addEventListener('message', (event) => {
+    if (event.origin !== 'https://giscus.app') return;
+    setGiscusTheme(currentTheme);
+  });
+
+  // Optional: Update Giscus when Chirpy theme is toggled
+  document.querySelector('#mode-toggle')?.addEventListener('click', () => {
+    const updatedTheme = localStorage.getItem('theme') || (document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    setTimeout(() => setGiscusTheme(updatedTheme), 200);
+  });
+</script>
+
   <title>
     {%- unless page.layout == 'home' -%}
       {{ page.title | append: ' | ' }}
