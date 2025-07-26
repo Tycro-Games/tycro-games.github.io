@@ -83,8 +83,7 @@ avatar: "./img/channels4_profile.png"
 toc: true
 
 comments:
-  provider: "giscus"
-  active: "giscus" # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
+  active: giscus # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
   # The active options are as follows:
   # utterances settings › https://utteranc.es/
   utterances:
@@ -92,16 +91,15 @@ comments:
     issue_term: # < url | pathname | title | ...>
   # Giscus options › https://giscus.app
   giscus:
-  
-    repo: "Tycro-Games/tycro-games.github.io"
-    repo_id: "R_kgDOI-t6lw"
-    category: "Comments"
-    category_id: "DIC_kwDOI-t6l84CtbyF"
-    mapping: "title"
-    input_position: "bottom"
-    lang: "en"
+    repo: Tycro-Games/tycro-games.github.io
+    repo_id: R_kgDOI-t6lw
+    category: Comments
+    category_id: DIC_kwDOI-t6l84CtbyF
+    mapping: title
+    input_position: bottom
+    lang: en
     reactions_enabled: 1
-    loading: "lazy"
+    loading: lazy
 
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
 assets:
