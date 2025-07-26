@@ -100,6 +100,7 @@ comments:
     lang: en
     reactions_enabled: 1
     loading: lazy
+    data-theme: dark_dimmed
 
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
 assets:
