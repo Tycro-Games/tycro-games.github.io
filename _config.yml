@@ -95,7 +95,7 @@ comments:
     repo: Tycro-Games/tycro-games.github.io
     repo_id: R_kgDOI-t6lw
     category: Comments
-    category_id: DIC_kwDOI-t6l84Ctby
+    category_id: DIC_kwDOI-t6l84CtbyF
     mapping: title # optional, default to 'pathname'
     strict: 0
     input_position: bottom # optional, default to 'bottom'
