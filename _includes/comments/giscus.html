@@ -5,6 +5,7 @@
     const lightTheme = 'light';
     const darkTheme = 'dark_dimmed';
 
+    // Detect initial theme
     let initTheme = lightTheme;
     const html = document.documentElement;
 
@@ -17,54 +18,63 @@
       initTheme = darkTheme;
     }
 
+    // Determine language
     let lang = '{{ site.comments.giscus.lang | default: lang }}';
-    {%- comment -%} https://github.com/giscus/giscus/tree/main/locales {%- endcomment -%}
     if (lang.length > 2 && !lang.startsWith('zh')) {
       lang = lang.slice(0, 2);
     }
 
-    let giscusAttributes = {
+    // Create and inject Giscus script
+    const giscusAttributes = {
       src: 'https://giscus.app/client.js',
       'data-repo': '{{ site.comments.giscus.repo}}',
       'data-repo-id': '{{ site.comments.giscus.repo_id }}',
       'data-category': '{{ site.comments.giscus.category }}',
       'data-category-id': '{{ site.comments.giscus.category_id }}',
-      'data-mapping': '{{ site.comments.giscus.mapping | default: 'pathname' }}',
-      'data-strict' : '{{ site.comments.giscus.strict | default: '0' }}',
-      'data-reactions-enabled': '{{ site.comments.giscus.reactions_enabled | default: '1' }}',
+      'data-mapping': '{{ site.comments.giscus.mapping | default: "pathname" }}',
+      'data-strict': '{{ site.comments.giscus.strict | default: "0" }}',
+      'data-reactions-enabled': '{{ site.comments.giscus.reactions_enabled | default: "1" }}',
       'data-emit-metadata': '0',
       'data-theme': initTheme,
-      'data-input-position': '{{ site.comments.giscus.input_position | default: 'bottom' }}',
+      'data-input-position': '{{ site.comments.giscus.input_position | default: "bottom" }}',
       'data-lang': lang,
       'data-loading': 'lazy',
       crossorigin: 'anonymous',
       async: ''
     };
 
-    let giscusScript = document.createElement('script');
-    Object.entries(giscusAttributes).forEach(([key, value]) =>
-      giscusScript.setAttribute(key, value)
-    );
+    const giscusScript = document.createElement('script');
+    Object.entries(giscusAttributes).forEach(([key, value]) => {
+      giscusScript.setAttribute(key, value);
+    });
     document.getElementById('tail-wrapper').appendChild(giscusScript);
 
-    addEventListener('message', (event) => {
+    // Theme change handler via ModeToggle
+    window.addEventListener('message', (event) => {
       if (
         event.source === window &&
         event.data &&
         event.data.direction === ModeToggle.ID
       ) {
-        {%- comment -%} global theme mode changed {%- endcomment -%}
         const mode = event.data.message;
         const theme = mode === ModeToggle.DARK_MODE ? darkTheme : lightTheme;
 
-        const message = {
-          setConfig: {
-            theme: theme
-          }
-        };
-
-        const giscus = document.getElementsByClassName('giscus-frame')[0].contentWindow;
-        giscus.postMessage({ giscus: message }, origin);
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (iframe) {
+          iframe.contentWindow.postMessage(
+            {
+              giscus: {
+                setConfig: {
+                  theme: theme
+                }
+              }
+            },
+            origin
+          );
+          console.log('[Giscus] Theme updated via postMessage:', theme);
+        } else {
+          console.warn('[Giscus] iframe not found when trying to update theme');
+        }
       }
     });
   })();
