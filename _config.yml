@@ -84,7 +84,7 @@ toc: true
 
 comments:
   provider: giscus
-  active: giscus # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
+  # active: giscus # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
   # The active options are as follows:
   # utterances settings › https://utteranc.es/
   utterances:
