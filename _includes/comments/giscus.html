@@ -9,29 +9,31 @@
     const html = document.documentElement;
 
     if (
-      (html.hasAttribute('data-mode') && html.getAttribute('data-mode') === 'dark') ||
-      (!html.hasAttribute('data-mode') && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      (html.hasAttribute('data-mode') &&
+        html.getAttribute('data-mode') === 'dark') ||
+      (!html.hasAttribute('data-mode') &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches)
     ) {
       initTheme = darkTheme;
     }
 
-    let lang = '{{ site.comments.giscus.lang | default: "en" }}';
+    let lang = '{{ site.comments.giscus.lang | default: lang }}';
     if (lang.length > 2 && !lang.startsWith('zh')) {
       lang = lang.slice(0, 2);
     }
 
-    const giscusAttributes = {
+    let giscusAttributes = {
       src: 'https://giscus.app/client.js',
-      'data-repo': '{{ site.comments.giscus.repo }}',
+      'data-repo': '{{ site.comments.giscus.repo}}',
       'data-repo-id': '{{ site.comments.giscus.repo_id }}',
       'data-category': '{{ site.comments.giscus.category }}',
       'data-category-id': '{{ site.comments.giscus.category_id }}',
-      'data-mapping': '{{ site.comments.giscus.mapping | default: "pathname" }}',
-      'data-strict': '{{ site.comments.giscus.strict | default: "0" }}',
-      'data-reactions-enabled': '{{ site.comments.giscus.reactions_enabled | default: "1" }}',
+      'data-mapping': '{{ site.comments.giscus.mapping | default: 'pathname' }}',
+      'data-strict' : '{{ site.comments.giscus.strict | default: '0' }}',
+      'data-reactions-enabled': '{{ site.comments.giscus.reactions_enabled | default: '1' }}',
       'data-emit-metadata': '0',
       'data-theme': initTheme,
-      'data-input-position': '{{ site.comments.giscus.input_position | default: "bottom" }}',
+      'data-input-position': '{{ site.comments.giscus.input_position | default: 'bottom' }}',
       'data-lang': lang,
       'data-loading': 'lazy',
       crossorigin: 'anonymous',
@@ -39,14 +41,12 @@
     };
 
     const giscusScript = document.createElement('script');
-    Object.entries(giscusAttributes).forEach(([key, value]) => {
-      giscusScript.setAttribute(key, value);
-    });
+    Object.entries(giscusAttributes).forEach(([key, value]) => 
+      giscusScript.setAttribute(key, value)
+    );
 
-    const wrapper = document.getElementById('tail-wrapper');
-    if (wrapper) {
-      wrapper.appendChild(giscusScript);
-    }
+    document.getElementById('tail-wrapper').appendChild(giscusScript);
+
 
     function sendGiscusThemeUpdate(theme) {
       const message = {
@@ -80,5 +80,5 @@
         sendGiscusThemeUpdate(theme);
       }
     });
-  })();  // <-- This closes the IIFE
+  })();
 </script>
