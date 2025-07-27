@@ -83,6 +83,7 @@ avatar: "./img/channels4_profile.png"
 toc: true
 
 comments:
+  provider: giscus
   active: giscus # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
   # The active options are as follows:
   # utterances settings › https://utteranc.es/
@@ -95,12 +96,9 @@ comments:
     repo_id: R_kgDOI-t6lw
     category: Comments
     category_id: DIC_kwDOI-t6l84CtbyF
-    mapping: pathname
-    input_position: bottom
-    lang: en
-    reactions_enabled: 1
-    loading: lazy
-    data-theme: dark_dimmed
+
+
+
 
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
 assets:

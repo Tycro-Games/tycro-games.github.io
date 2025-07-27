@@ -80,7 +80,10 @@ layout: compress
     {% endif %}
 
   <!-- Embedded scripts -->
-
+    {% for _include in layout.script_includes %}
+      {% assign _include_path = _include | append: '.html' %}
+      {% include {{ _include_path }} %}
+    {% endfor %}
     {% include js-selector.html lang=lang %}
 
     {% include_cached search-loader.html lang=lang %}
