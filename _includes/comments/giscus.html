@@ -5,29 +5,24 @@
     const lightTheme = 'light';
     const darkTheme = 'dark_dimmed';
 
-    // Detect initial theme
     let initTheme = lightTheme;
     const html = document.documentElement;
 
     if (
-      (html.hasAttribute('data-mode') &&
-        html.getAttribute('data-mode') === 'dark') ||
-      (!html.hasAttribute('data-mode') &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches)
+      (html.hasAttribute('data-mode') && html.getAttribute('data-mode') === 'dark') ||
+      (!html.hasAttribute('data-mode') && window.matchMedia('(prefers-color-scheme: dark)').matches)
     ) {
       initTheme = darkTheme;
     }
 
-    // Determine language
-    let lang = '{{ site.comments.giscus.lang | default: lang }}';
+    let lang = '{{ site.comments.giscus.lang | default: "en" }}';
     if (lang.length > 2 && !lang.startsWith('zh')) {
       lang = lang.slice(0, 2);
     }
 
-    // Create and inject Giscus script
     const giscusAttributes = {
       src: 'https://giscus.app/client.js',
-      'data-repo': '{{ site.comments.giscus.repo}}',
+      'data-repo': '{{ site.comments.giscus.repo }}',
       'data-repo-id': '{{ site.comments.giscus.repo_id }}',
       'data-category': '{{ site.comments.giscus.category }}',
       'data-category-id': '{{ site.comments.giscus.category_id }}',
@@ -47,9 +42,32 @@
     Object.entries(giscusAttributes).forEach(([key, value]) => {
       giscusScript.setAttribute(key, value);
     });
-    document.getElementById('tail-wrapper').appendChild(giscusScript);
 
-    // Theme change handler via ModeToggle
+    const wrapper = document.getElementById('tail-wrapper');
+    if (wrapper) {
+      wrapper.appendChild(giscusScript);
+    }
+
+    function sendGiscusThemeUpdate(theme) {
+      const message = {
+        setConfig: {
+          theme: theme
+        }
+      };
+
+      const postToIframe = () => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (iframe && iframe.contentWindow) {
+          iframe.contentWindow.postMessage({ giscus: message }, origin);
+        } else {
+          // Retry after a short delay if iframe isn't ready yet
+          setTimeout(postToIframe, 200);
+        }
+      };
+
+      postToIframe();
+    }
+
     window.addEventListener('message', (event) => {
       if (
         event.source === window &&
@@ -58,23 +76,7 @@
       ) {
         const mode = event.data.message;
         const theme = mode === ModeToggle.DARK_MODE ? darkTheme : lightTheme;
-
-        const iframe = document.querySelector('iframe.giscus-frame');
-        if (iframe) {
-          iframe.contentWindow.postMessage(
-            {
-              giscus: {
-                setConfig: {
-                  theme: theme
-                }
-              }
-            },
-            origin
-          );
-          console.log('[Giscus] Theme updated via postMessage:', theme);
-        } else {
-          console.warn('[Giscus] iframe not found when trying to update theme');
-        }
+        sendGiscusThemeUpdate(theme);
       }
     });
   })();
