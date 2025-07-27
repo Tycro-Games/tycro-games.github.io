@@ -73,11 +73,12 @@
         event.source === window &&
         event.data &&
         event.data.direction === ModeToggle.ID
-      ) {
+      ) 
+      {
         const mode = event.data.message;
         const theme = mode === ModeToggle.DARK_MODE ? darkTheme : lightTheme;
         sendGiscusThemeUpdate(theme);
       }
     });
-  })();
+  })();  // <-- This closes the IIFE
 </script>
