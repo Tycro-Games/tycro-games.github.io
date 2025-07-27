@@ -17,7 +17,7 @@
       initTheme = darkTheme;
     }
 
-    let lang = '{{ site.comments.giscus.lang | default: lang }}';
+    let lang = '{{ site.comments.giscus.lang | default: site.lang | default: "en" }}';
     if (lang.length > 2 && !lang.startsWith('zh')) {
       lang = lang.slice(0, 2);
     }
