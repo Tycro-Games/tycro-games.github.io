@@ -6,7 +6,6 @@ tags: [🎨graphics , 🔺OpenGL, 🌋 Vulkan, 🔧Engine]
 math: true
 img_path: /assets/assets-2025-07-19/
 image: /assets/assets-2025-07-19/gl_vk_demo.gif
-comments: true
 ---
 
 ## Intro
@@ -479,9 +478,7 @@ Thanks for reading my article. If you have any feedback or questions, please fee
 
 ### Source
 
-[Github repo link to the branch used at the moment of writing](https://github.com/OneBogdan01/hammered-engine/tree/Cmake-opengl-vulkan-set-up)
-
-### OpenGL and Vulkan
+[Github repo link to the branch used at the moment of writing](https://github.com/OneBogdan01/hammered-engine/tree/cmake-opengl-vulkan-set-up)
 
 [^glb]: [Red Book](https://www.amazon.com/OpenGL-Programming-Guide-Official-Learning/dp/0134495497)
 [^grc]: [3D Graphics Rendering Cookbook: A comprehensive guide to exploring rendering algorithms in modern OpenGL and Vulkan](https://www.amazon.com/Graphics-Rendering-Cookbook-comprehensive-algorithms/dp/1838986197)
@@ -490,4 +487,3 @@ Thanks for reading my article. If you have any feedback or questions, please fee
 [^vkg]: [Vulkan Guide chapter 3](https://vkguide.dev/docs/new_chapter_3/building_pipeline/)
 
 [^make]: [Cmake](https://cmake.org/)
-[^source]: [Github repo link to the branch used at the moment of writing](https://github.com/OneBogdan01/hammered-engine/tree/Cmake-opengl-vulkan-set-up)
