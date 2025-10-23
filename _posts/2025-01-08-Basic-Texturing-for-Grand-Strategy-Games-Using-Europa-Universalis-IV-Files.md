@@ -8,7 +8,7 @@ img_path: /assets/assets-2025-01-08/
 image: /assets/assets-2025-01-08/showcase.gif
 ---
 
-Most resources on the internet are providing information on how to create GTG games in an already established engine such as Unity, Godot or Unreal Engine. In this article, my aim is to make the ***rendering*** aspect of this genre easier to approach, thereby contributing towards the development of engines and tools that make the creation of GTGs more accessible.
+Most resources on the internet are providing information on how to create GSG games in an already established engine such as Unity, Godot or Unreal Engine. In this article, my aim is to make the ***rendering*** aspect of this genre easier to approach, thereby contributing towards the development of engines and tools that make the creation of GSGs more accessible.
 
 In this article I will explain how to texture a procedural mesh used in typical Grand Strategy games, like Europa Universalis 4 (EU4). Keep in mind that this article serves more as a base to improve upon, rather than a complete solution for texturing.
 
@@ -45,7 +45,7 @@ Another option is to use Tesselation Shaders. This will be a bit more advanced t
 
 ## Background
 
-Grand Strategy games (GTG) are a niche genre that appeal only to a smaller portion of the strategy audience. Their complex simulations of the world make it a hard genre to get into as well as a difficult one to develop for. The complex systems that guide diplomacy, economy and even history are being utilized for more than just entertainment. The area of research around these games has become more active in the recent years. Grand Strategy games might also be "Serious Games" and will aid in teaching history, economy and medieval diplomacy. Here are a few research papers exploring these topics:
+Grand Strategy games (GSG) are a niche genre that appeal only to a smaller portion of the strategy audience. Their complex simulations of the world make it a hard genre to get into as well as a difficult one to develop for. The complex systems that guide diplomacy, economy and even history are being utilized for more than just entertainment. The area of research around these games has become more active in the recent years. Grand Strategy games might also be "Serious Games" and will aid in teaching history, economy and medieval diplomacy. Here are a few research papers exploring these topics:
 
 - [Grand Strategy Games As A Pedagogical Tool For Introductory Economics: A Student's Perspective](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4986923#paper-references-widget)
 - [Simulating medieval connections Grand strategy games and social network analysis](https://jhnr.net/articles/81/files/660bbe5c7c0b0.pdf)
