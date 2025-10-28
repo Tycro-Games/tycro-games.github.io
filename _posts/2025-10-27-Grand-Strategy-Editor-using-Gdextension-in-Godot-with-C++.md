@@ -36,7 +36,6 @@ I own Europa Universalis 4, therefore, it is not surprising that it will have si
 ![alt text](</assets/assets-2025-10-27/Screenshot 2025-10-27 112910.png>) 
 
 ![alt text](</assets/assets-2025-10-27/Screenshot 2025-10-27 113506.png>)
-![text](2025-10-27-Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++.md)
 ![text](</assets/assets-2025-10-27/Screenshot 2025-10-07 105438.png>) 
 ![text](</assets/assets-2025-10-27/Screenshot 2025-10-07 105558.png>) 
 ![text](</assets/assets-2025-10-27/Screenshot 2025-10-07 105332.png>)
