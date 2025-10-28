@@ -41,14 +41,14 @@ I own Europa Universalis 4, therefore, it is not surprising that it will have si
 ![text](</assets/assets-2025-10-27/Screenshot 2025-10-07 105558.png>) 
 ![text](</assets/assets-2025-10-27/Screenshot 2025-10-07 105332.png>)
 
-## Demo
+### Runtime demo
 
 <video muted controls  src="/assets/assets-2025-10-27/borders.mp4" title="Title"></video>
 
 
 ## Contents
 
-- Write about what can they find here
+In this article I will cover how I implemented the border rendering, a short section on the implentation I did in Godot and the possible improvements or future work one might be interested in.
 
 1. Gdextension with C++ in Godot. (touch lightly and mainly reference to main references)
 2. Rendering in Grand Strategy games using the intel paper.
