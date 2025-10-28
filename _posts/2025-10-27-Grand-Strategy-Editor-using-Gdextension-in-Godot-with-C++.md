@@ -18,10 +18,11 @@ Ideas:
 
 ## Demo
 
-<video muted controls width="100%" src="./assets/assets-2025-10-27/borders.mp4" title="Title"></video>
+<video muted controls  src="/assets/assets-2025-10-27/borders.mp4" title="Title"></video>
 
 
-<video controls src="./assets/assets-2025-10-27/inspector.mp4" title="Title"></video>
+<video controls src="/assets/assets-2025-10-27/inspector.mp4" title="Title"></video>
+
 ## Contents
 
 - Write about what can they find here
