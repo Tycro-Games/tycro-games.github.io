@@ -16,11 +16,12 @@ The project is open source, you can access the repo by clicking [here](https://g
 
 - [Contents](#contents)
 - [Intro](#intro)
-  - [Results from my project](#results-from-my-project)
-  - [Runtime demo](#runtime-demo)
+	- [Results from my project](#results-from-my-project)
+	- [Runtime demo](#runtime-demo)
 - [Gdextension in Godot with C++](#gdextension-in-godot-with-c)
 - [Rendering provinces using Imperator: Rome paper](#rendering-provinces-using-imperator-rome-paper)
-- [Jump Flood for Distance Fields (and how to not implement it)](#jump-flood-for-distance-fields-and-how-to-not-implement-it)
+- [Distance Fields - Jump Flood Algorithm (and how to not implement it)](#distance-fields---jump-flood-algorithm-and-how-to-not-implement-it)
+	- [How to not do JFA](#how-to-not-do-jfa)
 - [Upscaling using HQX shaders](#upscaling-using-hqx-shaders)
 - [Final Words](#final-words)
 - [References](#references)
@@ -58,7 +59,6 @@ Here are a few screenshots closer to the borders:
 
 ![text](</assets/assets-2025-10-27/Screenshot 2025-10-07 105332.png>)
 *Brazil*
-
 
 ### Runtime demo
 
@@ -110,7 +110,6 @@ There are a lot of gameplay related information, however, just to render a simpl
 
 Below, is one of the files that defines which provinces are owned by countries.
 
-
 ```
 #Uppland, contains Stockholm, Uppsala & Nyk�ping.
 
@@ -148,21 +147,19 @@ center_of_trade = 2
 1502.5.9 = { controller = SWE } # Retaken by Sweden
 1523.6.7 = { base_manpower = 4 } # Kgl.Drabantk�ren/Svea Livgarde
 1527.6.1 = {
-	religion = protestant
-	reformation_center = protestant
+ religion = protestant
+ reformation_center = protestant
 }
 1598.8.12 = { controller = PLC } # Sigismund tries to reconquer his crown
 1598.12.15 = { controller = SWE } # Duke Karl get it back
 1617.1.1 = { 
-	base_tax = 6 
-	base_production = 6 
+ base_tax = 6 
+ base_production = 6 
 } # Stockholm become Baltic Metropol
 ```
 
-
 > You can find all the text files I used in my project [here](https://github.com/OneBogdan01/gs-map-editor/tree/478e1a66ed1c3b7e0f2383d00f836823dd868e66/demo/map).
 {: .prompt-info }
-
 
 I will refer to a `Political Map` as the output of these two textures.
 
@@ -178,12 +175,76 @@ The algorithm for simple rendering of colors can be summarized as follows:
 
 SHOW A DIAGRAM ANIMATION STEP BY STEP TO SHOW THE OUTPUT AT EACH STEP.
 
+Below is a short snippet that gets the province color from the two textures.
+
+```glsl
+uniform sampler2D lookup_map : filter_nearest;
+uniform sampler2D color_map : source_color, filter_nearest;
+
+vec4 get_province_color(vec2 uv)
+{
+ vec4 lookup = texture(lookup_map, uv);
+ vec2 province_id = lookup.rg;
+ return texture(color_map, color_uv);
+}
+```
+
 It is important to understand here, that this indirection is used, because the smaller texture can be modified easily and efficiently at runtime.
 
 ![alt text](<../assets/assets-2025-10-27/Screenshot 2025-09-24 133323.png>)
 *Very simple political map that only outputs each province's color*
 
-## Jump Flood for Distance Fields (and how to not implement it)
+## Distance Fields - Jump Flood Algorithm (and how to not implement it)
+
+Signed Distance Fields(SDF) are a common technique used in game development to create various graphics effects which can be seen in [this][sdf] paper from Valve. In the most simple case, one can generate an SDF as a 8 bit one channel texture.
+The brute force version of this algorithm is to check each texel's neighbors using a "spread" variable. As you can imagine, 0 will represent the smallest distance and 1 will be the maximum distance.
+
+Historically, this technique was first used for font rendering, to maintain crisp UI elements. However, we are using it to create a border, as well as a gradient between country colors. Therefore, the code needs to be adapted to this, below is the simplest (and slowest) shader code:
+
+```glsl
+
+void fragment()
+{
+vec2 uv = UV;
+vec4 center_color = get_province_color(uv);
+vec2 pixel_size = 1.0 / vec2(textureSize(lookup_map, 0));
+
+float min_distance = max_distance;
+bool found_edge = false;
+
+int spread = int(max_distance);
+for (int x = -spread; x <= spread; x++)
+{
+for (int y = -spread; y <= spread; y++)
+{
+ vec2 offset = vec2(float(x), float(y));
+ vec2 sample_uv = uv + offset * pixel_size;
+ vec4 sample_color = get_province_color(sample_uv);
+
+ if (sample_color != center_color)
+ {
+ float dist = length(offset);
+ min_distance = min(min_distance, dist);
+ }
+}
+}
+
+
+ float normalized_distance = min_distance / max_distance;
+ COLOR = vec4(vec3(normalized_distance), 1.0);
+}
+```
+
+> This is an Unsigned Distance field, since the borders cannot have a negative distance.
+{: .prompt-tip }
+
+![alt text](</assets/assets-2025-10-27/Screenshot 2025-10-29 112346.png>)
+*Resulting Distance field*
+
+### How to not do JFA
+
+<video controls src="/assets/assets-2025-10-27/nyan.mp4" title="Title"></video>
+*Nyan the cat outline with the Jump Flood Algorithm*
 
 ## Upscaling using HQX shaders
 
@@ -198,10 +259,4 @@ Thanks for reading my article. If you have any feedback or questions, please fee
 [Source code](https://github.com/OneBogdan01/gs-map-editor).
 
 [intel_paper]: https://www.intel.com/content/dam/develop/external/us/en/documents/optimized-gradient-border-rendering-in-imperator-rome.pdf
-[svg_repo_eu4]: https://github.com/primislas/eu4-svg-map
-[simulating_eu4]: https://nickb.dev/blog/simulating-the-eu4-map-in-the-browser-with-webgl/
 [sdf]: https://steamcdn-a.akamaihd.net/apps/valve/2007/SIGGRAPH2007_AlphaTestedMagnification.pdf
-[hqx_shader]: https://www.shadertoy.com/view/tsdcRM
-[very_old_epic_thread]: https://forums.unrealengine.com/t/borders-like-paradox-grand-strategy-game/763968
-[wide_outlines]: https://bgolus.medium.com/the-quest-for-very-wide-outlines-ba82ed442cd9
-
