@@ -8,24 +8,9 @@ img_path: /assets/assets-2025-10-27/
 image: /assets/assets-2025-10-27/bg.gif
 ---
 
-## Contents
-
 In this article I will cover how I implemented the border rendering, a short section on the implementation I did in Godot and the possible improvements or future work one might be interested in.
 
 The project is open source, you can access the repo by clicking [here](https://github.com/OneBogdan01/gs-map-editor).
-
-- [Contents](#contents)
-- [Intro](#intro)
-	- [Results from my project](#results-from-my-project)
-	- [Runtime demo](#runtime-demo)
-- [Gdextension in Godot with C++](#gdextension-in-godot-with-c)
-- [Rendering provinces using Imperator: Rome's paper](#rendering-provinces-using-imperator-romes-paper)
-- [Distance Fields - Jump Flood Algorithm (and how to not implement it)](#distance-fields---jump-flood-algorithm-and-how-to-not-implement-it)
-	- [How to not do the Jump Flood Algorithm](#how-to-not-do-the-jump-flood-algorithm)
-- [Upscaling using HQX shaders](#upscaling-using-hqx-shaders)
-	- [Future work: vector based borders](#future-work-vector-based-borders)
-- [References](#references)
-- [Final Words](#final-words)
 
 ## Intro
 
@@ -239,7 +224,6 @@ void fragment()
 }
 ```
 
-
 ![alt text](</assets/assets-2025-10-27/Screenshot 2025-10-29 112346.png>)
 *Resulting Distance field*
 
@@ -284,13 +268,12 @@ void fragment()
 
 The output is quite pixelated, while for pixel art styles this might be good enough, most developers would need a smoother result for making their maps exactly how they want. Feel free to skip to the [upscaling chapter](#upscaling-using-hqx-shaders), if you don't need a faster SDF generation.
 
-
 ### How to not do the Jump Flood Algorithm
 
 This algorithm has a complexity of O(log n), it is useful in the context of a simulated environment where each country is fighting wars, their provinces changing several times a frame. In other, words, you can safely skip this part. The JFA itself is quite simple to implement, however, I think it is worth spending some time to understand it thoroughly. [Ben Golus][wide_outlines] has an article exploring the performance of this algorithm for outlines on 3D models. I will not explain the algorithm, since there are plenty of resources:
 
 - [shadertoy][jfa]
-- [article on voronoi diagrams and distance field][Fast Voronoi Diagrams and Distance Field Textures on the GPU With the Jump Flooding Algorithm]
+- [article on voronoi diagrams and distance field][jfa_blog]: <https://blog.demofox.org/2016/02/29/fast-voronoi-diagrams-and-distance-dield-textures-on-the-gpu-with-the-jump-flooding-algorithm/>]
 - [paper on jfa][paper_jfa]
 
 Below I did a quick experiment in Godot using [SubViewports][subviewport] which can be thought of as `Render Textures` from other engines.
@@ -301,7 +284,7 @@ Below I did a quick experiment in Godot using [SubViewports][subviewport] which 
 A problem I encountered here is two fold:
 
 - `SubViewports` provide less flexibility for the programmer compared to a compute shader. They are very easy to test and can be run from the editor. However, I believe it is safer to implement the algorithm in compute shaders at least in the Godot engine (version 4.1).
-- Earlier I mentioned that the paper explains how to create the gradients, not the borders, however, the JFA algorithm needs a "seed" image with the borders. I was unable to use the previously mentioned approach to create good enough results with the naive detect a pixel is a border if neighboring pixels have another color. 
+- Earlier I mentioned that the paper explains how to create the gradients, not the borders, however, the JFA algorithm needs a "seed" image with the borders. I was unable to use the previously mentioned approach to create good enough results with the naive detect a pixel is a border if neighboring pixels have another color.
 
 I believe that using compute shaders or calculating the borders using a vector based approach might yield good results.
 
@@ -322,12 +305,10 @@ However, this might be fine for a wide range of applications that involve lookin
 
 I will warn you from the start, that I have not implemented this technique yet. EU4 might use something similar, and it is known for a fact that they generate meshes for some of the borders they display:
 
-
 [Oikoumene][svg_repo_eu4] is an open source project using Scala, that generates an impressive looking map as a `.svg`! They have a [page](https://github.com/primislas/eu4-svg-map/tree/bddacf30b46761a9635aee3ed49d19805c0d0f34/docs/pages) dedicated to the explanation of the algorithm they use. The gist of the approach is to use the `province map` that we saw earlier to create the shape of the borders.
 
 ![alt text](/assets/assets-2025-10-27/banner.png)
 *SVG from Oikoumene samples*
-
 
 ![alt text](/assets/assets-2025-10-27/zoomedin.png)
 *Original province map, approximately the same region as the screenshot below*
@@ -341,6 +322,33 @@ I think this approach looks amazing and I will keep you updated when I finally h
 
 [Source code](https://github.com/OneBogdan01/gs-map-editor).
 
+### Papers
+
+[Intel Paper - Optimized Gradient Border Rendering in Imperator: Rome][intel_paper]
+[Valve SDF Paper - Improved Alpha-Tested Magnification for Vector Textures][sdf]
+[Jump Flooding Algorithm Paper][paper_jfa]
+
+### Blog Posts & Articles
+
+[Simulating the EU4 Map in the Browser with WebGL][simulating_eu4]
+[The Quest for Very Wide Outlines][wide_outlines]
+[Fast Voronoi Diagrams and Distance Field Textures on the GPU With the Jump Flooding Algorithm][jfa_blog]
+
+### Code Examples & Demos
+
+[HQX Shader (Shadertoy)][hqx_shader]
+[JFA (Shadertoy)][jfa]
+[EU4 SVG Map Repository (GitHub)][svg_repo_eu4]
+
+### Forums
+
+[Unreal Engine Forum - Borders Like Paradox Grand Strategy Game][very_old_epic_thread]
+[Game Dev Stack Exchange - Answer on Border Rendering][game_dev_exchange]
+
+### Documentation
+
+[Godot - Using Viewport as Texture][subviewport]
+
 [intel_paper]: https://www.intel.com/content/dam/develop/external/us/en/documents/optimized-gradient-border-rendering-in-imperator-rome.pdf
 [sdf]: https://steamcdn-a.akamaihd.net/apps/valve/2007/SIGGRAPH2007_AlphaTestedMagnification.pdf
 [svg_repo_eu4]: https://github.com/primislas/eu4-svg-map
@@ -350,7 +358,8 @@ I think this approach looks amazing and I will keep you updated when I finally h
 [wide_outlines]: https://bgolus.medium.com/the-quest-for-very-wide-outlines-ba82ed442cd9
 [game_dev_exchange]: https://gamedev.stackexchange.com/a/213105
 [subviewport]: https://docs.godotengine.org/en/stable/tutorials/shaders/using_viewport_as_texture.html
-[Fast Voronoi Diagrams and Distance Field Textures on the GPU With the Jump Flooding Algorithm]: https://blog.demofox.org/2016/02/29/fast-voronoi-diagrams-and-distance-dield-textures-on-the-gpu-with-the-jump-flooding-algorithm/
+[jfa_blog]: https://blog.demofox.org/2016/02/29/fast-voronoi-diagrams-and-distance-dield-textures-on-the-gpu-with-the-jump-flooding-algorithm/]
+
 [jfa]: https://www.shadertoy.com/view/4syGWK
 [paper_jfa]: https://www.comp.nus.edu.sg/~tants/jfa/i3d06.pdf
 
