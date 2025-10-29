@@ -1,28 +1,31 @@
 ---
 title: Making a Grand Strategy Map Editor Plugin for Godot in C++
 date: 2025-10-27 14:10:00 +0200
-categories: [Tutorials 📚, Engine 🔧]
-tags: [🎨Graphics, 🔧Engine, Godot, C++]
+categories: [Tutorials 📚]
+tags: [🎨Graphics, 🔧Engine, Godot, C++, Grand Strategy]
 math: true
 img_path: /assets/assets-2025-10-27/
 image: /assets/assets-2025-10-27/bg.gif
 ---
 
-In this article I will cover how I implemented the border rendering, a short section on the implementation I did in Godot and the possible improvements or future work one might be interested in.
+In this article I will cover how I implemented the border rendering, and the possible improvements or future work one might be interested in.
 
 The project is open source, you can access the repo by clicking [here](https://github.com/OneBogdan01/gs-map-editor).
 
 ## Intro
 
-Border generation grand strategy games may be one of the most interestingly complicated subjects that I approached so far. You can read more about this topic here:[very_old_epic_thread], [simulating_eu4], [game_dev_exchange]. I started this project around the time that Paradox was already posting videos with the new content of Europa Universalis 5 (EU5). Below are references I used from Paradox games:
+Border generation grand strategy games may be one of the most interesting subjects that I approached so far. There is parsing to be done and tooling to modify and read the game data, then using shader magic, we get "border gore". The combination between the two makes for a varied challenge. I read a few posts on the forums online:[very_old_epic_thread], [simulating_eu4], [game_dev_exchange] and adventured into the subject with much *zeal*.
+
+I started this project around the time that Paradox was already posting videos with the new content of Europa Universalis 5 (EU5). Below are a few references from Paradox games:
 
 ![alt text](/assets/assets-2025-10-27/game_comparison.png)
 *From left to right: Europa Universalis 5 (EU5), Victoria 3 and EU4*
 
-> The image from EU4 is using a mod for graphics enhancement.
+> The image from EU4 is using [this](https://steamcommunity.com/sharedfiles/filedetails/?id=253263609&searchtext=) mod.
 {: .prompt-info }
 
-I believe the most peculiar aspect is that Grand Strategy Games always have a runtime component, the maps you see above will change drastically over the course of one game and it will differ dramatically between runs. If you are interested in reading more about this you check
+I believe the most peculiar aspect is that grand strategy games always have a runtime component, the maps you see above will change drastically over the course of one game and it will differ dramatically between runs. The map itself has a very dynamic appearance, despite the irony of being static once the player presses the "pause" button.
+
 I own Europa Universalis 4, therefore, it is not surprising that it will have similarities with the rightmost render. EU4 uses a `province map` to keep track of each province, I am not entirely certain, but I believe that they use the map below to generate their borders:
 
 ![alt text](/assets/assets-2025-10-27/provinces.bmp)
@@ -36,7 +39,7 @@ I own Europa Universalis 4, therefore, it is not surprising that it will have si
 ![alt text](</assets/assets-2025-10-27/Screenshot 2025-10-27 113506.png>)
 *No country borders and province borders with mask applied*
 
-Here are a few screenshots closer to the borders:
+Here are a few screenshots more zoomed in, so it is easier to see the limitations of the technique (artifacts):
 ![text](</assets/assets-2025-10-27/Screenshot 2025-10-07 105438.png>)
 *Norway*
 
@@ -48,7 +51,7 @@ Here are a few screenshots closer to the borders:
 
 ### Runtime demo
 
-<video muted controls  src="/assets/assets-2025-10-27/borders.mp4" title="Title"></video>
+<video controls src="../assets/assets-2025-10-27/demo_final.mp4" title="Title"></video>
 *Shows how the project would work in a game*
 
 ## Gdextension in Godot with C++
@@ -290,7 +293,7 @@ I believe that using compute shaders or calculating the borders using a vector b
 
 ## Upscaling using HQX shaders
 
-The HQX shader is used to make the image look like it is at a higher resolution. It has been been implemented in godot [here](https://github.com/Thomas-Holtvedt/opengs/blob/8a86111d108fe3bcaef8c827529978e84ff8131c/map/shaders/map3d.gdshader) or in [Unreal Engine](https://www.youtube.com/watch?v=VjfHYfNEA_w). You can check the [shadertoy][hqx_shader] to have an interactive experience with the shader.
+The HQX shader is used to make the image look like it is at a higher resolution. It has been been implemented in godot [here](https://github.com/Thomas-Holtvedt/opengs/blob/8a86111d108fe3bcaef8c827529978e84ff8131c/map/shaders/map3d.gdshader) or in [Unreal Engine](https://www.youtube.com/watch?v=VjfHYfNEA_w)(check the description of the video for the code). You can check the [shadertoy][hqx_shader] to have an interactive experience with the shader.
 
 ![alt text](/assets/assets-2025-10-27/upscaled.png)
 *Upscaled result using HQX*
@@ -303,24 +306,27 @@ However, this might be fine for a wide range of applications that involve lookin
 
 ### Future work: vector based borders
 
-I will warn you from the start, that I have not implemented this technique yet. EU4 might use something similar, and it is known for a fact that they generate meshes for some of the borders they display:
+I will warn you from the start, that I have not implemented this technique yet. EU4 might use something similar, and it is known for a fact that they generate meshes for some of the borders they display, along with the vector style borders between provinces that are owned by the same country:
 
-[Oikoumene][svg_repo_eu4] is an open source project using Scala, that generates an impressive looking map as a `.svg`! They have a [page](https://github.com/primislas/eu4-svg-map/tree/bddacf30b46761a9635aee3ed49d19805c0d0f34/docs/pages) dedicated to the explanation of the algorithm they use. The gist of the approach is to use the `province map` that we saw earlier to create the shape of the borders.
+![alt text](/assets/assets-2025-10-27/eu4_borders.png)
+*EU4 creates border meshes with its province neighbors*
+
+[oikoumene][svg_repo_eu4] is an open source project using Scala, that generates an impressive looking map as a `.svg`! They have a [page](https://github.com/primislas/eu4-svg-map/tree/bddacf30b46761a9635aee3ed49d19805c0d0f34/docs/pages) dedicated to the explanation of the algorithm they use. The gist of the approach is to use the `province map` that we saw earlier to create the shape of the borders by tracing the border segments in various passes.
 
 ![alt text](/assets/assets-2025-10-27/banner.png)
-*SVG from Oikoumene samples*
+*SVG from oikoumene samples*
 
 ![alt text](/assets/assets-2025-10-27/zoomedin.png)
 *Original province map, approximately the same region as the screenshot below*
 
 ![alt text](/assets/assets-2025-10-27/curves.png)
-*Province borders from Oikoumene*
+*Province borders from oikoumene*
 
-I think this approach looks amazing and I will keep you updated when I finally have a similar project as the one above. The JFA algorithm would also benefit from having the border as the input, resulting in a much better SDF output for the map gradients.
+I think this approach looks amazing and I will keep you updated when I finally have a similar project as the one above. The JFA algorithm would also benefit, resulting in a much better SDF output for the map gradients.
 
 ## References
 
-[Source code](https://github.com/OneBogdan01/gs-map-editor).
+[Source code](https://github.com/OneBogdan01/gs-map-editor)
 
 ### Papers
 
@@ -331,18 +337,23 @@ I think this approach looks amazing and I will keep you updated when I finally h
 ### Blog Posts & Articles
 
 [Simulating the EU4 Map in the Browser with WebGL][simulating_eu4]
+
 [The Quest for Very Wide Outlines][wide_outlines]
+
 [Fast Voronoi Diagrams and Distance Field Textures on the GPU With the Jump Flooding Algorithm][jfa_blog]
 
 ### Code Examples & Demos
 
 [HQX Shader (Shadertoy)][hqx_shader]
+
 [JFA (Shadertoy)][jfa]
+
 [EU4 SVG Map Repository (GitHub)][svg_repo_eu4]
 
 ### Forums
 
 [Unreal Engine Forum - Borders Like Paradox Grand Strategy Game][very_old_epic_thread]
+
 [Game Dev Stack Exchange - Answer on Border Rendering][game_dev_exchange]
 
 ### Documentation
@@ -365,4 +376,5 @@ I think this approach looks amazing and I will keep you updated when I finally h
 
 ## Final Words
 
+I made this article based on a self study project I did as a third year programmer at Breda University of Applied Sciences for the Creative Media and Game Technologies bachelor.
 Thanks for reading my article. If you have any feedback or questions, please feel free to email me at <bogdan.game.development@gmail.com>.
