@@ -14,7 +14,7 @@ The project is open source, you can access the repo by clicking [here](https://g
 
 ## Intro
 
-Border generation grand strategy games may be one of the most interesting subjects that I approached so far. There is parsing to be done and tooling to modify and read the game data, then using shader magic, we get "border gore". The combination between the two makes for a varied challenge. I read a few posts on the online forums:[very_old_epic_thread], [simulating_eu4], [game_dev_exchange] and adventured into the subject with much *zeal*.
+Border generation grand strategy games may be one of the most interesting subjects that I approached so far. There is parsing to be done and tooling to modify and read the game data, then using shader magic, we get "border gore". The combination between the two makes for a varied challenge. I read a few posts on the online forums: [very_old_epic_thread], [simulating_eu4], [game_dev_exchange] and adventured into the subject with much *zeal*.
 
 I started this project around the time that Paradox was already posting videos with the new content of Europa Universalis 5 (EU5). Below are a few references from Paradox games:
 
@@ -161,7 +161,9 @@ center_of_trade = 2
 
 I will refer to a `Political Map` as the output of these two textures.
 
-TODO INTRODUCE COLOR MAP AND LOOK UP TEXTURE AS DIAGRAM HERE
+![alt text](../assets/assets-2025-10-27/diagram_look_color.png)
+*Diagram with how the `Political Map` relates to the textures*
+
 
 The algorithm for simple rendering of colors can be summarized as follows:
 
@@ -170,8 +172,6 @@ The algorithm for simple rendering of colors can be summarized as follows:
 3. Associate each province with its country color
 4. Create `Color Map` texture from the data in step 3
 5. Render the final result
-
-SHOW A DIAGRAM ANIMATION STEP BY STEP TO SHOW THE OUTPUT AT EACH STEP.
 
 Below is a short snippet that gets the province color from the two textures.
 
