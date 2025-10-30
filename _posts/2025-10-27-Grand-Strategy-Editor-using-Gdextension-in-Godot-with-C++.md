@@ -14,7 +14,7 @@ The project is open source, you can access the repo by clicking [here](https://g
 
 ## Intro
 
-Border generation grand strategy games may be one of the most interesting subjects that I approached so far. There is parsing to be done and tooling to modify and read the game data, then using shader magic, we get "border gore". The combination between the two makes for a varied challenge. I read a few posts on the forums online:[very_old_epic_thread], [simulating_eu4], [game_dev_exchange] and adventured into the subject with much *zeal*.
+Border generation grand strategy games may be one of the most interesting subjects that I approached so far. There is parsing to be done and tooling to modify and read the game data, then using shader magic, we get "border gore". The combination between the two makes for a varied challenge. I read a few posts on the online forums:[very_old_epic_thread], [simulating_eu4], [game_dev_exchange] and adventured into the subject with much *zeal*.
 
 I started this project around the time that Paradox was already posting videos with the new content of Europa Universalis 5 (EU5). Below are a few references from Paradox games:
 
@@ -24,9 +24,9 @@ I started this project around the time that Paradox was already posting videos w
 > The image from EU4 is using [this](https://steamcommunity.com/sharedfiles/filedetails/?id=253263609&searchtext=) mod.
 {: .prompt-info }
 
-I believe the most peculiar aspect is that grand strategy games always have a runtime component, the maps you see above will change drastically over the course of one game and it will differ dramatically between runs. The map itself has a very dynamic appearance, despite the irony of being static once the player presses the "pause" button.
+I believe the most peculiar aspect is that grand strategy games always have a runtime component: the maps you see above will change drastically over the course of one game and it will differ dramatically between runs. The map itself has a very dynamic appearance, despite the irony of being static once the player presses the "pause" button.
 
-I own Europa Universalis 4, therefore, it is not surprising that it will have similarities with the rightmost render. EU4 uses a `province map` to keep track of each province, I am not entirely certain, but I believe that they use the map below to generate their borders:
+I own Europa Universalis 4, therefore, it is not surprising that it will have similarities with the rightmost render. EU4 uses a `province map` to keep track of each province.
 
 ![alt text](/assets/assets-2025-10-27/provinces.bmp)
 *Province map from EU4*
@@ -51,7 +51,7 @@ Here are a few screenshots more zoomed in, so it is easier to see the limitation
 
 ### Runtime demo
 
-<video controls src="../assets/assets-2025-10-27/demo_final.mp4" title="Title"></video>
+<video controls src="/assets/assets-2025-10-27/demo_final.mp4" title="Title"></video>
 *Shows how the project would work in a game*
 
 ## Gdextension in Godot with C++
@@ -59,18 +59,22 @@ Here are a few screenshots more zoomed in, so it is easier to see the limitation
 GDextension is a way to extend the Godot engine that still allows very easy distribution via their plugin store.
 
 There are a lot of resources on how to work with GDextension that I will link below.
+- [documentation on GDextension with C++][gdextension]
+- [repo example][repo_example]
 
-LINK RESOURCES
-Suffice to say that, coding in C++ plugins it is faster to run, but definitely not faster to write than in their scripting language (GDscript).
+>  The repo helped me set my project up with Visual Studio Code which I wanted to learn how to use, as it is faster than Visual Studio
+{: .prompt-info }
 
-Another important aspect is that I am only using compute shaders for generating the `color_lookup` and `color_map` at the beginning of the application. The rest is implemented using `SubViewports` in Godot, which is not the best way to implement it, but it allowed me to experiment faster than I could have using compute shaders.
+Suffice to say that, coding in C++ plugins is faster to run, but definitely not faster to write than in GDscript (Godot's scripting language).
 
-## Rendering provinces using Imperator: Rome's paper
+Another important aspect is that I am only using compute shaders for generating the `color_lookup` and `color_map` at the beginning of the application. The rest is implemented using `SubViewports` in Godot, which is not the best way to do it, but it allowed me to experiment faster than I could have using compute shaders. 
+
+## Rendering provinces using the paper on Imperator: Rome
 
 There are relatively few resources available online about Grand Strategy games. One that I found very useful is [Optimized Gradient Border Rendering in
 Imperator: Rome][intel_paper]. Although the paper's title relates to performance, the prerequisites for optimization outline how to render gradients for the countries.
 
-> The fact that the paper above is only explaining the algorithm for gradients, **not** on how to make borders is a limitation of the technique I use. I will suggest better alternatives at the end of the article.
+> The fact that the paper is only explaining the algorithm for **gradients** and does **not** touch the topic of borders is a limitation of the technique I use. I will suggest a vector based approach at the end of the article.
 {: .prompt-tip }
 
 ![alt text](</assets/assets-2025-10-27/Screenshot 2025-09-22 150426.png>)
@@ -78,12 +82,12 @@ Imperator: Rome][intel_paper]. Although the paper's title relates to performance
 
 I will introduce a few terms from the paper, as it makes the explanation easier to grasp:
 
-- `Color Map` is a small texture (256x256) that contains the color that a province should have.
-- `Color Lookup` is a texture with two channels that contain UV coordinates for the `Color Map` .
+- `Color Map` is a small texture (256x256) that contains the color that a province should have
+- `Color Lookup` is a texture with two channels that contain UV coordinates for the `Color Map`
 
 The `Color Map` can be thought of as an array of colors that are in the same order of the provinces. To illustrate my point, below I show a very zoomed in `color map`.
 
-> Note that, the first pixel is empty, as the first province's id is 1.
+> Note that, the first pixel is empty to keep it simple. The first province starts from the the second pixel with ID 1.
 {: .prompt-info }
 ![alt text](/assets/assets-2025-10-27/color_map.png)
 *Color map with the few first province IDs*
@@ -93,11 +97,14 @@ The first few provinces are mapped as follows:
 ![alt text](/assets/assets-2025-10-27/province_names.png)
 *List of province pairs ID - Name, with their country color on the left*
 
-Here the first few provinces are colored blue, since they are owned by Sweden. The 6th province is owned by Denmark, therefore the color reflects that.
+Here the first few provinces are colored blue, since they are owned by Sweden. The 6th province is owned by Denmark, so color reflects that.
 
-To know the initial state of the map, we can parse each of the province files. This is how I formed a database of data, where each country has a color associated with it and each province is associated with a country.
+To know the initial state of the map, we can parse each of the province files. This is how I formed a database, where each country has a color associated with it and each province is associated with a country.
 
-There are a lot of gameplay related information, however, just to render a simple political map, we only need to find the token "owner=". There we will find a 3 letter ID. Here you can see SWE, which is the short name for Sweden.
+> I recommend taking a look at the C++ [code](https://github.com/OneBogdan01/gs-map-editor/blob/master/src/source/country_data_io.cpp) I wrote for parsing various data from the files. This post focuses more on the graphics side.
+{: .prompt-tip }
+
+There is a lot of gameplay related information, however, just to render a simple political map, we only need to find the token "owner=". There we will find a 3 letter ID. Here you can see SWE, which is the short name for Sweden.
 
 Below, is one of the files that defines which provinces are owned by countries.
 
@@ -193,7 +200,7 @@ The brute force version of this algorithm is to check each texel's neighbors usi
 > This is an Unsigned Distance field, since the borders cannot have a negative distance.
 {: .prompt-tip }
 
-Historically, this technique was first used for font rendering, to maintain crisp UI elements. However, we are using it to create a border, as well as a gradient between country colors. Therefore, the code needs to be adapted to this, below is the simplest (and slowest) shader code:
+Historically, this technique was first used for font rendering, to maintain crisp UI elements. However, we are using it to create a border, as well as a gradient between country colors. Therefore, the code needs to be adapted accordingly. Below is the simplest (and slowest) shader code:
 
 ```glsl
 
@@ -269,11 +276,11 @@ void fragment()
 ![alt text](/assets/assets-2025-10-27/sdf_image.png)
 *Output of the previous shader*
 
-The output is quite pixelated, while for pixel art styles this might be good enough, most developers would need a smoother result for making their maps exactly how they want. Feel free to skip to the [upscaling chapter](#upscaling-using-hqx-shaders), if you don't need a faster SDF generation.
+The output is pixelated. While for pixel art styles this might be good enough, most developers would need a smoother result for making their maps exactly how they want. Feel free to skip to the [upscaling chapter](#upscaling-using-hqx-shaders), if you don't need a faster SDF generation.
 
 ### How to not do the Jump Flood Algorithm
 
-This algorithm has a complexity of O(log n), it is useful in the context of a simulated environment where each country is fighting wars, their provinces changing several times a frame. In other, words, you can safely skip this part. The JFA itself is quite simple to implement, however, I think it is worth spending some time to understand it thoroughly. [Ben Golus][wide_outlines] has an article exploring the performance of this algorithm for outlines on 3D models. I will not explain the algorithm, since there are plenty of resources:
+JFA has a complexity of O(log n). It is useful in the context of a simulated environment where each country is fighting wars, their provinces changing several times a frame. In other, words, you can safely skip this part. The JFA itself is quite simple to implement, however, I think it is worth spending some time to understand it thoroughly. [Ben Golus][wide_outlines] has an article exploring the performance of this algorithm for outlines on 3D models. I will not explain the algorithm, since there are plenty of resources:
 
 - [shadertoy][jfa]
 - [article on voronoi diagrams and distance field][jfa_blog]: <https://blog.demofox.org/2016/02/29/fast-voronoi-diagrams-and-distance-dield-textures-on-the-gpu-with-the-jump-flooding-algorithm/>]
@@ -282,12 +289,12 @@ This algorithm has a complexity of O(log n), it is useful in the context of a si
 Below I did a quick experiment in Godot using [SubViewports][subviewport] which can be thought of as `Render Textures` from other engines.
 
 <video controls src="/assets/assets-2025-10-27/nyan.mp4" title="Title"></video>
-*Nyan the cat outline with the Jump Flood Algorithm*
+*Nyan cat outline with the Jump Flood Algorithm*
 
-A problem I encountered here is two fold:
+A problem I encountered here is twofold:
 
-- `SubViewports` provide less flexibility for the programmer compared to a compute shader. They are very easy to test and can be run from the editor. However, I believe it is safer to implement the algorithm in compute shaders at least in the Godot engine (version 4.1).
-- Earlier I mentioned that the paper explains how to create the gradients, not the borders, however, the JFA algorithm needs a "seed" image with the borders. I was unable to use the previously mentioned approach to create good enough results with the naive detect a pixel is a border if neighboring pixels have another color.
+- `SubViewports` provide less flexibility for the programmer compared to a compute shader. They are very easy to test and can be run from the editor. However, I believe it is safer to implement the algorithm in compute shaders at least in the Godot engine (version 4.4).
+- Earlier I mentioned that the paper explains how to create the gradients, not the borders. However, the JFA algorithm needs a "seed" image with the borders. I was unable to use the previously mentioned approach to create good enough results. The naive approach detects if a pixel is a border by checking the color of neighboring pixels.
 
 I believe that using compute shaders or calculating the borders using a vector based approach might yield good results.
 
@@ -298,7 +305,7 @@ The HQX shader is used to make the image look like it is at a higher resolution.
 ![alt text](/assets/assets-2025-10-27/upscaled.png)
 *Upscaled result using HQX*
 
-Clearly this approach, is not perfect, especially when the camera is zoomed enough you can clearly see artifacts:
+Clearly, this approach is not perfect, especially when the camera is zoomed enough you can clearly see artifacts:
 ![alt text](/assets/assets-2025-10-27/artifacts.png)
 *Upscaling artifacts*
 
@@ -373,7 +380,8 @@ I think this approach looks amazing and I will keep you updated when I finally h
 
 [jfa]: https://www.shadertoy.com/view/4syGWK
 [paper_jfa]: https://www.comp.nus.edu.sg/~tants/jfa/i3d06.pdf
-
+[gdextension]: https://docs.godotengine.org/en/stable/tutorials/scripting/cpp/gdextension_cpp_example.html
+[repo_example]: https://github.com/paddy-exe/GDExtensionSummator
 ## Final Words
 
 I made this article based on a self study project I did as a third year programmer at Breda University of Applied Sciences for the Creative Media and Game Technologies bachelor.
