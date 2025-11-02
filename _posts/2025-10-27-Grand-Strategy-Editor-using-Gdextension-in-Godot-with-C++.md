@@ -5,7 +5,7 @@ categories: [Tutorials 📚]
 tags: [🎨Graphics, 🔧Engine, Godot, C++, Grand Strategy]
 math: true
 img_path: /assets/assets-2025-10-27/
-image: /assets/assets-2025-10-27/bg.gif
+image: /assets/assets-2025-10-27/demo_final.gif
 ---
 
 In this article I will cover how I implemented the border rendering, and the possible improvements or future work one might be interested in.
@@ -159,10 +159,11 @@ center_of_trade = 2
 > You can find all the text files I used in my project [here](https://github.com/OneBogdan01/gs-map-editor/tree/478e1a66ed1c3b7e0f2383d00f836823dd868e66/demo/map).
 {: .prompt-info }
 
-I will refer to a `Political Map` as the output of these two textures.
+I will refer to a `Political Map` as the output of these two textures. Below is a diagram with an overview of the whole process:
 
-![alt text](../assets/assets-2025-10-27/diagram_look_color.png)
-*Diagram with how the `Political Map` relates to the textures*
+![alt text](../assets/assets-2025-10-27/diagram.jpg)
+
+*Diagram with the overview of the process*
 
 
 The algorithm for simple rendering of colors can be summarized as follows:
