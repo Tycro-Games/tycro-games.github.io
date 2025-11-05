@@ -1,28 +1,30 @@
 ---
 layout: project
-title: A Tower Defense made in Unity | Lunar Voyage
-description: A 2D prototype made in Unity focused on dynamic pathfinding.
-image: /assets/portfolio/lunar-voyage/lunar-voyage.png
-categories: [💻Unity, C#, 🧭A* Pathfinding, ⚙️Prototype, 🛠️Tools, 🎮Gameplay Programming, 👥Team Project]
+title: A Strategy game made in Unity | Stalemate
+description: A strategy game where you play as both sides.
+image: /assets/media/stalemate/thumbnail.gif
+categories: [💻Unity, C#, ⚙️Prototype, 🛠️Tools, 👥Team Project]
 
-main_category: Archive Projects
-date: 2022-08-08
+main_category: Personal Projects
+date: 2025-11-05
 ---
+
 ## 🚀 About the Project
 
-"Lunar Voyage" is a tower defense prototype developed using Unity (C#). It features enemies that dynamically adjust their paths based on tower placements.
+Stalemate was made as a hobby project by me and [Jasmine de Jong](https://jasjasdev.itch.io/stalemate) alongside our studies at Breda University of Applied Sciences. It is a game based on chess where the player plays as both sides in order to obtain a "Stalemate". I was responsible for the code used in the project.
 
 ## 📂 Source Code
 
-The game source code can be found on [GitHub](https://github.com/Tycro-Games/Lunar-Voyage).
+The game source code can be found on [GitHub](https://github.com/Tycro-Games/Stalemate).
 
-## 🛠️ Skills Developed
+## 🛠️ Main Features
 
-- **Unity**: Designed and implemented interconnected systems in Unity with clean and modular architecture.  
-- **AI and Pathfinding Systems**: Integrated the A* algorithm to enable dynamic enemy navigation.  
-- **Game Prototyping**: Built a functional prototype combining pathfinding mechanics with tower defense gameplay.  
-- **Gameplay Tools**: Developed tools for procedural wave spawning using scriptable objects and customizable projectile movement.  
-- **FMOD**: Gained experience integrating FMOD.  
+- Configurable gameplay loop using events
+- AI that adapts to designer made constraints via a rating score
+- Custom Scriptable Objects for making new unit types
+- Serialization system for the unit types
+- Audio integration with FMOD
+
 
 
 ## ⚙️ Key Highlights:
