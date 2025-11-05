@@ -1,7 +1,7 @@
 ---
 layout: project
 title: A Strategy game made in Unity | Stalemate
-description: A strategy game where you play as both sides.
+description: A game where you play as both sides.
 image: /assets/media/stalemate/thumbnail.gif
 categories: [💻Unity, C#, ⚙️Prototype, 🛠️Tools, 👥Team Project]
 
@@ -9,9 +9,14 @@ main_category: Personal Projects
 date: 2025-11-05
 ---
 
+
+## 🎮 Play on itch.io
+
+<iframe frameborder="0" src="https://itch.io/embed/2664633" width="552" height="167"><a href="https://jasjasdev.itch.io/stalemate">Stalemate by JasJas, Tycro Games</a></iframe>
+
 ## 🚀 About the Project
 
-Stalemate was made as a hobby project by me and [Jasmine de Jong](https://jasjasdev.itch.io/stalemate) alongside our studies at Breda University of Applied Sciences. It is a game based on chess where the player plays as both sides in order to obtain a "Stalemate". I was responsible for the code used in the project.
+Stalemate was made as a hobby project by me and [Jasmine de Jong](https://jasjasdev.itch.io/stalemate). We developed it in our free time, while doing our studies at Breda University of Applied Sciences. It is a game based on chess where the player plays as both sides in order to obtain a "Stalemate". Each round battle ship "pieces" fight among each other based on predefined rules. I was responsible for the codebase used in the project.
 
 ## 📂 Source Code
 
@@ -25,53 +30,45 @@ The game source code can be found on [GitHub](https://github.com/Tycro-Games/Sta
 - Serialization system for the unit types
 - Audio integration with FMOD
 
+## ⚙️ Key Highlights
 
+### **Gameplay loop**
 
-## ⚙️ Key Highlights:
+The game follows a sequential list of events for each round. The system uses events to not couple any specific script to any event for the order of player and AI, as well as the ordering of unit actions. These can be reordered or deleted as needed.
 
-### **Dynamic Pathfinding**
-<div style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
-  <div style="flex: 1; font-size: 1.5em; display: flex; align-items: center;">
-    Enemies dynamically alter their routes based on player tower placement.
-  </div>
+![alt text](/assets/media/stalemate/phase.png)
 
-</div>
-<div style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
-  <img src="/assets/portfolio/lunar-voyage/A-path.gif" style="flex-shrink: 0; max-width: 100%; object-fit: contain;" alt="Pathfinding demo in Lunar Voyage" />
-</div>
----
-
-### **Procedural Wave Spawning**
-
-
-<div style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
-  <div style="flex: 1; font-size: 1.5em; display: flex; align-items: center;">
-    Procedurally selects enemies from a pool using scriptable objects and weight-based values.
-  </div>
-  <img src="/assets/portfolio/lunar-voyage/proc-spawnables.png" style="flex-shrink: 0; max-width: 45%; object-fit: contain;" alt="Procedural wave spawning in Lunar Voyage" />
-</div>
-
-<div style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
-
-  <video src="/assets/portfolio/lunar-voyage/boom.mp4" style="flex-shrink: 0; max-width: 100%; object-fit: contain;" controls alt="Projectile explosion mechanics in Lunar Voyage"></video>
-
-</div>
----
-
-
-### **Tower Placement and Projectile Mechanics**
-<div style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
-  <div style="flex: 1; font-size: 1.5em; display: flex; align-items: center;">
-    Towers shoot projectiles with customizable speed and parabolic paths.
-  </div>
-
-</div>
-<div style="display: flex; justify-content: space-between; align-items: right; gap: 20px;">
-
- <video src="/assets/portfolio/lunar-voyage/parabolic.mp4" style="flex-shrink: 0; max-width: 100%; object-fit: contain;" controls alt="Parabolic projectile mechanics in Lunar Voyage"></video>
-  </div>
+*Each phase of the game can be configured to trigger certain events*
 
 ---
 
-## 🎮 Play on itch.io
-<iframe frameborder="0" src="https://itch.io/embed/830920" width="552" height="167"><a href="https://tycro-dev.itch.io/lunar-voyage-moon-colonization">Lunar Voyage by Tycro Games, Jvfzago</a></iframe>
+### **Creating units as data**
+
+All units are defined using `ScriptableObjects`, which is a feature that Unity provides to represent objects offline. To define a unit, one has to fill their gameplay information. Sprites for each unit are expected to be in grayscale, because they get colored based on the faction colors in a shader.
+
+![alt text](/assets/media/stalemate/unit.png)
+
+*Filling the gameplay data for a unit*
+
+![alt text](/assets/media/stalemate/shader.png)
+
+*Output of the shader from grayscale sprite*
+
+---
+
+### **AI constrained by design**
+
+Stalemate is based on chess and it is using **backtracking** to generate all possible permutations of the 5 units in the 4 squares that are available at a time. In the project there is a scene called **Backtracking** that showcases how the AI rates a board. In the video below you can see how the test scene is used to generate permutation using a max cost. These are sorted based on a developer defined rating. Blue side is configured to have a smaller rating if there are fewer units placed, therefore, the highest rating boards have as many units as possible.
+
+<video controls src="/assets/media/stalemate/export import.mp4" title="Title"></video>
+
+*Debug scene where all the permutations are rated and viewed*
+
+The constraints are once again defined offline by the designer:
+
+![alt text](/assets/media/stalemate/AI.png)
+
+*Blue rating defined as a ScriptableObject*
+
+---
+
