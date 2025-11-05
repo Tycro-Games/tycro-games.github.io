@@ -16,7 +16,7 @@ date: 2025-11-05
 
 ## 🚀 About the Project
 
-Stalemate was made as a hobby project by me and [Jasmine de Jong](https://jasjasdev.itch.io/stalemate). We developed it in our free time, while doing our studies at Breda University of Applied Sciences. It is a game based on chess where the player plays as both sides in order to obtain a "Stalemate". Each round battle ship "pieces" fight among each other based on predefined rules. I was responsible for the codebase used in the project.
+Stalemate was made as a hobby project by me and [Jasmine de Jong](https://jasjasdev.itch.io/stalemate). We developed it in our free time, while doing our studies at Breda University of Applied Sciences. It is a game based on chess where you play as both sides, in order to obtain a "stalemate". Each round, battle ship "pieces" fight among each other based on predefined rules. I was responsible for the codebase used in the project.
 
 ## 📂 Source Code
 
@@ -34,7 +34,10 @@ The game source code can be found on [GitHub](https://github.com/Tycro-Games/Sta
 
 ### **Gameplay loop**
 
-The game follows a sequential list of events for each round. The system uses events to not couple any specific script to any event for the order of player and AI, as well as the ordering of unit actions. These can be reordered or deleted as needed.
+It follows a sequential list of events for each round: player chooses sides, show fog of war units, player places units, etc. The system uses `UnityEvents` to allow for changing certain phases of the game easily. This is applied in the same way for unit actions (move, attack, boost), as well as the ordering of unit actions. These can be reordered, modified or deleted as needed.
+
+> Boosting is the ability of some units, to retrigger movement and attack
+{: .prompt-info }
 
 ![alt text](/assets/media/stalemate/phase.png)
 
@@ -58,7 +61,7 @@ All units are defined using `ScriptableObjects`, which is a feature that Unity p
 
 ### **AI constrained by design**
 
-Stalemate is based on chess and it is using **backtracking** to generate all possible permutations of the 5 units in the 4 squares that are available at a time. In the project there is a scene called **Backtracking** that showcases how the AI rates a board. In the video below you can see how the test scene is used to generate permutation using a max cost. These are sorted based on a developer defined rating. Blue side is configured to have a smaller rating if there are fewer units placed, therefore, the highest rating boards have as many units as possible.
+Stalemate is based on chess and it uses **backtracking** to generate all possible permutations of the 5 units in the 4 squares that are available at a time. In the project, there is a scene called **Backtracking** that showcases how the AI rates a board. In the video below you can see how the test scene is used to generate permutation using a max cost. These are sorted based on a developer-defined rating. Blue side is configured to have a smaller rating if there are fewer units placed, therefore, the highest rating boards have as many units as possible.
 
 <video controls src="/assets/media/stalemate/export import.mp4" title="Title"></video>
 
