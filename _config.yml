@@ -77,7 +77,7 @@ google_analytics:
 img_cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar: "./img/channels4_profile.png"
+avatar: "./img/icon.png"
 
 # boolean type, the global switch for TOC in posts.
 toc: true

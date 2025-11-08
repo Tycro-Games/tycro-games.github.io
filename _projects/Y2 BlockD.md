@@ -3,23 +3,36 @@ layout: project
 title: "Nakon | FPS made in a cross-platform engine for PS5/PC"
 description: "An FPS game made in a cross-platform engine from the ground up."
 image: /assets/portfolio/Y2/D/Animation.gif
-categories: [
-  C++,
-  🔧 Engine Development,
-  🌍 Cross-Platform,
-
-  🎓 University,
-  🛠️ Engine,
-  📋 Production,
-  👥 Team Project,
-]
-
 main_category: University Projects
 date: 2025-07-15
+
+# Metadata tags
+features: "Producer & Engine Tools"
+engine: "C++ Custom Engine"
+team_size: "12 people"
+platform: "PC/PS5"
+duration: "8 weeks"
 ---
+
+
 ## 🎓 About the Project
 
 This project was created by a team of 12 students (9 programmers and 3 artists). Without a dedicated designer, I stepped up as a first time producer—leading meetings, resolving conflicts, managing releases, and supporting workflow improvements.
+
+## 🎥 Trailer
+
+<iframe width="1120" height="650" src="https://www.youtube.com/embed/EN-oXI_JE1o?si=sIhCHjMPHE09ErHL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+*Nakon game trailer showcasing FPS gameplay*
+
+
+## 🎮 Play on itch.io
+
+<iframe frameborder="0" src="https://itch.io/embed/3581823" width="552" height="167"><a href="https://buas.itch.io/nakon">Nakon by Breda University of Applied Sciences, BuasJoey, tBoons, Allen Philip, Tycro Games, J111M, Gikster007, Mika Halbauer, alexstn, PappaNiels, desytsv, Viktor231407, Des</a></iframe>
+
+
+## 📂 Source Code
+
+Unfortunately, due to NDA restrictions, I am unable to share the codebase.
 
 ## 📋 Producer Experience & Reflections
 
@@ -31,105 +44,50 @@ This project was created by a team of 12 students (9 programmers and 3 artists).
 - Found planning and managing scope pretty tough, but learned a lot from it.
 - Balanced coding with leading the team, gaining valuable experience for future lead or indie projects.
 
-## 💻 Dev Contributions
+## 💻 Technical Contributions
 
 Although I focused mostly on production, I also contributed as a developer—mainly on bug fixes and in-engine usability tools.
 
-<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+<video src="/assets/portfolio/Y2/D/buggy.mp4" autoplay muted loop playsinline title="Collision Bug Example"></video>
+*Collision bug causing player to fall through floor in edge cases*
 
-  <div style="flex: 1 1 45%; max-width: 500px;">
-    <video src="/assets/portfolio/Y2/D/buggy.mp4" style="width: 100%;" autoplay muted loop playsinline title="Collision Bug Example"></video>
-    <p><strong>🐞 Collision Bug (Before)</strong> — A player could fall through the floor due to broken collision logic in certain edge cases.</p>
-  </div>
+<video src="/assets/portfolio/Y2/D/fix bug.mp4" autoplay muted loop playsinline title="Collision Bug Fix"></video>
+*Fixed collision system ensuring stable and reliable player movement*
 
-  <div style="flex: 1 1 45%; max-width: 500px;">
-    <video src="/assets/portfolio/Y2/D/fix bug.mp4" style="width: 100%;" autoplay muted loop playsinline title="Collision Bug Fix"></video>
-    <p><strong>✅ Collision Fix (After)</strong> — I tracked down and fixed the floor collision issue, making movement more stable and reliable.</p>
-  </div>
+<video src="/assets/portfolio/Y2/D/camera_shots.mp4" autoplay muted loop playsinline title="Museum View Controls"></video>
+*Museum mode with multi-angle camera controls for viewing models and artwork*
 
-  <div style="flex: 1 1 45%; max-width: 500px;">
-    <video src="/assets/portfolio/Y2/D/camera_shots.mp4" style="width: 100%;" autoplay muted loop playsinline title="Museum View Controls"></video>
-    <p><strong>🖼️ Museum Mode</strong> — Added a simple camera switch so players can view models and artwork from multiple angles in the museum area.</p>
-  </div>
+<video src="/assets/portfolio/Y2/D/easy_preview_model.mp4" autoplay muted loop playsinline title="Model Export Preview"></video>
+*Blender to engine export workflow with real-time model verification*
 
-<div style="flex: 1 1 45%; max-width: 500px;">
-  <video src="/assets/portfolio/Y2/D/easy_preview_model.mp4" style="width: 100%;" autoplay muted loop playsinline title="Model Export Preview"></video>
-  <p><strong>📤 Blender to Engine Export</strong> — Demonstrated the workflow of adjusting models in Blender and verifying the changes after export into the engine.</p>
-</div>
+## 🎨 Project Showcase
 
-</div>
+### 🎬 Cinematic Shots
 
-## ⚙️ Highlights of the project
+![Cinematic environment shot 1](/assets/portfolio/Y2/D/cinematic_shot.png)
+*Atmospheric cinematic framing of game environment*
 
-<!-- Cinematic Shots -->
-<h3>🎬 Cinematic Shots</h3>
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 1rem;">
-  <figure style="text-align: center;">
-    <img src="/assets/portfolio/Y2/D/cinematic_shot.png" alt="Cinematic Shot" />
-  </figure>
+![Cinematic environment shot 2](/assets/portfolio/Y2/D/cinmeatic_shot.png)
+*Alternative cinematic angle showcasing level design*
 
-  <figure style="text-align: center;">
-    <img src="/assets/portfolio/Y2/D/cinmeatic_shot.png" alt="Alternate Cinematic Shot" />
-  </figure>
+![Wide cinematic environment shot](/assets/portfolio/Y2/D/enviroment_shot.png)
+*Wide-angle environmental composition*
 
-  <figure style="text-align: center; grid-column: span 2;">
-    <img src="/assets/portfolio/Y2/D/enviroment_shot.png" alt="Cinematic Shot Variation" />
-  </figure>
-</div>
+### ✨ Post Processing Effects
 
-  <hr style="margin: 3rem 0;" />
-<!-- Post Processing Effects -->
-<h3>✨ Post Processing Effects</h3>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 1rem;">
-  <figure style="text-align: center;">
-    <img src="/assets/portfolio/Y2/D/bloom_rim_light_ritual.png" alt="Bloom and Rim Light Ritual" />
-    <figcaption>Bloom & Rim Lighting Ritual Prop</figcaption>
-  </figure>
+![Bloom and rim light on ritual prop](/assets/portfolio/Y2/D/bloom_rim_light_ritual.png)
+*Bloom and rim lighting effect on ritual prop*
 
-  <figure style="text-align: center;">
-    <img src="/assets/portfolio/Y2/D/post_proccesing_effect.png" alt="Freeze Effect" />
-    <figcaption>Freeze Post Processing Effect</figcaption>
-  </figure>
-</div>
+![Freeze post-processing effect](/assets/portfolio/Y2/D/post_proccesing_effect.png)
+*Screen-space freeze effect post-processing*
 
-<div style="margin-top: 1rem;">
-  <figure style="text-align: center; margin-bottom: 1rem;">
-    <img src="/assets/portfolio/Y2/D/post_proccesing_effect2.png" alt="Explosion Effect" />
-    <figcaption>Explosion Post Processing Effect</figcaption>
-  </figure>
-</div>
+![Explosion post-processing effect](/assets/portfolio/Y2/D/post_proccesing_effect2.png)
+*Dynamic explosion post-processing with screen distortion*
 
-<hr style="margin: 3rem 0;" />
+### 🎮 Rim Lighting
 
-<!-- Game Objects & Other Shots -->
-<h3>🎮 Rim Lighting</h3>
+![Enemy swarm encounter](/assets/portfolio/Y2/D/enemy_swarm.png)
+*Multiple enemies showcasing rim lighting system*
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 1rem;">
-  <figure style="text-align: center;">
-    <img src="/assets/portfolio/Y2/D/enemy_rimlight.png" alt="Enemy with Rim Light" />
-  </figure>
-
-  <figure style="text-align: center;">
-    <img src="/assets/portfolio/Y2/D/perk_machine_rim_light.png" alt="Perk Machine Rim Lighting" />
-  </figure>
-</div>
-
-<div style="margin-top: 1rem;">
-  <figure style="text-align: center; margin-bottom: 1rem;">
-    <img src="/assets/portfolio/Y2/D/enemy_swarm.png" alt="Enemy Swarm" />
-
-  </figure>
-
-  <figure style="text-align: center;">
-    <img src="/assets/portfolio/Y2/D/bq_guy.png" alt="Character Portrait" />
-  </figure>
-</div>
-
-## 🎥 Trailer
-
-<iframe width="1120" height="650" src="https://www.youtube.com/embed/EN-oXI_JE1o?si=sIhCHjMPHE09ErHL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-## 📂 Source Code
-
-Unfortunately, due to NDA restrictions, I am unable to share the codebase.
-
-![alt text](/assets/portfolio/logo.png)
+![Character portrait](/assets/portfolio/Y2/D/bq_guy.png)
+*In-game character render with lighting effects*

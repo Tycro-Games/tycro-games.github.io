@@ -1,76 +1,127 @@
 ---
 layout: page
-
 ---
 {% include lang.html %}
 
 <div class="portfolio-page">
-
-  <!-- Define the main categories you want to display -->
-  {% assign project_categories = "University Projects, Personal Projects, Archive Projects" | split: ", " %}
-
-  <!-- Loop through each category to create a section -->
-  {% for category in project_categories %}
-    <section class="category-section">
-      <h2 class="category-title">{{ category }}</h2>
-
-      <!-- Filter and sort projects for each category -->
-      {% assign filtered_projects = site.projects | where: "main_category", category | sort: 'date' | reverse %}
-
-      <div class="projects-container">
-        <!-- Loop through each project in the current category -->
-        {% for project in filtered_projects %}
-        <a href="{{ project.url }}" class="project-card-link">
-          <article class="project-card">
-            <!-- Project card with image and description -->
+  <div class="projects-container">
+    {% assign all_projects = site.projects | sort: 'date' | reverse %}
+    
+    {% for project in all_projects %}
+    <a href="{{ project.url }}" class="project-card-link">
+      <article class="project-card">
+        
+        {% if project.image %}
+          <div class="project-image">
+            <img src="{{ project.image | relative_url }}" alt="{{ project.title }} Preview">
+          </div>
+        {% endif %}
+        
+        <div class="project-info">
+          <h3>{{ project.title }}</h3>
+          <p>{{ project.description }}</p>
+          
+          <!-- Project Metadata Tags -->
+          <div class="project-metadata">
             
-              {% if project.image %}
-                <div class="project-image">
-                  <img src="{{ project.image | relative_url }}" alt="{{ project.title }} Preview">
+            <!-- Project Type Badge -->
+            {% if project.main_category == "University Projects" %}
+              <div class="meta-tag university">
+                <span class="meta-icon">🎓</span>
+                <span class="meta-label">University</span>
+              </div>
+            {% elsif project.main_category == "Personal Projects" %}
+              <div class="meta-tag personal">
+                <span class="meta-icon">💡</span>
+                <span class="meta-label">Personal</span>
+              </div>
+            {% elsif project.main_category == "Archive Projects" %}
+              <div class="meta-tag archive">
+                <span class="meta-icon">📦</span>
+                <span class="meta-label">Archived</span>
+              </div>
+            {% endif %}
+            
+            <!-- Main Features/Contribution -->
+            {% if project.features %}
+              <div class="meta-tag features">
+                <span class="meta-icon">⭐</span>
+                <span class="meta-label">{{ project.features }}</span>
+              </div>
+            {% endif %}
+
+            <!-- Engine/Tools -->
+            {% if project.engine %}
+              <div class="meta-tag engine">
+                <span class="meta-icon">🔧</span>
+                <span class="meta-label">{{ project.engine }}</span>
+              </div>
+            {% endif %}
+
+            <!-- Team Size -->
+            {% if project.team_size %}
+              {% assign team_lower = project.team_size | downcase %}
+              {% if team_lower contains "solo" %}
+                <div class="meta-tag team solo">
+                  <span class="meta-icon">👤</span>
+                  <span class="meta-label">{{ project.team_size }}</span>
+                </div>
+              {% else %}
+                <div class="meta-tag team group">
+                  <span class="meta-icon">👥</span>
+                  <span class="meta-label">{{ project.team_size }}</span>
                 </div>
               {% endif %}
-            
-            
-            <!-- Project Info -->
-            <div class="project-info">
-              <h3>{{ project.title }}</h3>
-              <p>{{ project.description }}</p>
-              <!-- Categories -->
-              {% if project.categories %}
-                <div class="categories-container">
-                  {% for category in project.categories %}
-                    <span class="project-category">{{ category }}</span>
-                  {% endfor %}
-                </div>
-              {% endif %}
-              
-            </div>
-          </article>
-          </a>
-        {% endfor %}
-      </div>
-    </section>
-  {% endfor %}
+            {% endif %}
+
+            <!-- Platform -->
+            {% if project.platform %}
+              <div class="meta-tag platform">
+                <span class="meta-icon">💻</span>
+                <span class="meta-label">{{ project.platform }}</span>
+              </div>
+            {% endif %}
+
+            <!-- Duration -->
+            {% if project.duration %}
+              <div class="meta-tag duration">
+                <span class="meta-icon">⏱️</span>
+                <span class="meta-label">{{ project.duration }}</span>
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+      </article>
+    </a>
+    {% endfor %}
+  </div>
 </div>
+
 <style>
 /* Projects Container */
 .projects-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid with minimum card width */
-  gap: 20px; /* Adds consistent spacing between cards */
-  grid-auto-rows: auto; /* Cards adjust naturally based on content */
-  padding: 20px; /* Optional: Adds padding around the grid */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  grid-auto-rows: auto;
+  padding: 20px;
 }
 
+@media (min-width: 1200px) {
+  .projects-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 /* Project Card */
 .project-card {
-  background-color: var(--project-card-bg);  /* Use the background color variable */
+  background-color: var(--project-card-bg);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 100%; /* Full height for consistency */
+  height: 100%;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -79,70 +130,145 @@ layout: page
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
+/* Project Type Badge */
+.project-type-badge {
+  margin-bottom: 12px;
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.type-badge.university {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.type-badge.personal {
+  background-color: #8b5cf6;
+  color: white;
+}
+
+.type-badge.archive {
+  background-color: #6b7280;
+  color: white;
+  opacity: 0.8;
+}
+
 /* Project Image */
 .project-image img {
   width: 100%;
-  height: 100%; /* Larger, proportional image height */
-  object-fit: cover; /* Maintain aspect ratio */
+  height: 100%;
+  object-fit: cover;
   border-bottom: 1px solid #f0f0f0;
 }
 
 /* Project Info */
 .project-info {
-  padding: 15px; /* Increased padding for better spacing */
+  padding: 15px;
   display: flex;
-  flex-grow: 1; /* Ensure content takes remaining space */
+  flex-grow: 1;
   flex-direction: column;
-  flex-grow: 1; /* Ensure content takes available space */
-  background-color: var(--project-info-bg);  /* Use the project info background color variable */
-  color: var(--text-color);  /* Use the text color variable */
+  background-color: var(--project-info-bg);
+  color: var(--text-color);
 }
 
 .project-info h3 {
-  font-size: 1.4rem; /* Slightly larger for readability */
+  font-size: 1.4rem;
   font-weight: bold;
-  margin-bottom: 8px; /* Add spacing below title */
+  margin-bottom: 8px;
 }
 
 .project-info p {
-  font-size: 1rem; /* Standard size for better readability */
-  margin-bottom: 10px; /* Adjust spacing between content */
-  color: var(--text-color);  /* Use the text color variable */
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: var(--text-color);
 }
 
-/* Read More Button */
-.read-more-btn-container {
-  text-align: center;
-  margin-top: auto; /* Push to the bottom */
-}
-
-
-
-/* Categories */
-.categories-container {
-  margin-top: 10px;
-  margin-bottom: 15px;
+/* Project Metadata Tags */
+.project-metadata {
+  margin-top: auto;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(128, 128, 128, 0.2);
 }
 
-.project-category {
-  background-color: #28a745;
-  color: white;
-  border-radius: 25px;
-  padding: 6px 12px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  display: inline-block;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, transform 0.3s ease;
+.meta-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.project-category:hover {
-  background-color: #218838;
+.meta-tag:hover {
   transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.meta-icon {
+  font-size: 1rem;
+}
+
+.meta-label {
+  white-space: nowrap;
+}
+
+/* Color coding for different metadata types */
+.meta-tag.university {
+  background-color: #3b82f6; /* Blue */
+  color: white;
+}
+
+.meta-tag.personal {
+  background-color: #8b5cf6; /* Purple */
+  color: white;
+}
+
+.meta-tag.archive {
+  background-color: #6b7280; /* Gray */
+  color: white;
+  opacity: 0.8;
+}
+
+.meta-tag.features {
+  background-color: #ea580c; /* Red */
+  color: white;
+}
+
+.meta-tag.engine {
+  background-color: #10b981; /* Green */
+  color: white;
+}
+
+.meta-tag.team.solo {
+  background-color: #06b6d4; /* Cyan - for solo work */
+  color: white;
+}
+
+.meta-tag.team.group {
+  background-color: #8b5cf6; /* Purple - for team work */
+  color: white;
+}
+
+.meta-tag.platform {
+  background-color: #3b82f6; /* Blue */
+  color: white;
+}
+
+.meta-tag.duration {
+  background-color: #ec4899; /* Pink */
+  color: white;
 }
 </style>
-
