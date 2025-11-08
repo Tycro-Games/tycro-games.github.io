@@ -16,7 +16,7 @@ duration: "8 weeks"
 
 ## 📚 Project Article 
 
-I like writing articles on the topics I worked on. It makes me feel I can help others learn about the topic and it 
+I like writing articles on the topics I worked on. It makes me feel I can help others learn about the topic and it. The one below describes how the rendering works at a basic level.
 **[Making a Grand Strategy Map Editor Plugin for Godot in C++](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/)**
 
 ## 📂 Source Code
@@ -33,4 +33,25 @@ Can be found [here](https://github.com/OneBogdan01/gs-map-editor).
 
 ## ⚙️ My Contributions
 
+### Rendering Pipeline
 
+I used the technique described in this [paper](https://www.intel.com/content/dam/develop/external/us/en/documents/optimized-gradient-border-rendering-in-imperator-rome.pdf) to implement basic rendering for each of the countries, which can change at runtime their provinces. Broadly speaking, it involves using two textures(UV coordinates and one with color values) as an indirection in the fragment shader. One of them defines the UV coordinates to the other texture, therefore, a province is mapped to a pixel and changing that particular pixel will change the province color.
+
+![Pipeline diagram](/assets/assets-2025-10-27/diagram.jpg)
+*Complete overview of the rendering pipeline from province map to final output*
+
+![Simple political map](/assets/assets-2025-10-27/Screenshot 2025-09-24 133323.png)
+*Basic political map outputting province colors without borders*
+
+### Border Rendering
+
+There are many ways to do border rendering. One can generate meshes, use vector based splines or image based techniques. The latter is one of the simpler ones that I implemented, it has artifacts in certain . The political map from the `Rendering Pipeline` is used in conjunction with a mask and Signed Distance Field texture to create low resolution borders. Afterwards a HQX shader is applied to create a smooth appearance.
+
+![Upscaled map result](/assets/assets-2025-10-27/upscaled.png)
+*Map upscaled using HQX shader for smoother appearance*
+
+### Editor Functionality
+
+In this project I also learned how to extend the editor in Godot. Below you can see how the user can change owenership of provinces, or their country color through the editor I made. The changes are saved in the file format that Europa Universalis 4 uses.
+
+<video controls src="/assets/media/gs_map/export import.mp4" title="Title"></video>

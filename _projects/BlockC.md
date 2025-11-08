@@ -8,7 +8,7 @@ date: 2024-04-02
 
 # Metadata tags
 features: "Voxel Raytracing"
-engine: "C++ & GLFW"
+engine: "C++"
 team_size: "Solo"
 platform: "PC"
 duration: "8 weeks"
