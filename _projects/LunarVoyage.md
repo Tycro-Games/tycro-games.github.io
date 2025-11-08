@@ -2,7 +2,7 @@
 layout: project
 title: A Tower Defense made in Unity | Lunar Voyage
 description: A 2D prototype made in Unity focused on dynamic pathfinding.
-image: /assets/portfolio/lunar-voyage/lunar-voyage.png
+image: /assets/portfolio/lunar-voyage/A-path.gif
 main_category: Archive Projects
 date: 2022-08-08
 

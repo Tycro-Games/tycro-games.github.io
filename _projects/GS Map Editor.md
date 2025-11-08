@@ -3,11 +3,11 @@ layout: project
 title: Plugin for Godot | Grand Strategy Map Editor
 description: A Godot 4.5 GDExtension that provides editor tools for interacting with Europa Universalis provinces and country data as well as a shader pipeline that renders a map with smooth borders.
 image: assets/media/gs_map/demo_final.gif
-categories: [C++, Godot, 👤Solo Project]
 
 main_category: University Projects
 date: 2025-11-07
 
+features: "Smooth Borders & Editor Tools"
 engine: "C++ in Godot"
 team_size: "Solo"  
 platform: "PC"  
@@ -18,6 +18,11 @@ duration: "8 weeks"
 
 I like writing articles on the topics I worked on. It makes me feel I can help others learn about the topic and it. The one below describes how the rendering works at a basic level.
 **[Making a Grand Strategy Map Editor Plugin for Godot in C++](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/)**
+
+
+## 🎮 Play on itch.io
+<iframe frameborder="0" src="https://itch.io/embed/4008182" width="552" height="167"><a href="https://tycro-dev.itch.io/grand-strategy-map-demo">Grand Strategy Map Demo by Tycro Games</a></iframe>
+
 
 ## 📂 Source Code
 
