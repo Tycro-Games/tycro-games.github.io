@@ -12,6 +12,8 @@ engine: "C++ Custom Engine"
 team_size: "12 people"
 platform: "PC/PS5"
 duration: "8 weeks"
+priority_graphics: 4
+priority_engine: 4
 ---
 
 

@@ -12,6 +12,8 @@ engine: "C++ & Unreal Engine"
 team_size: "12 people"
 platform: "PC"
 duration: "8 weeks"
+priority_graphics: 999
+priority_engine: 5
 ---
 
 ## 🎓 About the Project

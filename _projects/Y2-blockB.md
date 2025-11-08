@@ -12,6 +12,8 @@ engine: "C++ & OpenGL"
 team_size: "Solo"
 platform: "PC"
 duration: "8 weeks"
+priority_graphics: 2
+priority_engine: 6
 ---
 
 ## 🛠️ Skills and Technologies

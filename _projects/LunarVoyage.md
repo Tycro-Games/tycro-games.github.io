@@ -12,6 +12,8 @@ engine: "C# & Unity"
 team_size: "2 people"
 platform: "PC/Web"
 duration: "3 months"
+priority_graphics: 999
+priority_engine: 20
 ---
 
 ## 🚀 About the Project

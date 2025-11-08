@@ -7,11 +7,13 @@ image: assets/media/gs_map/demo_final.gif
 main_category: University Projects
 date: 2025-11-07
 
-features: "Smooth Borders & Editor Tools"
+features: "Shaders & Editor Tools"
 engine: "C++ in Godot"
 team_size: "Solo"  
 platform: "PC"  
 duration: "8 weeks" 
+priority_graphics: 1
+priority_engine: 2
 ---
 
 ## 📚 Project Article 

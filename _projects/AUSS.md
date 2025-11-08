@@ -11,6 +11,8 @@ features: "Wave System & Collision Detection"
 engine: "C++ & SDL2"
 team_size: "Solo"
 platform: "PC"
+priority_graphics: 20
+priority_engine: 9
 ---
 
 # An Unrealistic Spaceship Simulator (AUSS) 🚀

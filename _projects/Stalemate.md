@@ -4,13 +4,15 @@ title: A Strategy game made in Unity | Stalemate
 description: A game where you play as both sides in order to win.
 image: /assets/media/stalemate/thumbnail.gif
 main_category: Personal Projects
-date: 2025-11-05
+date: 2024-11-05
 
 # Metadata tags
 features: "AI & Tools"
 engine: "C# & Unity"
 team_size: "2 people"
 platform: "PC/Web"
+priority_graphics: 999
+priority_engine: 10
 ---
 
 ## 🚀 About the Project

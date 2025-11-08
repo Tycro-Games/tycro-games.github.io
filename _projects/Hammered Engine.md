@@ -11,6 +11,8 @@ features: "Graphics & Engine Systems"
 engine: "C++"
 team_size: "Solo"
 platform: "PC"
+priority_graphics: 2
+priority_engine: 1
 ---
 
 

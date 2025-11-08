@@ -12,6 +12,8 @@ engine: "C++"
 team_size: "Solo"
 platform: "PC"
 duration: "8 weeks"
+priority_graphics: 5
+priority_engine: 999
 ---
 
 ## 🎓 About the Project

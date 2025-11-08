@@ -12,6 +12,8 @@ engine: "C++ & OpenGL"
 team_size: "7 programmers"
 platform: "PC/Nintendo"
 duration: "8 weeks"
+priority_graphics: 5
+priority_engine: 3
 ---
 
 
