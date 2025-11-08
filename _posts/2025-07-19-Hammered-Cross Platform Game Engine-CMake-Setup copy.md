@@ -1,8 +1,8 @@
 ---
 title: Hammered Engine | Cmake setup
 date: 2025-07-19 14:10:00 +0200
-categories: [Tutorials 📚, Engine 🔧, Series]
-tags: [🎨graphics , 🔺OpenGL, 🌋 Vulkan, 🔧Engine]
+categories: [Engine 🔧, Tutorial 📚]
+
 math: true
 img_path: /assets/assets-2025-07-19/
 image: /assets/assets-2025-07-19/gl_vk_demo.gif

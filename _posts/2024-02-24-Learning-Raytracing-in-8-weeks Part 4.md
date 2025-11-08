@@ -1,8 +1,7 @@
 ---
 title: Learning-Raytracing-in-8-weeks | Simple Smoke with Beer's Law | Part 4
 date: 2024-04-08 14:10:00 +0200
-categories: [Learning 📚, Log 📖, Raytracing 🌐]
-tags: [blog 📝, programming 💻, c++, raytracing 🌟, graphics 🎨, voxels 🔳]
+categories: [Graphics 🎨, Raytracing 🌐]
 math: true
 img_path: /assets/assets-2024-04-08/
 image: /assets/assets-2024-04-08/finCloud.png

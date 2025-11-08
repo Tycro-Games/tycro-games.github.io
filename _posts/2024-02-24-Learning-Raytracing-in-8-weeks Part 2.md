@@ -1,8 +1,7 @@
 ---
 title: Learning-Raytracing-in-8-weeks | Glass made out of voxels | Part 2
 date: 2024-03-02 14:10:00 +0200
-categories: [Learning 📚, Log 📖, Raytracing 🌐]
-tags: [blog 📝, programming 💻, c++, raytracing 🌟, graphics 🎨, voxels 🔳]
+categories: [Graphics 🎨, Raytracing 🌐]
 math: true
 img_path: /assets/assets-2024-03-02/
 image: /assets/assets-2024-03-02/sphereOfVoxels.png

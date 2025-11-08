@@ -1,85 +1,87 @@
 ---
 layout: page
-
 ---
-
 {% include lang.html %}
 
 <!-- Get pinned posts -->
 {% assign all_pinned = site.posts | where: 'pin', 'true' %}
-
 <!-- Get normal posts -->
 {% assign all_normal = site.posts | where_exp: 'item', 'item.pin != true and item.hidden != true' %}
-
 <!-- Merge pinned and normal posts -->
 {% assign all_posts = all_pinned | concat: all_normal %}
 
 <div class="portfolio-page">
-
   <div class="projects-container">
     {% for post in all_posts %}
       <a href="{{ post.url }}" class="project-card-link">
-
-      <article class="project-card">
+        <article class="project-card">
           {% if post.image %}
             <div class="project-image">
-              <img src="{{ post.image | relative_url }}" alt="{{ post.title}} Preview" >
+              <img src="{{ post.image | relative_url }}" alt="{{ post.title }} Preview">
             </div>
           {% endif %}
+          
+          <div class="project-info">
+            <h3>{{ post.title }}</h3>
+            <p>
+              {% if post.description %}
+                {{ post.description }}
+              {% else %}
+                {% include post-description.html %}
+              {% endif %}
+            </p>
+            
+            <!-- Article Metadata Tags -->
+            <div class="article-metadata">
+              <!-- Pin Badge -->
+              {% if post.pin %}
+                <div class="meta-tag pinned">
+                  <span class="meta-icon">📌</span>
+                  <span class="meta-label">Pinned</span>
+                </div>
+              {% endif %}
 
-
-        <div class="project-info">
-          <h3>{{ post.title }}</h3>
-          <p>
-            {% if post.description %}
-              {{ post.description }}
-            {% else %}
-              {% include post-description.html %}
-            {% endif %}
-          </p>
-
-          {% if post.categories %}
-            <div class="categories-container">
-              {% for cat in post.categories %}
-                <span class="project-category">{{ cat }}</span>
-              {% endfor %}
+              <!-- Categories -->
+              {% if post.categories %}
+                {% for cat in post.categories %}
+                  <div class="meta-tag category">
+                    <span class="meta-label">{{ cat }}</span>
+                  </div>
+                {% endfor %}
+              {% endif %}
             </div>
-          {% endif %}
-
-        </div>
-       
-      </article>
-       </a> 
+          </div>
+        </article>
+      </a> 
     {% endfor %}
   </div>
-
 </div>
 
 <style>
-.project-card-link {
-  display: block;
-  text-decoration: none; /* Optional: Removes underline */
-  color: transparent !important; /* Optional: Inherit text color */
-  border-bottom: transparent !important; /* Optional: Inherit text color */
-}
-
+/* Projects Container */
 .projects-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid with minimum card width */
-  gap: 20px; /* Adds consistent spacing between cards */
-  grid-auto-rows: auto; /* Cards adjust naturally based on content */
-  padding: 20px; /* Optional: Adds padding around the grid */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  grid-auto-rows: auto;
+  padding: 20px;
+}
+
+@media (min-width: 1200px) {
+  .projects-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /* Project Card */
 .project-card {
-  background-color: var(--project-card-bg);  /* Use the background color variable */
+  background-color: var(--project-card-bg);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 100%; /* Full height for consistency */
+  height: 100%;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -91,59 +93,90 @@ layout: page
 /* Project Image */
 .project-image img {
   width: 100%;
-  height: 100%; /* Larger, proportional image height */
-  object-fit: cover; /* Maintain aspect ratio */
+  height: 200px;
+  object-fit: cover;
   border-bottom: 1px solid #f0f0f0;
 }
 
 /* Project Info */
 .project-info {
-  padding: 15px; /* Increased padding for better spacing */
+  padding: 20px;
   display: flex;
-  flex-grow: 1; /* Ensure content takes remaining space */
+  flex-grow: 1;
   flex-direction: column;
-  flex-grow: 1; /* Ensure content takes available space */
-  background-color: var(--project-info-bg);  /* Use the project info background color variable */
-  color: var(--text-color);  /* Use the text color variable */
+  background-color: var(--project-info-bg);
+  color: var(--text-color);
 }
 
 .project-info h3 {
-  font-size: 1.4rem; /* Slightly larger for readability */
+  font-size: 1.4rem;
   font-weight: bold;
-  margin-bottom: 8px; /* Add spacing below title */
+  margin-bottom: 8px;
+  color: var(--text-color);
 }
 
 .project-info p {
-  font-size: 1rem; /* Standard size for better readability */
-  margin-bottom: 10px; /* Adjust spacing between content */
-  color: var(--text-color);  /* Use the text color variable */
+  font-size: 1rem;
+  margin-bottom: 15px;
+  color: var(--text-color);
+  line-height: 1.5;
 }
 
-
-/* Categories */
-.categories-container {
-  margin-top: 10px;
-  margin-bottom: 15px;
+/* Article Metadata Tags */
+.article-metadata {
+  margin-top: auto;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(128, 128, 128, 0.2);
 }
 
-.project-category {
-  background-color: #28a745;
+.meta-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+}
+
+.meta-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.meta-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.meta-label {
+  line-height: 1;
+}
+
+/* Color Palette for Article Tags */
+.meta-tag.pinned {
+  background-color: #dc2626; /* Red */
   color: white;
-  border-radius: 25px;
-  padding: 6px 12px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  display: inline-block;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.project-category:hover {
-  background-color: #218838;
+.meta-tag.category {
+  background-color: #059669; /* Emerald Green */
+  color: white;
 }
 
+.meta-tag.reading-time {
+  background-color: #7c3aed; /* Violet */
+  color: white;
+}
+
+/* Remove link styling */
+.project-card-link {
+  text-decoration: none;
+  color: inherit;
+}
 </style>

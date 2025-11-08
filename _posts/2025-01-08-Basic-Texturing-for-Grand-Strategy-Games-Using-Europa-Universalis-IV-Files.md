@@ -1,8 +1,8 @@
 ---
 title: Basic Texturing for Grand Strategy Games Using Europa Universalis IV Files
 date: 2025-01-08 14:10:00 +0200
-categories: [Tutorials 📚, Graphics 🎨]
-tags: [blog 📝, programming 💻, c++, 🔀procedural Generation , 🎓university, 🎨graphics , 🔺OpenGL, 🌍grand strategy]
+categories: [Graphics 🎨, Tutorial 📚]
+
 math: true
 img_path: /assets/assets-2025-01-08/
 image: /assets/assets-2025-01-08/showcase.gif
