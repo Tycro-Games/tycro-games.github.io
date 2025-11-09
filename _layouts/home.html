@@ -1,5 +1,7 @@
 ---
 layout: page
+script_includes:
+  - portfolio-filter
 ---
 {% include lang.html %}
 
@@ -109,68 +111,6 @@ layout: page
   </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  const projectCards = document.querySelectorAll('.project-card-link');
-  const container = document.querySelector('.projects-container');
-
-  function applyFilter(filter) {
-    // Convert NodeList to Array for sorting
-    const cardsArray = Array.from(projectCards);
-    
-    if (filter === 'chronological') {
-      // Sort by date (newest first)
-      cardsArray.sort((a, b) => {
-        const dateA = parseInt(a.getAttribute('data-date'));
-        const dateB = parseInt(b.getAttribute('data-date'));
-        return dateB - dateA; // Reverse chronological
-      });
-
-      cardsArray.forEach((card, index) => {
-        card.style.display = '';
-        card.style.order = index;
-      });
-    } else {
-      // Sort and reorder based on priority
-      const priorityAttr = `data-priority-${filter}`;
-      
-      cardsArray.sort((a, b) => {
-        const priorityA = parseInt(a.getAttribute(priorityAttr)) || 999;
-        const priorityB = parseInt(b.getAttribute(priorityAttr)) || 999;
-        return priorityA - priorityB;
-      });
-
-      // Apply new order
-      cardsArray.forEach((card, index) => {
-        const priority = parseInt(card.getAttribute(priorityAttr)) || 999;
-        
-        // Hide projects with priority 999 (not relevant)
-        if (priority === 999) {
-          card.style.display = 'none';
-        } else {
-          card.style.display = '';
-          card.style.order = index;
-        }
-      });
-    }
-  }
-
-  // Apply engine filter on page load
-  applyFilter('engine');
-
-  filterButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      // Update active button
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      this.classList.add('active');
-
-      const filter = this.dataset.filter;
-      applyFilter(filter);
-    });
-  });
-});
-</script>
 
 <style>
 /* Filter Controls */
