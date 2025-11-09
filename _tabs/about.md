@@ -17,9 +17,13 @@ Hello! I'm **Bogdan Mocanu**, a game programming student at **Breda University o
 
 ---
 
-### Contact Me
-Feel free to reach out via [bogdan.game.development@gmail.com](mailto:bogdan.game.development@gmail.com).
+### You can find me
+
+**Email:** [bogdan.game.development@gmail.com](mailto:bogdan.game.development@gmail.com)  
+**LinkedIn:** [linkedin.com/in/bogdan-mocanu](https://www.linkedin.com/in/bogdan-mocanu-8234581b1/)  
+**GitHub:** [github.com/OneBogdan01](https://github.com/OneBogdan01)  
+**Itch.io:** [tycro-games.itch.io](https://tycro-games.itch.io/)
 
 ---
 
-*Currently seeking engine programming internships with a focus on graphics, tools, or low-level systems. Available from [insert date].*
+*Currently seeking engine programming internships with a focus on engine, tools, graphics or low-level systems. Available from Summer 2026.*
