@@ -4,16 +4,22 @@ icon: fas fa-info-circle
 order: 1
 ---
 
-Hello! I’m **Bogdan Mocanu**, a game programming student at **Breda University of Applied Sciences**. I am working towards becoming an engine programmer, focusing on **graphics programming** at the moment. In my freetime, I enjoy building tools and engines.
+Hello! I'm **Bogdan Mocanu**, a game programming student at **Breda University of Applied Sciences**. I am working towards becoming an engine programmer, focusing on **graphics programming** at the moment. To me, game programming is a constant challenge of learning and collaborating with other passionate developers. I do not see it as "work", but a passion where I can keep discovering.
 
-### Career Goals
+### When I am not "working" I am:
+- Building my own game engine to explore low-level systems and graphics techniques
+- Learning game design for creating educational games and simulations
 
-My goal is to leverage my skills to work on impactful, games or engines. I’m also open to connecting with other developers and industry professionals.
+### Outside of coding
+- I am a nerd for fitness and calisthenics exercises with emphasis on gymnastic skills on the rings
+- I play Paradox, indie hits and other strategy games; my favorite game of all time is Europa Universalis 4 *with 1000h+*
+- Every time I return to my home country, I bake at least one pizza from scratch
 
-### Other Passions
-
-Outside of coding, I enjoy practicing **calisthenics** 💪, playing **indie** and **grand strategy games** 🎮, and playing **guitar** 🎶.
+---
 
 ### Contact Me
+Feel free to reach out via [bogdan.game.development@gmail.com](mailto:bogdan.game.development@gmail.com).
 
-If you’re interested in my work or have any questions, feel free to reach out via [bogdan.game.development@gmail.com](mailto:bogdan.game.development@gmail.com).
+---
+
+*Currently seeking engine programming internships with a focus on graphics, tools, or low-level systems. Available from [insert date].*
