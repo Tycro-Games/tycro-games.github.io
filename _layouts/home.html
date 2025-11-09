@@ -37,7 +37,7 @@ script_includes:
           <!-- Project Metadata Tags -->
           <div class="project-metadata">
             
-            <!-- Project Type Badge -->
+            <!-- 1. Project Type Badge (always first) -->
             {% if project.main_category == "University Projects" %}
               <div class="meta-tag university">
                 <span class="meta-icon">🎓</span>
@@ -55,15 +55,7 @@ script_includes:
               </div>
             {% endif %}
             
-            <!-- Main Features/Contribution -->
-            {% if project.features %}
-              <div class="meta-tag features">
-                <span class="meta-icon">⭐</span>
-                <span class="meta-label">{{ project.features }}</span>
-              </div>
-            {% endif %}
-
-            <!-- Engine/Tools -->
+            <!-- 2. Engine/Tools -->
             {% if project.engine %}
               <div class="meta-tag engine">
                 <span class="meta-icon">🔧</span>
@@ -71,7 +63,7 @@ script_includes:
               </div>
             {% endif %}
 
-            <!-- Team Size -->
+            <!-- 3. Team Size -->
             {% if project.team_size %}
               {% assign team_lower = project.team_size | downcase %}
               {% if team_lower contains "solo" %}
@@ -87,7 +79,7 @@ script_includes:
               {% endif %}
             {% endif %}
 
-            <!-- Platform -->
+            <!-- 4. Platform -->
             {% if project.platform %}
               <div class="meta-tag platform">
                 <span class="meta-icon">💻</span>
@@ -95,11 +87,19 @@ script_includes:
               </div>
             {% endif %}
 
-            <!-- Duration -->
+            <!-- 5. Duration -->
             {% if project.duration %}
               <div class="meta-tag duration">
                 <span class="meta-icon">⏱️</span>
                 <span class="meta-label">{{ project.duration }}</span>
+              </div>
+            {% endif %}
+            
+            <!-- 6. Features (last, since it can be long) -->
+            {% if project.features %}
+              <div class="meta-tag features">
+                <span class="meta-icon">⭐</span>
+                <span class="meta-label">{{ project.features }}</span>
               </div>
             {% endif %}
 
