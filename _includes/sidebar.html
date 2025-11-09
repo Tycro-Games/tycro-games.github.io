@@ -30,7 +30,7 @@
       {% if  tab.title != "Categories" and tab.title != "Tags" and tab.title != "Timeline" %}
         <li class="nav-item{% if tab.url == page.url %}{{ " active" }}{% endif %}">
           {% if tab.title == "Resume" %}
-            <a href="{{ '/assets/resume2025.pdf' | relative_url }}" class="nav-link" target="_blank" rel="noopener noreferrer">
+            <a href="{{ 'https://rxresu.me/onebogdan01/engine-programmer' | relative_url }}" class="nav-link" target="_blank" rel="noopener noreferrer">
               <i class="fa-fw {{ tab.icon }}"></i>
               {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
               <span>{{ site.data.locales[include.lang].tabs.[tab_name] | default: tab.title | upcase }}</span>
