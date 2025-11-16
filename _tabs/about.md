@@ -75,7 +75,7 @@ Hello! I'm **Bogdan Mocanu**, a game programming student at **Breda University o
 
 *Currently seeking programming internships with a focus on engine, tools, graphics or low-level systems. Available from Summer 2026.*
 
-</div>
+<!-- </div>
 
 <div class="about-sidebar">
   <div class="passion-photo">
@@ -94,4 +94,4 @@ Hello! I'm **Bogdan Mocanu**, a game programming student at **Breda University o
   </div>
 </div>
 
-</div>
+</div> -->
