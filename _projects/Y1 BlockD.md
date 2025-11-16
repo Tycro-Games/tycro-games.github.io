@@ -1,6 +1,6 @@
 ---
 layout: project
-title: "Procedural Coastline Generation Tool in Unreal Engine | Game"
+title: "Procedural Coastline Generation Tool in Unreal Engine | Kaboom Return of Kaboom"
 description: "A Wave Function Collapse (WFC)-based tool for artists and designers to generate island coastlines procedurally."
 image: /assets/portfolio/blockd-preview.png
 main_category: University Projects

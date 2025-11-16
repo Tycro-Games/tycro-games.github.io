@@ -8,7 +8,7 @@ main_category: University Projects
 date: 2025-11-07
 
 features: "Shaders & Editor Tools"
-engine: "C++ in Godot"
+engine: "C++ & Godot"
 team_size: "Solo"  
 platform: "PC"  
 duration: "8 weeks" 

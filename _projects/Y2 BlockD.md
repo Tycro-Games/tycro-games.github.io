@@ -1,6 +1,6 @@
 ---
 layout: project
-title: "Nakon | FPS made in a cross-platform engine for PS5/PC"
+title: "FPS made in a cross-platform engine for PS5/PC | Nakon"
 description: "An FPS game made in a cross-platform engine from the ground up."
 image: /assets/portfolio/Y2/D/Animation.gif
 main_category: University Projects

@@ -1,6 +1,6 @@
 ---
 layout: project
-title: FireAnt | PC/Nintendo Engine
+title: PC/Nintendo Engine for Strategy Games  | FireAnt
 description: A cross-platform engine demo featuring particle systems, ECS architecture, inspector hierarchies, and GLTF 3D model support.
 image: assets/portfolio/Y2/C/Animation.gif
 main_category: University Projects
