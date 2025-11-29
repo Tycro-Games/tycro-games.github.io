@@ -98,7 +98,7 @@ script_includes:
             <!-- 6. Features (last, since it can be long) -->
             {% if project.features %}
               <div class="meta-tag features">
-                <span class="meta-icon">⭐</span>
+                <span class="meta-icon">✨</span>
                 <span class="meta-label">{{ project.features }}</span>
               </div>
             {% endif %}
@@ -112,8 +112,7 @@ script_includes:
 </div>
 
 
-<style>
-/* Filter Controls */
+<style>/* Filter Controls */
 .filter-controls {
   display: flex;
   justify-content: center;
@@ -121,37 +120,37 @@ script_includes:
   margin-bottom: 30px;
   flex-wrap: wrap;
   position: relative;
-  z-index: 10; /* Ensure buttons are above other content */
-  padding: 10px; /* Add padding for better touch targets */
+  z-index: 10;
+  padding: 10px;
 }
 
 .filter-btn {
-  padding: 12px 24px; /* Slightly larger for better touch targets */
-  border: 2px solid #e5e7eb;
+  padding: 12px 24px;
+  border: 2px solid var(--border-color, #e5e7eb);
   border-radius: 8px;
-  background-color: white;
-  color: #374151;
+  background-color: var(--card-bg, var(--main-bg));
+  color: var(--text-color);
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-height: 44px; /* Minimum touch target size for mobile */
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .filter-btn:hover {
-  border-color: #2563eb;
-  color: #2563eb;
+  border-color: var(--link-color, #2563eb);
+  color: var(--link-color, #2563eb);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .filter-btn.active {
-  background-color: #2563eb;
-  color: white;
-  border-color: #2563eb;
+  background-color: var(--link-color, #2563eb);
+  color: var(--btn-active-text, #fff);
+  border-color: var(--link-color, #2563eb);
 }
 
 /* Mobile specific adjustments */
@@ -164,7 +163,7 @@ script_includes:
   .filter-btn {
     padding: 10px 20px;
     font-size: 0.9rem;
-    min-width: 90px; /* Ensure buttons are wide enough */
+    min-width: 90px;
   }
 }
 
@@ -205,7 +204,7 @@ script_includes:
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-bottom: 1px solid #f0f0f0;
+  #border-bottom: 1px solid #f0f0f0;
 }
 
 /* Project Info */
@@ -235,9 +234,9 @@ script_includes:
 /* Project Metadata Tags */
 .project-metadata {
   margin-top: auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
   padding-top: 15px;
   border-top: 1px solid rgba(128, 128, 128, 0.2);
 }
@@ -245,15 +244,29 @@ script_includes:
 .meta-tag {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 12px; /* More padding */
   border-radius: 20px;
-  font-size: 1.25rem;
+  font-size: 0.8rem; /* Slightly larger */
   font-weight: 600;
+  letter-spacing: 0.02em; /* Easier to read */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   white-space: nowrap;
+  min-width: 0;
+  grid-column: span 3;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.67); /* Subtle shadow for contrast */
 }
 
+
+
+.meta-label {
+  line-height: 1.2;
+}
+
+.meta-tag.features {
+  grid-column: span 3; /* Features takes 3 of 6 columns = half row */
+}
 .meta-tag:hover {
   transform: translateY(-2px);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
@@ -285,7 +298,7 @@ script_includes:
 }
 
 .meta-tag.features {
-  background-color: #f59e0b; /* Amber/Orange */
+  background-color: #b45309;
   color: white;
 }
 
@@ -295,7 +308,7 @@ script_includes:
 }
 
 .meta-tag.team.solo {
-  background-color: #7c3aed; /* Violet */
+  background-color: #9254ffff; /* Violet */
   color: white;
 }
 

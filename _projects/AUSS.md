@@ -7,7 +7,7 @@ main_category: Archive Projects
 date: 2022-12-28
 
 # Metadata tags
-features: "Wave System & Collision Detection"
+features: "Gameplay Systems"
 engine: "C++ & SDL2"
 team_size: "Solo"
 platform: "PC"
