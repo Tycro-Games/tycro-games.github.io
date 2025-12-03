@@ -7,7 +7,7 @@ main_category: University Projects
 date: 2025-04-08
 
 # Metadata tags
-features: "Cross-Platform Engine"
+# features: "Cross-Platform Engine"
 engine: "C++ & OpenGL"
 team_size: "7 programmers"
 platform: "PC/Nintendo"

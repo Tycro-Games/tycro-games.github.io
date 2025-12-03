@@ -7,7 +7,7 @@ image: assets/media/gs_map/demo_final.gif
 main_category: University Projects
 date: 2025-11-07
 
-features: "Shaders & Editor Tools"
+# features: "Shaders & Editor Tools"
 engine: "C++ & Godot"
 team_size: "Solo"  
 platform: "PC"  

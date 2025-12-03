@@ -7,7 +7,7 @@ main_category: Personal Projects
 date: 2024-11-05
 
 # Metadata tags
-features: "AI & Tools"
+# features: "AI & Tools"
 engine: "C# & Unity"
 team_size: "2 people"
 platform: "PC/Web"

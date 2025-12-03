@@ -7,7 +7,7 @@ main_category: University Projects
 date: 2024-07-15
 
 # Metadata tags
-features: "WFC Algorithm & A* Pathfinding"
+# features: "WFC Algorithm & A* Pathfinding"
 engine: "C++ & Unreal Engine"
 team_size: "12 people"
 platform: "PC"

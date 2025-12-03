@@ -7,7 +7,7 @@ main_category: Personal Projects
 date: 2025-11-05
 
 # Metadata tags
-features: "Graphics & Engine Systems"
+# features: "Graphics & Engine Systems"
 engine: "C++"
 team_size: "Solo"
 platform: "PC"

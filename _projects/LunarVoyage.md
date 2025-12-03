@@ -7,7 +7,7 @@ main_category: Archive Projects
 date: 2022-08-08
 
 # Metadata tags
-features: "A* Pathfinding & Tools"
+# features: "A* Pathfinding & Tools"
 engine: "C# & Unity"
 team_size: "2 people"
 platform: "PC/Web"

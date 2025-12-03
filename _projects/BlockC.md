@@ -7,7 +7,7 @@ main_category: University Projects
 date: 2024-04-02
 
 # Metadata tags
-features: "Voxel Raytracing"
+# features: "Voxel Raytracing"
 engine: "C++"
 team_size: "Solo"
 platform: "PC"

@@ -7,7 +7,7 @@ main_category: University Projects
 date: 2025-01-27
 
 # Metadata tags
-features: "Terrain Rendering"
+# features: "Terrain Rendering"
 engine: "C++ & OpenGL"
 team_size: "Solo"
 platform: "PC"

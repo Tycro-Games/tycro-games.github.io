@@ -7,7 +7,7 @@ main_category: University Projects
 date: 2025-07-15
 
 # Metadata tags
-features: "Producer & Engine Tools"
+# features: "Producer & Engine Tools"
 engine: "C++ Custom Engine"
 team_size: "12 people"
 platform: "PC/PS5"
