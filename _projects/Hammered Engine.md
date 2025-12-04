@@ -1,16 +1,14 @@
 ---
 layout: project
-title: A game engine that I use as a playground for learning low-level systems | Toy Engine (IN PROGRESS)
+title: Hammered Engine | A Personal Game Engine for Learning Low-Level Systems
 description: A personal learning project for exploring low-level engine systems and graphics programming.
 image: assets/assets-2025-07-19/gl_vk_demo.gif
 main_category: Personal Projects
 date: 2025-11-05
-
-# Metadata tags
-# features: "Graphics & Engine Systems"
 engine: "C++"
 team_size: "Solo"
 platform: "PC"
+duration: "In Progress"
 priority_graphics: 2
 priority_engine: 1
 ---
