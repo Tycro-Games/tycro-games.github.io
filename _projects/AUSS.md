@@ -14,6 +14,10 @@ platform: "PC"
 priority_graphics: 20
 priority_engine: 9
 ---
+## 📂 Source Code & Template
+
+The game is based on a template I received during the intake, which you can find [here on GitHub](https://github.com/Tycro-Games/AUSS).
+
 
 # An Unrealistic Spaceship Simulator (AUSS) 🚀
 
@@ -30,9 +34,6 @@ priority_engine: 9
 
 <iframe frameborder="0" src="https://itch.io/embed/1607830" width="552" height="167"><a href="https://tycro-dev.itch.io/auss">An Unrealistic Spaceship Simulator by Tycro Games</a></iframe>
 
-## 📂 Source Code & Template
-
-The game is based on a template I received during the intake, which you can find [here on GitHub](https://github.com/Tycro-Games/AUSS).
 
 
 ## 🛠️ Technologies Used

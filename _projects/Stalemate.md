@@ -15,6 +15,11 @@ priority_graphics: 999
 priority_engine: 10
 ---
 
+## 📂 Source Code
+
+The game source code can be found on [GitHub](https://github.com/Tycro-Games/Stalemate).
+
+
 ## 🚀 About the Project
 
 Stalemate was made as a hobby project by me and [Jasmine de Jong](https://jasjasdev.itch.io/stalemate). We developed it in our free time, while doing our studies at Breda University of Applied Sciences. It is a game based on chess where you play as both sides, in order to obtain a "stalemate". Each round, battle ship "pieces" fight among each other based on predefined rules. I was responsible for the codebase used in the project.
@@ -23,9 +28,6 @@ Stalemate was made as a hobby project by me and [Jasmine de Jong](https://jasjas
 
 <iframe frameborder="0" src="https://itch.io/embed/2664633" width="552" height="167"><a href="https://jasjasdev.itch.io/stalemate">Stalemate by JasJas, Tycro Games</a></iframe>
 
-## 📂 Source Code
-
-The game source code can be found on [GitHub](https://github.com/Tycro-Games/Stalemate).
 
 ## 🛠️ Main Features
 

@@ -16,6 +16,11 @@ priority_graphics: 999
 priority_engine: 5
 ---
 
+## 📂 Source Code
+
+This project was hosted on **Perforce** as part of a collaborative workflow, and the source code is not publicly available.
+
+
 ## 🎓 About the Project
 
 This project was made in a team of 12 students (4 programmers, 3 designers and 5 artists). I focused on creating a **procedural coastline generation tool** for artists and designers.
@@ -28,10 +33,6 @@ In addition to creating the procedural tool, I also created the trailer for this
 
 <iframe width="1120" height="650" src="https://www.youtube.com/embed/zk-24I7OJf8?si=GfJ0t553i__HbgYu" title="Game Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 *Game trailer showcasing procedurally generated island environments*
-
-## 📂 Source Code
-
-This project was hosted on **Perforce** as part of a collaborative workflow, and the source code is not publicly available.
 
 ## 🛠️ Skills Developed
 

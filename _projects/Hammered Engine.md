@@ -15,6 +15,10 @@ priority_graphics: 2
 priority_engine: 1
 ---
 
+## 📂 Source Code
+
+*Source code information will be added once the project reaches a stable state.*
+
 
 ## 📚 Project Article 
 
@@ -23,10 +27,6 @@ priority_engine: 1
 ## 🚀 About the Project
 
 *This project is currently in development. More details coming soon.*
-
-## 📂 Source Code
-
-*Source code information will be added once the project reaches a stable state.*
 
 ## 🛠️ Main Features
 

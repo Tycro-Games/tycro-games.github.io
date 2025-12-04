@@ -16,6 +16,9 @@ priority_graphics: 5
 priority_engine: 3
 ---
 
+## 📂 Source Code
+
+Unfortunately, due to NDA restrictions, I am unable to share the codebase.
 
 ## 🎓 About the Project
 
@@ -31,9 +34,6 @@ FireAnt is a cross-platform engine, with **Nintendo** and **PC**. It was made to
 
 - **Teamwork**: As this was my first "large" collaborative engine project, I contributed to code reviews, helped enforce team coding standards through using Github Actions, and worked to maintain a shared vision across the team. I got the opportunity to lead some of our meetings.
 
-## 📂 Source Code
-
-Unfortunately, due to NDA restrictions, I am unable to share the codebase.
 
 ## 🎮 Demo
 

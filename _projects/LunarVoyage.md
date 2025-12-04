@@ -16,6 +16,10 @@ priority_graphics: 999
 priority_engine: 20
 ---
 
+## 📂 Source Code
+The game source code can be found on [GitHub](https://github.com/Tycro-Games/Lunar-Voyage).
+
+
 ## 🚀 About the Project
 Lunar Voyage features enemies that dynamically adjust their paths based on tower placements. It is a game that I worked in my spare time, during highschool. I was responsible for all the code used in the project.
 
@@ -23,8 +27,6 @@ Lunar Voyage features enemies that dynamically adjust their paths based on tower
 ## 🎮 Play on itch.io
 <iframe frameborder="0" src="https://itch.io/embed/830920" width="552" height="167"><a href="https://tycro-dev.itch.io/lunar-voyage-moon-colonization">Lunar Voyage by Tycro Games, Jvfzago</a></iframe>
 
-## 📂 Source Code
-The game source code can be found on [GitHub](https://github.com/Tycro-Games/Lunar-Voyage).
 
 ## 🛠️ Skills Developed
 - **Unity**: Designed and implemented interconnected systems in Unity with clean and modular architecture.

@@ -16,6 +16,11 @@ priority_graphics: 2
 priority_engine: 6
 ---
 
+## 📂 Source Code
+
+Unfortunately, due to NDA restrictions, I am unable to share the full codebase.
+
+
 ## 🛠️ Skills and Technologies
 
 - **Custom Educational Engine**: Developed using the Bee engine, a proprietary tool used at Breda University of Applied Sciences for the CMGT programming track.
@@ -30,9 +35,6 @@ As part of the project, we also had to create an article where we share the know
 
 **[Basic Texturing for Grand Strategy Games Using Europa Universalis IV Files](https://tycro-games.github.io/posts/Basic-Texturing-for-Grand-Strategy-Games-Using-Europa-Universalis-IV-Files/)**
 
-## 📂 Source Code
-
-Unfortunately, due to NDA restrictions, I am unable to share the full codebase.
 
 ## ⚙️ My Contributions
 

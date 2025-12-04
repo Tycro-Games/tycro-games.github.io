@@ -16,6 +16,9 @@ priority_graphics: 4
 priority_engine: 4
 ---
 
+## 📂 Source Code
+
+Unfortunately, due to NDA restrictions, I am unable to share the codebase.
 
 ## 🎓 About the Project
 
@@ -32,9 +35,6 @@ This project was created by a team of 12 students (9 programmers and 3 artists).
 <iframe frameborder="0" src="https://itch.io/embed/3581823" width="552" height="167"><a href="https://buas.itch.io/nakon">Nakon by Breda University of Applied Sciences, BuasJoey, tBoons, Allen Philip, Tycro Games, J111M, Gikster007, Mika Halbauer, alexstn, PappaNiels, desytsv, Viktor231407, Des</a></iframe>
 
 
-## 📂 Source Code
-
-Unfortunately, due to NDA restrictions, I am unable to share the codebase.
 
 ## 📋 Producer Experience & Reflections
 

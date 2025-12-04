@@ -16,6 +16,12 @@ priority_graphics: 1
 priority_engine: 2
 ---
 
+
+## 📂 Source Code
+
+Can be found [here](https://github.com/OneBogdan01/gs-map-editor).
+
+
 ## 📚 Project Article 
 
 I like writing articles on the topics I worked on. It makes me feel I can help others learn about the topic and it. The one below describes how the rendering works at a basic level.
@@ -25,10 +31,6 @@ I like writing articles on the topics I worked on. It makes me feel I can help o
 ## 🎮 Play on itch.io
 <iframe frameborder="0" src="https://itch.io/embed/4008182" width="552" height="167"><a href="https://tycro-dev.itch.io/grand-strategy-map-demo">Grand Strategy Map Demo by Tycro Games</a></iframe>
 
-
-## 📂 Source Code
-
-Can be found [here](https://github.com/OneBogdan01/gs-map-editor).
 
 ## 🛠️ Features
 
