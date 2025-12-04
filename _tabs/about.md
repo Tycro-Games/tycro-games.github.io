@@ -60,7 +60,7 @@ Hello! I'm **Bogdan Mocanu**, a game programming student at **Breda University o
 - I am building my **own game engine** to explore low-level systems and graphics techniques
 - I am learning **game design** by making games on my own
 - I am practicing **calisthenics** exercises with emphasis on **gymnastic skills** on the rings
-- I play Paradox, indie and **strategy games**; my favorite game of all time is **Europa Universalis 4** *with 1000h+*
+- I play **Paradox**, **indie** and **strategy** **games**; my favorite game of all time is **Europa Universalis 4** *with 1000h+*
 - Every time I return to my home country, I **bake** at least one **pizza** from scratch with my childhood friend
 
 ---
