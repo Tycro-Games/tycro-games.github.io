@@ -7,12 +7,83 @@ tail_includes:
   - post-nav
   - comments
 ---
-
 <!-- Project Detail Page -->
 <article class="project-detail">
   <!-- Project Header Section -->
   <header class="project-header">
     <h1>{{ page.title }}</h1>
+    
+    <!-- Project Metadata Tags -->
+    <div class="project-metadata">
+      
+      <!-- 1. Project Type Badge (always first) -->
+      {% if page.main_category == "University Projects" %}
+        <div class="meta-tag university">
+          <span class="meta-icon">🎓</span>
+          <span class="meta-label">University</span>
+        </div>
+      {% elsif page.main_category == "Personal Projects" %}
+        <div class="meta-tag personal">
+          <span class="meta-icon">🚀</span>
+          <span class="meta-label">Personal</span>
+        </div>
+      {% elsif page.main_category == "Archive Projects" %}
+        <div class="meta-tag archive">
+          <span class="meta-icon">📦</span>
+          <span class="meta-label">Archived</span>
+        </div>
+      {% endif %}
+      
+      <!-- 2. Engine/Tools -->
+      {% if page.engine %}
+        <div class="meta-tag engine">
+          <span class="meta-icon">🔧</span>
+          <span class="meta-label">{{ page.engine }}</span>
+        </div>
+      {% endif %}
+
+      <!-- 3. Team Size -->
+      {% if page.team_size %}
+        {% assign team_lower = page.team_size | downcase %}
+        {% if team_lower contains "solo" %}
+          <div class="meta-tag team solo">
+            <span class="meta-icon">👤</span>
+            <span class="meta-label">{{ page.team_size }}</span>
+          </div>
+        {% else %}
+          <div class="meta-tag team group">
+            <span class="meta-icon">👥</span>
+            <span class="meta-label">{{ page.team_size }}</span>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      <!-- 4. Platform -->
+      {% if page.platform %}
+        <div class="meta-tag platform">
+          <span class="meta-icon">💻</span>
+          <span class="meta-label">{{ page.platform }}</span>
+        </div>
+      {% endif %}
+
+      <!-- 5. Duration -->
+      {% if page.duration %}
+        <div class="meta-tag duration">
+          <span class="meta-icon">⏱️</span>
+          <span class="meta-label">{{ page.duration }}</span>
+        </div>
+      {% endif %}
+      
+      <!-- 6. Features (last, since it can be long) -->
+      {% if page.features %}
+        <div class="meta-tag features">
+          <span class="meta-icon">✨</span>
+          <span class="meta-label">{{ page.features }}</span>
+        </div>
+      {% endif %}
+
+    </div>
+    
     <p class="project-description">{{ page.description }}</p>
   </header>
 
@@ -25,7 +96,6 @@ tail_includes:
         </div>
       {% endif %}
     </a>
-
     {% if page.video %}
       <div class="project-video">
         <iframe width="100%" height="315" src="{{ page.video }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -39,8 +109,6 @@ tail_includes:
       {{ content }}
     </div>
   </section>
-
-
 </article>
 
 <style>
@@ -49,7 +117,6 @@ tail_includes:
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
-
   }
 
   .project-header {
@@ -60,10 +127,89 @@ tail_includes:
   .project-header h1 {
     font-size: 3rem;
     font-weight: bold;
+    margin-bottom: 20px;
   }
 
- .project-header .project-description {
+  .project-header .project-description {
     font-size: 1.2rem;
-    margin-top: 10px; /* Added 'px' for proper unit */
-}
+    margin-top: 20px;
+  }
+
+  /* Project Metadata Tags */
+  .project-metadata {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .meta-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.67);
+  }
+
+  .meta-icon {
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .meta-label {
+    line-height: 1.2;
+  }
+
+  /* Distinct Color Palette */
+  .meta-tag.university {
+    background-color: #2563eb;
+    color: white;
+  }
+
+  .meta-tag.personal {
+    background-color: #dc2626;
+    color: white;
+  }
+
+  .meta-tag.archive {
+    background-color: #64748b;
+    color: white;
+  }
+
+  .meta-tag.engine {
+    background-color: #059669;
+    color: white;
+  }
+
+  .meta-tag.team.solo {
+    background-color: #9254ff;
+    color: white;
+  }
+
+  .meta-tag.team.group {
+    background-color: #db2777;
+    color: white;
+  }
+
+  .meta-tag.platform {
+    background-color: #0891b2;
+    color: white;
+  }
+
+  .meta-tag.duration {
+    background-color: #ea580c;
+    color: white;
+  }
+
+  .meta-tag.features {
+    background-color: #b45309;
+    color: white;
+  }
 </style>
