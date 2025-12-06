@@ -15,12 +15,12 @@ priority_engine: 1
 
 ## 📂 Source Code
 
-*Source code information will be added once the project reaches a stable state.*
+Can be found [here](https://github.com/OneBogdan01/hammered/tree/main).
 
 
 ## 📚 Project Article 
 
-**[Hammered Engine | Cmake setup](https://tycro-games.github.io/posts/Hammered-Cross-Platform-Game-Engine-CMake-Setup-copy/)**
+[Hammered Engine | Cmake setup](https://tycro-games.github.io/posts/Hammered-Cross-Platform-Game-Engine-CMake-Setup-copy/)
 
 ## 🚀 About the Project
 
