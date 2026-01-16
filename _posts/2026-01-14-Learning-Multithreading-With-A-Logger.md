@@ -696,8 +696,10 @@ _Log::Debug is considerably faster with async logger (yellow) than single-thread
 | Approach              | Log::Debug Total | Log::Debug (mean) | Speedup  |
 | --------------------- | ---------------- | ----------------- | -------- |
 | Single-threaded       | 811 ms           | 47 µs             | baseline |
-| Buffered + ThreadPool | 70 ms            | 4 µs              | ~11×     |
-| Async Logger          | 29 ms            | 1.7 µs            | ~28×     |
+| Async Logger          | 70 ms            | 4 µs              | ~11×     |
+| Buffered + ThreadPool | 29 ms            | 1.7 µs            | ~28×     |
+
+The buffered approach is fastest (~28×) but requires manual flushing and delayed output. The async logger (~11×) gives you near-realtime output while still keeping the main thread responsive.
 
 The async logger reduces per log overhead from **47 µs to under 2 µs**; the main thread spends 96% less time on logging.
 
