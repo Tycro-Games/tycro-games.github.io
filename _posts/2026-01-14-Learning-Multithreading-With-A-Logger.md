@@ -256,7 +256,9 @@ If you want to inspect the file yourself using Tracy:
 
 [single_thread.tracy](/assets/assets-2026-01-14/single_thread.tracy)
 
-Here we can see that our main logging function, which is `Log::Debug` is mainly taking most of the time on the "sink" of the console. This happens because the function will wait for `println` to return.
+Here we can see that our main logging function, which is `Log::Debug` is mainly taking most of the time on the "sink" of the console. This happens because the function will wait for `println` to return. Now the important question: Will multithreading make it faster?
+
+### Thread Pool
 
 We could try to multithread this directly via a `ThreadPool`:
 
@@ -271,10 +273,7 @@ namespace hm
 class ThreadPool
 {
  public:
-  ThreadPool(u64 threadCount = 0);
-  ~ThreadPool();
-  //deletes copy constructors
-  HM_NON_COPYABLE(ThreadPool);
+ //constructors ...
   //generic jobs, can be anything
   void QueueJob(const std::function<void()>& job);
   //make sure that all threads are done with their work and join them
@@ -337,7 +336,7 @@ The contention between threads is making them wait on each other. The overhead i
                   });
 ```
 
-Despite the clanky API for passing the time to a function about logging, we are nearly done optimizing it. I created a new `SortedLogger` that inherits from the `BaseLogger` class. This will only add messages to a `std::vector` and only on the `Flush` call it is going to sort and call the slow `sink`  functions. It is important that now we have an owning `std::string` of our message, otherwise we will get invalid data when the string that was passed goes out of scope.
+Despite the clunky API for passing the time to a function about logging, we are nearly done optimizing it. I created a new `SortedLogger` that inherits from the `BaseLogger` class. This will only add messages to a `std::vector` and only on the `Flush` call it is going to sort and call the slow `sink`  functions. It is important that now we have an owning `std::string` of our message, otherwise we will get invalid data when the string that was passed goes out of scope.
 
 ```cpp
 //LogMessage uses a std::string
@@ -375,7 +374,7 @@ std::vector<LogMessage> buffer;
 ```
 
 //TODO visualization with contention between threads
-In profiling, we got 29.13 ms for the `Log::Debug` function, this is the fastest we will get.
+
 
 ![alt text](/assets/assets-2026-01-14/multi_thread_buffered.png)
 
@@ -393,20 +392,19 @@ This approach is marked as yellow, compared to single-threaded which is red:
 
 ![alt text](/assets/assets-2026-01-14/comparison.png)
 
-This approach does not fit well for logging. It is "wierd" to pass the time when logging or to use a thread pool in order to queue log messages. This would work seamlessly if we had multiple threads that do work in parallel: AI, UI, Physics etc. could log their messages in this way.
-> Is this sentance good?
+The buffered approach fits well with separate threads with subsystem multithreaded architectures: AI, physics, rendering etc., each maintaining their own buffered logger, flushing at the end of the frame. For more "usual" use cases.
 
-Spdlog offers an `async` logger. This means that the separation we had earlier is applied in a similar fashion. The buffer could be a circular queue which I am going to explain in the next section.
+Before tackling the async logger,one should understand its core data structure: the circular queue (also called a ring buffer).
 
 ## Circular Queue
 
-This library uses a circular queue wrapped with thread safety and  pre-allocated memory. The main concept that is used in async logging is to separate `queueing` of messages from writing them to the sink (console and file in this case). They offer three overflow policies when the queue is full:
+This library uses a circular queue wrapped with thread safety and pre-allocated memory in order to avoid reallocations at runtime. The main concept that is used in async logging is to separate `queueing` of messages from writing them to the `sink`. They offer three overflow policies when the queue is full:
 
 - **Block**: The calling thread waits until space becomes available
 - **Discard New**: New messages are dropped if the queue is full; existing messages are preserved
 - **Overwrite Oldest**: New messages overwrite the oldest unprocessed messages in the queue
 
-This is the main reason a circular queue is used. It handles what happens when the memory allocated is full. A circular queue maintains a fixed-size buffer with `head` (next element to pop) and `tail` (next empty slot) indices that wrap around. In the constructor, the maximum capacity is increased by one to keep track if the queue is full. This means that when the `tail` index is equal to the `head`, the queue has ran out of space. When overwriting, both indices are advanced following each other in a circular manner.
+This is one of the reasons a circular queue is used. It handles what happens when the memory allocated is full. A circular queue maintains a fixed-size buffer with `head` (next element to pop) and `tail` (next empty slot) indices that wrap around. In the constructor, the maximum capacity is increased by one to keep track if the queue is full. This means that when the `tail` index is equal to the `head`, the queue has ran out of space. When overwriting, both indices are advanced following each other in a circular manner.
 
 ```cpp
 template<typename T>
@@ -431,7 +429,7 @@ class CircularQueue
       ++m_overrunCount;
     }
   }
-
+  // ...
  private:
   u64 m_maxItems = 0;
   u64 m_overrunCount = 0;
