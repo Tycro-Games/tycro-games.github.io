@@ -34,9 +34,9 @@ The way I test logging in order to compare it between single/multithreaded solut
 
 ## A Basic Logger with Sinks
 
-A sink is an object that will process a message and "print" it. This could be a file called `log.txt`, the console we all had to write to when learning to code. A sink is not necessarily only those two, but anything that can be written to as well as `flushed`. To `flush`  means the function will return only after the message was written to the sink. As you can imagine, flushing is often the slowest part.
+A sink is an object that will process a message and "print" it. This could be a file called `log.txt`, or the console we all had to write to when learning to code. A sink is not necessarily only those two, but anything that can be written to as well as `flushed`. To `flush` means the function will return only after the message was written to the sink. As you can imagine, flushing is often the slowest part.
 
-> This is why `endl` is not as fast as using '\n'; `endl` will also flush the console buffer, which is way slower than only doing a newline.
+> This is why `endl` is not as fast as using `\n`; `endl` will also flush the console buffer, which is way slower than only doing a newline.
 {: .prompt-info }
 
 We can use an abstract class as our blueprint for making various kinds of sinks:
@@ -59,16 +59,18 @@ struct LogMsgView
   std::string_view loggerName; // could have multiple loggers, each could have the same or different sinks, so it is important to differentiate between them
   std::string_view payload; // the message!
   time_point timestamp; // useful for debugging
-  std::thread::id threadId; // only relevant when we multithreaded
+  std::thread::id threadId; //only relevant when we multithreaded
 };
 ```
 
 > C++ uses the concept of a `string_view`, you can think of this as a read-only pointer to a string object with some utility functions and size of the string.
 {: .prompt-info }
 
-Of course, it is important to realize that there may be times when different wrappers for log messages are needed. The one above does not own its message, and uses a read-only approach, which has the advantage of no-memory allocations for the string it holds. However, one may need another object that owns the `string` it holds.
+Note that there may be times when different wrappers for log messages are needed. The one above does not own its message, and uses a read-only approach, which has the advantage of no-memory allocations for the string it holds. However, one may need another object that owns the `string` it holds.
 
 To build a logger, one needs to wrap the sinks inside an API that allows the user to call the basic `sink` and `flush` functions. A few templated functions will also help us make a thread-safe and a non-thread-safe version.
+
+Below I am using `scoped_lock` which is used to acquire and release it the mutex when the object lifetime goes out of scope.
 
 ```cpp
 
@@ -147,7 +149,6 @@ using LoggerSt = BaseLogger<NullMutex>;
 > `Mutex` can be either `std::mutex` which makes the code thread safe, or `NullMutex` which is an empty implementation of a mutex construct. This makes it so C++ removes all the multithreading primitives and removes the overhead associated with it.
 {: .prompt-info }
 
-Below I am using `scoped_lock` which is used to acquire and release it the mutex when the object lifetime goes out of scope.
 
 ```cpp
 template<typename Mutex>
@@ -232,6 +233,7 @@ inline std::shared_ptr<DefaultLogger>& GetGlobalLogger()
 
 inline void SetDefaultLogger(std::shared_ptr<DefaultLogger> logger)
 {
+  //move is a more efficient way to "assign" variables in C++
   GetGlobalLogger() = std::move(logger);
 }
 
@@ -321,7 +323,7 @@ pool.QueueJob(
 {: .prompt-info}
 
 The result is orders of magnitude slower, not only that, but our output is no longer in the correct order.
-![alt text](/assets/assets-2026-01-14/multi_no_buffer.png)
+![Thread pool logging with high contention](/assets/assets-2026-01-14/multi_no_buffer.png)
 
 [log_multithreaded.txt](/assets/assets-2026-01-14/log_multi.txt)
 
@@ -336,7 +338,7 @@ The contention between threads is making them wait on each other. The overhead i
                   });
 ```
 
-Despite the clunky API for passing the time to a function about logging, we are nearly done optimizing it. I created a new `SortedLogger` that inherits from the `BaseLogger` class. This will only add messages to a `std::vector` and only on the `Flush` call it is going to sort and call the slow `sink`  functions. It is important that now we have an owning `std::string` of our message, otherwise we will get invalid data when the string that was passed goes out of scope.
+Despite the clunky API for passing the time to a function about logging, we are nearly done optimizing it. I created a new `SortedLogger` that inherits from the `BaseLogger` class. This will only add messages to a `std::vector` and only on the `Flush` call it is going to sort and call the slow `Sink` functions. It is important that now we have an owning `std::string` of our message, otherwise we will get invalid data when the string that was passed goes out of scope.
 
 ```cpp
 //LogMessage uses a std::string
@@ -376,7 +378,7 @@ std::vector<LogMessage> buffer;
 //TODO visualization with contention between threads
 
 
-![alt text](/assets/assets-2026-01-14/multi_thread_buffered.png)
+![Buffered multithreaded logging flame graph](/assets/assets-2026-01-14/multi_thread_buffered.png)
 
  What we lose is the real-time output from earlier. To even get the output, we have to rely on the user to call the `Flush` after the thread-pool has finished all its tasks.
 
@@ -388,13 +390,13 @@ indexLogger.Flush(); // Outputs sorted by timestamp
 At least the order is the same as in the single-threaded one. This could be made even faster, since I did not even pre-allocate memory for our buffered vector.
 [log_multithreaded_correct_order](/assets/assets-2026-01-14/log_multi_correct_order.txt)
 
-This approach is marked as yellow, compared to single-threaded which is red:
+This approach is marked as yellow (faster), compared to single-threaded which is red(slower):
 
-![alt text](/assets/assets-2026-01-14/comparison.png)
+![Performance comparison: single-threaded vs buffered](/assets/assets-2026-01-14/comparison.png)
 
-The buffered approach fits well with separate threads with subsystem multithreaded architectures: AI, physics, rendering etc., each maintaining their own buffered logger, flushing at the end of the frame. For more "usual" use cases.
+The buffered approach fits well with separate threads with subsystem multithreaded architectures: AI, physics, rendering etc., each maintaining their own buffered logger, flushing at the end of the frame. Otherwise, it is a cumbersome API for anything else. This is 
 
-Before tackling the async logger,one should understand its core data structure: the circular queue (also called a ring buffer).
+Before tackling the async logger, one should understand its core data structure: the circular queue (also called a ring buffer).
 
 ## Circular Queue
 
@@ -404,7 +406,7 @@ This library uses a circular queue wrapped with thread safety and pre-allocated 
 - **Discard New**: New messages are dropped if the queue is full; existing messages are preserved
 - **Overwrite Oldest**: New messages overwrite the oldest unprocessed messages in the queue
 
-This is one of the reasons a circular queue is used. It handles what happens when the memory allocated is full. A circular queue maintains a fixed-size buffer with `head` (next element to pop) and `tail` (next empty slot) indices that wrap around. In the constructor, the maximum capacity is increased by one to keep track if the queue is full. This means that when the `tail` index is equal to the `head`, the queue has ran out of space. When overwriting, both indices are advanced following each other in a circular manner.
+This is one of the reasons a circular queue is used. It handles what happens when the memory allocated is full. A circular queue maintains a fixed-size buffer with `head` (next element to pop) and `tail` (next empty slot) indices that wrap around. In the constructor, the maximum capacity is increased by one to keep track if the queue is full. This means that when the `tail` index is equal to the `head`, the queue has run out of space. When overwriting, both indices are advanced following each other in a circular manner.
 
 ```cpp
 template<typename T>
@@ -442,10 +444,17 @@ class CircularQueue
 
 ### ThreadPool for logging
 
-Similar to the generic `ThreadPool` shown previously, this implementation uses mutexes and condition variables to ensure thread safety. A wrapper can be built around the `CircularQueue` in order to make it thread safe and still have a version without the overhead. `Spdlog` uses a `mpmc_blocking_queue` to offer this flexibility. It maps to the three policies mentioned earlier that deal with space in a queue, for `Enqueue` and `Dequeue`. For brevity only the blocking version of these two is written in code below.
+```mermaid
+   flowchart LR
+       A[Main Thread] -->|PostLog| B[MPMC Queue]
+       B -->|Dequeue| C[Worker Thread]
+       C -->|Sink| D[Console/File]
+```
+
+Similar to the generic `ThreadPool` shown previously, this implementation uses mutexes and condition variables to ensure thread safety. A wrapper can be built around the `CircularQueue` in order to make it thread safe and still have a version without the overhead. `Spdlog` uses a `mpmc_blocking_queue` to offer this flexibility. It implements the three overflow policies mentioned earlier, applied to `Enqueue` and `Dequeue`. For brevity only the blocking version of these two is written in code below.
 
 > MPMC stands for multi producer multi consumer, and means that it will be thread safe for multiple threads to write and read at the same time.
-
+ {: .prompt-info }
 ```cpp
 
   // blocking dequeue without a timeout.
@@ -453,12 +462,15 @@ Similar to the generic `ThreadPool` shown previously, this implementation uses m
   {
     HM_ZONE_SCOPED_N("LogQueue::Dequeue");
     {
+      // unique_lock will allow the condition variable to lock/unlock the mutex
       std::unique_lock lock(m_queueMutex);
+      // if queue is empty, wait
       m_pushCV.wait(lock,
                     [this]
                     {
                       return !this->m_queue.Empty();
                     });
+    
       popped_item = std::move(m_queue.Front());
       m_queue.PopFront();
     }
@@ -511,6 +523,7 @@ bool hm::log::LogThreadPool::ProcessNextMsg()
 ```
 
 > An implementation detail worth noting: `AsyncMessage` owns the `AsyncLogger` via `shared_ptr`. This handles the scenario where a logger is destroyed while messages referencing it still exist in the queue.
+{. prompt-info}
 
 The `AsyncLogger` still inherits from the same base class as the other loggers in my project. The main `Log` function has changed to sending the message to the `LogThreadPool` as below. The `PostAsyncMsg` inside `LogThreadPool` is very similar to its `Process` counterpart with the only difference that instead of using the `Pop` functions, it uses the `Push` ones.
 
@@ -527,8 +540,7 @@ void AsyncLogger::Log(Level level, std::string_view msg)
                    .timestamp = clock::now(),
                    .threadId = std::this_thread::get_id()};
 
-  auto pool = m_threadPool.lock();
-  assert(pool);
+  //get the log thread pool and handle what to do if it is not initialized
   if (pool)
   {
     pool->PostLog(shared_from_this(), view, m_overflowPolicy);
