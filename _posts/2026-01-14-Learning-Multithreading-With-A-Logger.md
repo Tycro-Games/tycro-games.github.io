@@ -40,6 +40,8 @@ A sink is an object that will process a message and "print" it. This could be a 
 > This is why `endl` is not as fast as using `\n`; `endl` will also flush the console buffer, which is way slower than only doing a newline.
 {: .prompt-info }
 
+The diagram below shows the overall architecture of the logger and sink system:
+
 ```mermaid
 classDiagram
     class BaseSink {
@@ -285,6 +287,8 @@ void Info(std::format_string<T...> fs, T&&... args)
 }
 ```
 
+The flow of a single log call looks like this:
+
 ```mermaid
 sequenceDiagram
     participant Main as Main Thread
@@ -301,12 +305,12 @@ sequenceDiagram
     deactivate Console
     Logger->>File: Sink(msg)
     activate File
-    Note right of File: write blocks
+    Note right of File: writing to file blocks less
     File-->>Logger: done
     deactivate File
     Logger-->>Main: return
     deactivate Logger
-    Note over Main: Thread blocked during I/O
+
 ```
 
 Running Tracy on our load function for this logger will give us the following results:
@@ -401,7 +405,6 @@ sequenceDiagram
     T2->>M: lock() - BLOCKED
     T3->>M: lock() - BLOCKED
     T1->>C: println()
-    Note over T1,C: Slow I/O
     T1->>M: unlock()
     deactivate T1
     activate T2
@@ -463,7 +466,6 @@ std::vector<LogMessage> buffer;
   }
 ```
 
-//TODO visualization with contention between threads
 
 
 ![Buffered multithreaded logging flame graph](/assets/assets-2026-01-14/multi_thread_buffered.png)
@@ -475,14 +477,15 @@ std::vector<LogMessage> buffer;
 indexLogger.Flush(); // Outputs sorted by timestamp
 ```
 
-At least the order is the same as in the single-threaded one. This could be made even faster, since I did not even pre-allocate memory for our buffered vector.
-[log_multithreaded_correct_order](/assets/assets-2026-01-14/log_multi_correct_order.txt)
+At least the order is the same as in the single-threaded one. This could be made even faster, since I did not even pre-allocate memory for our buffered vector. 
+
+[log_multithreaded_correct_order.txt](/assets/assets-2026-01-14/log_multi_correct_order.txt)
 
 This approach is marked as yellow (faster), compared to single-threaded which is red (slower):
 
 ![Performance comparison: single-threaded vs buffered](/assets/assets-2026-01-14/comparison.png)
 
-The buffered approach fits well with separate threads with subsystem multithreaded architectures: AI, physics, rendering etc., each maintaining their own buffered logger, flushing at the end of the frame. Otherwise, it is a cumbersome API for anything else. This is 
+The buffered approach fits well with separate threads with subsystem multithreaded architectures: AI, physics, rendering etc., each maintaining their own buffered logger, flushing at the end of the frame. Otherwise, it is a cumbersome API for anything else.
 
 Before tackling the async logger, one should understand its core data structure: the circular queue (also called a ring buffer).
 
@@ -496,22 +499,40 @@ This library uses a circular queue wrapped with thread safety and pre-allocated 
 
 This is one of the reasons a circular queue is used. It handles what happens when the memory allocated is full. A circular queue maintains a fixed-size buffer with `head` (next element to pop) and `tail` (next empty slot) indices that wrap around. In the constructor, the maximum capacity is increased by one to keep track if the queue is full. This means that when the `tail` index is equal to the `head`, the queue has run out of space. When overwriting, both indices are advanced following each other in a circular manner.
 
+Here's a visualization of the queue state with three elements added:
 ```mermaid
-flowchart TB
-    subgraph CircularQueue["Circular Queue (capacity: 8)"]
-        direction LR
-        s0["[0] A"] --> s1["[1] B"] --> s2["[2] C"] --> s3["[3] ___"] --> s4["[4] ___"] --> s5["[5] ___"] --> s6["[6] ___"] --> s7["[7] ___"]
+flowchart TD
+    subgraph Queue["Buffer State - Initial (capacity: 7 usable + 1 reserved)"]
+        s0["[0] A"]
+        s1["[1] B"]
+        s2["[2] C"]
+        s3["[3] ___"]
+        s4["[4] ___"]
+        s5["[5] ___"]
+        s6["[6] ___"]
+        s7["[7] 🚫 RESERVED"]
     end
-    
     head["head = 0"] -.-> s0
     tail["tail = 3"] -.-> s3
     
-    subgraph Legend
-        direction TB
-        l1["On PushBack: tail = (tail + 1) % capacity"]
-        l2["On PopFront: head = (head + 1) % capacity"]
-        l3["Full when: tail == head"]
+```
+
+After pushing 5 more elements (D, E, F, G, H) with the "overwrite" policy, the oldest element (A) gets dropped and the queue wraps:
+```mermaid
+flowchart TD
+    subgraph Queue["Buffer State - Full (7 usable elements + 1 reserved)"]
+        s0["[0] 🚫 RESERVED"]
+        s1["[1] B"]
+        s2["[2] C"]
+        s3["[3] D"]
+        s4["[4] E"]
+        s5["[5] F"]
+        s6["[6] G"]
+        s7["[7] H"]
     end
+    
+    head["head = 1"] -.-> s1
+    tail["tail = 0"] -.-> s0
 ```
 
 ```cpp
@@ -550,32 +571,6 @@ class CircularQueue
 
 ### ThreadPool for logging
 
-```mermaid
-flowchart TB
-    subgraph MainThread["Main Thread (fast)"]
-        A[Log::Debug called] --> B[Create LogMsgView]
-        B --> C[PostLog to queue]
-    end
-    
-    subgraph Queue["MPMC Queue"]
-        D[(Ring Buffer)]
-    end
-    
-    subgraph WorkerThread["Worker Thread (background)"]
-        E[Dequeue message] --> F{Message Type?}
-        F -->|LOG| G[BackendSink]
-        F -->|FLUSH| H[BackendFlush]
-        F -->|TERMINATE| I[Exit loop]
-        G --> J[Console/File I/O]
-        J --> E
-    end
-    
-    C --> D
-    D --> E
-    
-    style MainThread fill:#90EE90
-    style WorkerThread fill:#FFB366
-```
 
 Similar to the generic `ThreadPool` shown previously, this implementation uses mutexes and condition variables to ensure thread safety. A wrapper can be built around the `CircularQueue` in order to make it thread safe and still have a version without the overhead. `Spdlog` uses a `mpmc_blocking_queue` to offer this flexibility. It implements the three overflow policies mentioned earlier, applied to `Enqueue` and `Dequeue`. For brevity only the blocking version of these two is written in code below.
 
@@ -622,6 +617,22 @@ Similar to the generic `ThreadPool` shown previously, this implementation uses m
 ```
 
 An important aspect of this thin wrapper is that it uses condition variables for `push` and `pop` actions that are separate. This improves performance by only waking up threads that have work to do, rather than all waiting threads. This is then used by a specialized `ThreadPool` which deals with logging. This owns the `mpmc` construct, and is similar otherwise to the previous pool used in the buffered approach.
+
+The overall flow from log call to output becomes:
+
+```mermaid
+flowchart LR
+    subgraph Main["Main Thread"]
+        A[Log::Debug] --> B[PostLog]
+    end
+    
+    B --> C[(MPMC Queue)]
+    
+    subgraph Worker["Worker Thread"]
+        C --> D[Dequeue]
+        D --> E[BackendSink]
+    end
+```
 
 The "worker loop" in this case is responsible for processing messages from the queue. Messages can have types and are required to use `std::string`, rather than their non-allocating counterpart: `std::string_view`. Otherwise, we may get invalid data.
 
@@ -677,7 +688,7 @@ void AsyncLogger::Log(Level level, std::string_view msg)
 
 ### Performance Comparison
 
-The tests below were performed with a very large allocated queue (8192 * 5 = 40960) and only one worker thread. This was chosen as one consumer thread guarantees the same order of logs and minimizes thread contention, although I have not explored the possibility of more than one background thread due to lack of time.
+The tests below were performed with a very large allocated queue of `8,192 × 5 = 40,960` entries (each storing a `u64`) and a single worker thread. This was chosen as one consumer thread guarantees the same order of logs and minimizes thread contention, although I have not explored the possibility of more than one background thread.
 
 ![Async vs single-threaded performance comparison](/assets/assets-2026-01-14/async_vs_single.png)
 _Log::Debug is considerably faster with async logger (yellow) than single-threaded logging (red)_
@@ -692,7 +703,9 @@ This is the same graph for the async approach. You can notice how overall the ca
 ![Async logger flame graph](/assets/assets-2026-01-14/async_flame.png)
 _Flame graph, async logger_
 
-In conclusion, an async logger provides a flexible and performant solution for lots of logging. It decouples expensive I/O operations from the calling thread while maintaining control through manual flushing for critical messages and configurable overflow policies to handle memory.
+In conclusion, an async logger provides a flexible and performant solution for lots of logging. It decouples the queue of a message from the `sink` operation and it allows various multithreading scenarios. One could have multiple producers as in the UI, Physics, AI example earlier and still use 1 consumer thread. Or if order of logs is not important, one could add as many threads as needed to the consumer part.
+
+To summarize the progression of approaches explored in this article:
 
 ```mermaid
 flowchart LR
