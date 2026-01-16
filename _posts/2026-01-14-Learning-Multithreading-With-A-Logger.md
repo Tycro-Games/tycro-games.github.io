@@ -485,7 +485,7 @@ This approach is marked as yellow (faster), compared to single-threaded which is
 
 ![Performance comparison: single-threaded vs buffered](/assets/assets-2026-01-14/comparison.png)
 
-The buffered approach fits well with separate threads with subsystem multithreaded architectures: AI, physics, rendering etc., each maintaining their own buffered logger, flushing at the end of the frame. Otherwise, it is a cumbersome API for anything else.
+The buffered approach fits well with separate threads with subsystem multithreaded architectures: AI, physics, rendering etc., each maintaining their own buffered logger, flushing at the end of the frame. Otherwise, it is a cumbersome API, most of the time you need to see the output in realtime. This is where the async logger becomes appealing: it queues messages very fast and does the slow processing later on a background thread.
 
 Before tackling the async logger, one should understand its core data structure: the circular queue (also called a ring buffer).
 
@@ -497,7 +497,7 @@ This library uses a circular queue wrapped with thread safety and pre-allocated 
 - **Discard New**: New messages are dropped if the queue is full; existing messages are preserved
 - **Overwrite Oldest**: New messages overwrite the oldest unprocessed messages in the queue
 
-This is one of the reasons a circular queue is used. It handles what happens when the memory allocated is full. A circular queue maintains a fixed-size buffer with `head` (next element to pop) and `tail` (next empty slot) indices that wrap around. In the constructor, the maximum capacity is increased by one to keep track if the queue is full. This means that when the `tail` index is equal to the `head`, the queue has run out of space. When overwriting, both indices are advanced following each other in a circular manner.
+This is one of the reasons a circular queue is used. It handles what happens when the memory allocated is full. A circular queue maintains a fixed-size buffer with `head` (next element to pop) and `tail` (next empty slot) indices that wrap around. In the constructor, the maximum capacity is increased by one to keep track if the queue is full. This means that when the `tail` index is equal to the `head`, the queue has run out of space. When overwriting, both indices are advanced following each other.
 
 Here's a visualization of the queue state with three elements added:
 ```mermaid
@@ -692,6 +692,14 @@ The tests below were performed with a very large allocated queue of `8,192 × 5 
 
 ![Async vs single-threaded performance comparison](/assets/assets-2026-01-14/async_vs_single.png)
 _Log::Debug is considerably faster with async logger (yellow) than single-threaded logging (red)_
+
+| Approach              | Log::Debug Total | Log::Debug (mean) | Speedup  |
+| --------------------- | ---------------- | ----------------- | -------- |
+| Single-threaded       | 811 ms           | 47 µs             | baseline |
+| Buffered + ThreadPool | 70 ms            | 4 µs              | ~11×     |
+| Async Logger          | 29 ms            | 1.7 µs            | ~28×     |
+
+The async logger reduces per log overhead from **47 µs to under 2 µs**; the main thread spends 96% less time on logging.
 
 In Tracy you can clearly see when the main thread finished sending all the messages and the other thread is still processing them later at runtime.
 
