@@ -26,7 +26,7 @@ I am assuming an abstract understanding of mutexes, condition variables, atomics
 
 The way I test logging in order to compare it between single/multithreaded solutions is via aggressively logging from a 3D model loading function. In practice this will almost never be required, however, it is done in order to observe the performance of logging. I log both to console and file to compare the results. This serves as a way to check the results against the "ground truth", represented by the single-threaded output:
 
-[log.txt](../assets/assets-2026-01-14/log.txt)
+[log.txt](/assets/assets-2026-01-14/log.txt)
 
 ### About Hammered Engine
 
@@ -250,11 +250,11 @@ void Info(std::format_string<T...> fs, T&&... args)
 
 Running Tracy on our load function for this logger will give us the following results:
 
-![Tracy single-threaded flame graph](../assets/assets-2026-01-14/single_threaded.png)
+![Tracy single-threaded flame graph](/assets/assets-2026-01-14/single_threaded.png)
 
 If you want to inspect the file yourself using Tracy:
 
-[single_thread.tracy](../assets/assets-2026-01-14/single_thread.tracy)
+[single_thread.tracy](/assets/assets-2026-01-14/single_thread.tracy)
 
 Here we can see that our main logging function, which is `Log::Debug` is mainly taking most of the time on the "sink" of the console. This happens because the function will wait for `println` to return.
 
@@ -322,9 +322,9 @@ pool.QueueJob(
 {: .prompt-info}
 
 The result is orders of magnitude slower, not only that, but our output is no longer in the correct order.
-![alt text](../assets/assets-2026-01-14/multi_no_buffer.png)
+![alt text](/assets/assets-2026-01-14/multi_no_buffer.png)
 
-[log_multithreaded.txt](../assets/assets-2026-01-14/log_multi.txt)
+[log_multithreaded.txt](/assets/assets-2026-01-14/log_multi.txt)
 
 The contention between threads is making them wait on each other. The overhead is obviously bigger than the single-threaded result, as mutex and the other primitives have a noticeable overhead. We could have much faster results by reducing the time it takes to log a message. The correct order is also possible if we pass the timestamp from the main thread before queuing the `ThreadPool`.
 
@@ -377,7 +377,7 @@ std::vector<LogMessage> buffer;
 //TODO visualization with contention between threads
 In profiling, we got 29.13 ms for the `Log::Debug` function, this is the fastest we will get.
 
-![alt text](../assets/assets-2026-01-14/multi_thread_buffered.png)
+![alt text](/assets/assets-2026-01-14/multi_thread_buffered.png)
 
  What we lose is the real-time output from earlier. To even get the output, we have to rely on the user to call the `Flush` after the thread-pool has finished all its tasks.
 
@@ -387,11 +387,11 @@ indexLogger.Flush(); // Outputs sorted by timestamp
 ```
 
 At least the order is the same as in the single-threaded one. This could be made even faster, since I did not even pre-allocate memory for our buffered vector.
-[log_multithreaded_correct_order](../assets/assets-2026-01-14/log_multi_correct_order.txt)
+[log_multithreaded_correct_order](/assets/assets-2026-01-14/log_multi_correct_order.txt)
 
 This approach is marked as yellow, compared to single-threaded which is red:
 
-![alt text](../assets/assets-2026-01-14/comparison.png)
+![alt text](/assets/assets-2026-01-14/comparison.png)
 
 This approach does not fit well for logging. It is "wierd" to pass the time when logging or to use a thread pool in order to queue log messages. This would work seamlessly if we had multiple threads that do work in parallel: AI, UI, Physics etc. could log their messages in this way. 
 > Is this sentance good?
@@ -542,17 +542,17 @@ void AsyncLogger::Log(Level level, std::string_view msg)
 
 The tests below were performed with a very large allocated queue (8192 * 5 = 40960) and only one worker thread. This was chosen as one consumer thread guarantees the same order of logs and minimizes thread contention, although I have not explored the possibility of more than one background thread due to lack of time.
 
-![alt text](../assets/assets-2026-01-14/async_vs_single.png)
+![alt text](/assets/assets-2026-01-14/async_vs_single.png)
 *Log::Debug is considerably faster with async logger (yellow) than single-threaded logging (red)*
 
 In Tracy you can clearly see when the main thread finished sending all the messages and the other thread is still processing them later at runtime.
 
-![alt text](../assets/assets-2026-01-14/async_logger.png)
+![alt text](/assets/assets-2026-01-14/async_logger.png)
 *Timeline showing main thread finishing logging related calls while worker thread continues processing queued messages*
 
 This is the same graph for the async approach. You can notice how overall the calls are marginally under 1 second, however, the `Log::Debug` is taking considerably less, because it is not tied to the console sink anymore.
 
-![alt text](../assets/assets-2026-01-14/async_flame.png)
+![alt text](/assets/assets-2026-01-14/async_flame.png)
 *Flame graph, async logger*
 
 In conclusion, an async logger provides a flexible and performant solution for lots of logging. It decouples expensive I/O operations from the calling thread while maintaining control through manual flushing for critical messages and configurable overflow policies to handle memory.
