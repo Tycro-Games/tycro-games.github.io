@@ -20,7 +20,7 @@ In this section I mention what you need to know in order to better use the infor
 
 ### Multithreading Primitives
 
-I am assuming an abstract understanding of mutexes, condition variables, atomics and mutex wrappers (`scoped_lock`, `unique_lock`) present in the standard library. If any of those are unclear, please check the links provided [here](#resources-for-multithreading-primitives).
+I am assuming an abstract understanding of mutexes, condition variables, atomics and mutex wrappers (`scoped_lock`, `unique_lock`) present in the standard library. If any of those are unclear, please check the links provided [here](#learning-resources).
 
 ### Test Environment
 
@@ -393,7 +393,7 @@ This approach is marked as yellow, compared to single-threaded which is red:
 
 ![alt text](/assets/assets-2026-01-14/comparison.png)
 
-This approach does not fit well for logging. It is "wierd" to pass the time when logging or to use a thread pool in order to queue log messages. This would work seamlessly if we had multiple threads that do work in parallel: AI, UI, Physics etc. could log their messages in this way. 
+This approach does not fit well for logging. It is "wierd" to pass the time when logging or to use a thread pool in order to queue log messages. This would work seamlessly if we had multiple threads that do work in parallel: AI, UI, Physics etc. could log their messages in this way.
 > Is this sentance good?
 
 Spdlog offers an `async` logger. This means that the separation we had earlier is applied in a similar fashion. The buffer could be a circular queue which I am going to explain in the next section.
@@ -447,7 +447,6 @@ class CircularQueue
 Similar to the generic `ThreadPool` shown previously, this implementation uses mutexes and condition variables to ensure thread safety. A wrapper can be built around the `CircularQueue` in order to make it thread safe and still have a version without the overhead. `Spdlog` uses a `mpmc_blocking_queue` to offer this flexibility. It maps to the three policies mentioned earlier that deal with space in a queue, for `Enqueue` and `Dequeue`. For brevity only the blocking version of these two is written in code below.
 
 > MPMC stands for multi producer multi consumer, and means that it will be thread safe for multiple threads to write and read at the same time.
-
 
 ```cpp
 
@@ -512,9 +511,11 @@ bool hm::log::LogThreadPool::ProcessNextMsg()
   return true;
 }
 ```
+
 > An implementation detail worth noting: `AsyncMessage` owns the `AsyncLogger` via `shared_ptr`. This handles the scenario where a logger is destroyed while messages referencing it still exist in the queue.
 
 The `AsyncLogger` still inherits from the same base class as the other loggers in my project. The main `Log` function has changed to sending the message to the `LogThreadPool` as below. The `PostAsyncMsg` inside `LogThreadPool` is very similar to its `Process` counterpart with the only difference that instead of using the `Pop` functions, it uses the `Push` ones.
+
 ```cpp
 void AsyncLogger::Log(Level level, std::string_view msg)
 {
@@ -536,7 +537,6 @@ void AsyncLogger::Log(Level level, std::string_view msg)
   }
 }
 ```
-
 
 ### Performance Comparison
 
