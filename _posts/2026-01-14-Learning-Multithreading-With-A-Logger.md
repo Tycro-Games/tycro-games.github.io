@@ -3,6 +3,7 @@ title: Learning Multithreading by Logging Asynchronously
 date: 2026-01-14 14:10:00 +0200
 categories: [Engine 🔧, Multithreading 🧵]
 math: true
+mermaid: true
 img_path: /assets/assets-2026-01-14/
 image: /assets/assets-2026-01-14/cover.png
 
@@ -39,6 +40,39 @@ A sink is an object that will process a message and "print" it. This could be a 
 > This is why `endl` is not as fast as using `\n`; `endl` will also flush the console buffer, which is way slower than only doing a newline.
 {: .prompt-info }
 
+```mermaid
+classDiagram
+    class BaseSink {
+        <<abstract>>
+        +Sink(LogMsgView msg)*
+        +Flush()*
+    }
+    class ConsoleSink {
+        -Mutex m_mutex
+        +Sink(LogMsgView msg)
+        +Flush()
+    }
+    class FileSink {
+        -ofstream m_file
+        -Mutex m_mutex
+        +Sink(LogMsgView msg)
+        +Flush()
+    }
+    class BaseLogger~Mutex~ {
+        +vector~shared_ptr~BaseSink~~ sinks
+        #string m_name
+        #Level m_level
+        #Mutex m_mutex
+        +Log(Level, string_view)
+        +Flush()
+        +Debug(format_string, args...)
+    }
+    
+    BaseSink <|-- ConsoleSink
+    BaseSink <|-- FileSink
+    BaseLogger o-- BaseSink : contains
+```
+
 We can use an abstract class as our blueprint for making various kinds of sinks:
 
 ```cpp
@@ -59,7 +93,7 @@ struct LogMsgView
   std::string_view loggerName; // could have multiple loggers, each could have the same or different sinks, so it is important to differentiate between them
   std::string_view payload; // the message!
   time_point timestamp; // useful for debugging
-  std::thread::id threadId; //only relevant when we multithreaded
+  std::thread::id threadId; //only relevant in a multithreaded context
 };
 ```
 
@@ -203,7 +237,8 @@ struct FileSink : BaseSink
 };
 ```
 
-TODO show what the zone scoped and lockable mean
+> `HM_ZONE_SCOPED_N` marks a profiling zone in Tracy. `HM_LOCKABLE_N` wraps a mutex so Tracy can visualize lock contention. These are thin wrappers around Tracy's C++ API.
+   {: .prompt-info }
 
 Then we can create a new logger that logs both to file and console like so:
 
@@ -248,6 +283,30 @@ void Info(std::format_string<T...> fs, T&&... args)
   if (auto logger = GetDefaultLogger())
     logger->Info(fs, std::forward<T>(args)...);
 }
+```
+
+```mermaid
+sequenceDiagram
+    participant Main as Main Thread
+    participant Logger
+    participant Console as Console Sink
+    participant File as File Sink
+    
+    Main->>Logger: Log::Debug("message")
+    activate Logger
+    Logger->>Console: Sink(msg)
+    activate Console
+    Note right of Console: println() blocks
+    Console-->>Logger: done
+    deactivate Console
+    Logger->>File: Sink(msg)
+    activate File
+    Note right of File: write blocks
+    File-->>Logger: done
+    deactivate File
+    Logger-->>Main: return
+    deactivate Logger
+    Note over Main: Thread blocked during I/O
 ```
 
 Running Tracy on our load function for this logger will give us the following results:
@@ -307,7 +366,7 @@ This class aims to provide a general way to multithread various tasks. It works 
 - on `Shutdown` we should finish all the jobs in the queue, then join all the threads together.
 
 > I am deliberately omitting the implementation of this generic `ThreadPool`, because I would like to explain in detail how a specialized thread pool could work for the async logger. If you are still curious you can find the `.cpp` file [here](https://github.com/OneBogdan01/hammered/blob/b7f02d68582e81e534c6a6183b8724575e26d28f/engine/code/source/thread/thread_pool.cpp).
-{: .prompt-tip}
+{: .prompt-tip }
 
 The hot-spot for logging messages becomes:
 
@@ -320,14 +379,43 @@ pool.QueueJob(
 ```
 
 > This is a lambda, that allows us to queue the logging as a job.
-{: .prompt-info}
+{: .prompt-info }
 
 The result is orders of magnitude slower, not only that, but our output is no longer in the correct order.
 ![Thread pool logging with high contention](/assets/assets-2026-01-14/multi_no_buffer.png)
 
 [log_multithreaded.txt](/assets/assets-2026-01-14/log_multi.txt)
 
-The contention between threads is making them wait on each other. The overhead is obviously bigger than the single-threaded result, as mutex and the other primitives have a noticeable overhead. We could have much faster results by reducing the time it takes to log a message. The correct order is also possible if we pass the timestamp from the main thread before queuing the `ThreadPool`.
+The contention between threads is making them wait on each other. The overhead is obviously bigger than the single-threaded result, as mutex and the other primitives have a noticeable overhead.
+
+```mermaid
+sequenceDiagram
+    participant T1 as Worker 1
+    participant T2 as Worker 2
+    participant T3 as Worker 3
+    participant M as Mutex
+    participant C as Console
+    
+    T1->>M: lock()
+    activate T1
+    T2->>M: lock() - BLOCKED
+    T3->>M: lock() - BLOCKED
+    T1->>C: println()
+    Note over T1,C: Slow I/O
+    T1->>M: unlock()
+    deactivate T1
+    activate T2
+    T2->>C: println()
+    Note over T2,T3: Threads wait on each other
+    T2->>M: unlock()
+    deactivate T2
+    activate T3
+    T3->>C: println()
+    deactivate T3
+```
+
+
+ We could have much faster results by reducing the time it takes to log a message. The correct order is also possible if we pass the timestamp from the main thread before queuing the `ThreadPool`.
 
 ```cpp
  auto ts = log::clock::now();
@@ -390,7 +478,7 @@ indexLogger.Flush(); // Outputs sorted by timestamp
 At least the order is the same as in the single-threaded one. This could be made even faster, since I did not even pre-allocate memory for our buffered vector.
 [log_multithreaded_correct_order](/assets/assets-2026-01-14/log_multi_correct_order.txt)
 
-This approach is marked as yellow (faster), compared to single-threaded which is red(slower):
+This approach is marked as yellow (faster), compared to single-threaded which is red (slower):
 
 ![Performance comparison: single-threaded vs buffered](/assets/assets-2026-01-14/comparison.png)
 
@@ -407,6 +495,24 @@ This library uses a circular queue wrapped with thread safety and pre-allocated 
 - **Overwrite Oldest**: New messages overwrite the oldest unprocessed messages in the queue
 
 This is one of the reasons a circular queue is used. It handles what happens when the memory allocated is full. A circular queue maintains a fixed-size buffer with `head` (next element to pop) and `tail` (next empty slot) indices that wrap around. In the constructor, the maximum capacity is increased by one to keep track if the queue is full. This means that when the `tail` index is equal to the `head`, the queue has run out of space. When overwriting, both indices are advanced following each other in a circular manner.
+
+```mermaid
+flowchart TB
+    subgraph CircularQueue["Circular Queue (capacity: 8)"]
+        direction LR
+        s0["[0] A"] --> s1["[1] B"] --> s2["[2] C"] --> s3["[3] ___"] --> s4["[4] ___"] --> s5["[5] ___"] --> s6["[6] ___"] --> s7["[7] ___"]
+    end
+    
+    head["head = 0"] -.-> s0
+    tail["tail = 3"] -.-> s3
+    
+    subgraph Legend
+        direction TB
+        l1["On PushBack: tail = (tail + 1) % capacity"]
+        l2["On PopFront: head = (head + 1) % capacity"]
+        l3["Full when: tail == head"]
+    end
+```
 
 ```cpp
 template<typename T>
@@ -445,16 +551,37 @@ class CircularQueue
 ### ThreadPool for logging
 
 ```mermaid
-   flowchart LR
-       A[Main Thread] -->|PostLog| B[MPMC Queue]
-       B -->|Dequeue| C[Worker Thread]
-       C -->|Sink| D[Console/File]
+flowchart TB
+    subgraph MainThread["Main Thread (fast)"]
+        A[Log::Debug called] --> B[Create LogMsgView]
+        B --> C[PostLog to queue]
+    end
+    
+    subgraph Queue["MPMC Queue"]
+        D[(Ring Buffer)]
+    end
+    
+    subgraph WorkerThread["Worker Thread (background)"]
+        E[Dequeue message] --> F{Message Type?}
+        F -->|LOG| G[BackendSink]
+        F -->|FLUSH| H[BackendFlush]
+        F -->|TERMINATE| I[Exit loop]
+        G --> J[Console/File I/O]
+        J --> E
+    end
+    
+    C --> D
+    D --> E
+    
+    style MainThread fill:#90EE90
+    style WorkerThread fill:#FFB366
 ```
 
 Similar to the generic `ThreadPool` shown previously, this implementation uses mutexes and condition variables to ensure thread safety. A wrapper can be built around the `CircularQueue` in order to make it thread safe and still have a version without the overhead. `Spdlog` uses a `mpmc_blocking_queue` to offer this flexibility. It implements the three overflow policies mentioned earlier, applied to `Enqueue` and `Dequeue`. For brevity only the blocking version of these two is written in code below.
 
 > MPMC stands for multi producer multi consumer, and means that it will be thread safe for multiple threads to write and read at the same time.
  {: .prompt-info }
+
 ```cpp
 
   // blocking dequeue without a timeout.
@@ -523,7 +650,7 @@ bool hm::log::LogThreadPool::ProcessNextMsg()
 ```
 
 > An implementation detail worth noting: `AsyncMessage` owns the `AsyncLogger` via `shared_ptr`. This handles the scenario where a logger is destroyed while messages referencing it still exist in the queue.
-{. prompt-info}
+{. prompt-info }
 
 The `AsyncLogger` still inherits from the same base class as the other loggers in my project. The main `Log` function has changed to sending the message to the `LogThreadPool` as below. The `PostAsyncMsg` inside `LogThreadPool` is very similar to its `Process` counterpart with the only difference that instead of using the `Pop` functions, it uses the `Push` ones.
 
@@ -552,20 +679,30 @@ void AsyncLogger::Log(Level level, std::string_view msg)
 
 The tests below were performed with a very large allocated queue (8192 * 5 = 40960) and only one worker thread. This was chosen as one consumer thread guarantees the same order of logs and minimizes thread contention, although I have not explored the possibility of more than one background thread due to lack of time.
 
-![alt text](/assets/assets-2026-01-14/async_vs_single.png)
-*Log::Debug is considerably faster with async logger (yellow) than single-threaded logging (red)*
+![Async vs single-threaded performance comparison](/assets/assets-2026-01-14/async_vs_single.png)
+_Log::Debug is considerably faster with async logger (yellow) than single-threaded logging (red)_
 
 In Tracy you can clearly see when the main thread finished sending all the messages and the other thread is still processing them later at runtime.
 
-![alt text](/assets/assets-2026-01-14/async_logger.png)
-*Timeline showing main thread finishing logging related calls while worker thread continues processing queued messages*
+![Tracy timeline showing async logger thread separation](/assets/assets-2026-01-14/async_logger.png)
+_Timeline showing main thread finishing logging related calls while worker thread continues processing queued messages_
 
 This is the same graph for the async approach. You can notice how overall the calls are marginally under 1 second, however, the `Log::Debug` is taking considerably less, because it is not tied to the console sink anymore.
 
-![alt text](/assets/assets-2026-01-14/async_flame.png)
-*Flame graph, async logger*
+![Async logger flame graph](/assets/assets-2026-01-14/async_flame.png)
+_Flame graph, async logger_
 
 In conclusion, an async logger provides a flexible and performant solution for lots of logging. It decouples expensive I/O operations from the calling thread while maintaining control through manual flushing for critical messages and configurable overflow policies to handle memory.
+
+```mermaid
+flowchart LR
+    A[Single-Threaded] -->|add buffering| B[Buffered Thread Pool]
+    B -->|add async queue| C[Async Logger]
+    
+    A -.- A1[Base performance, Ordered]
+    B -.- B1[Fastest, Weird to use]
+    C -.- C1[Fast, Realtime-ish]
+```
 
 ## References
 
