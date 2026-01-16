@@ -542,7 +542,7 @@ void AsyncLogger::Log(Level level, std::string_view msg)
 
 The tests below were performed with a very large allocated queue (8192 * 5 = 40960) and only one worker thread. This was chosen as one consumer thread guarantees the same order of logs and minimizes thread contention, although I have not explored the possibility of more than one background thread due to lack of time.
 
-![alt text](../assets/assets-2026-01-14//async_vs_single.png)
+![alt text](../assets/assets-2026-01-14/async_vs_single.png)
 *Log::Debug is considerably faster with async logger (yellow) than single-threaded logging (red)*
 
 In Tracy you can clearly see when the main thread finished sending all the messages and the other thread is still processing them later at runtime.
