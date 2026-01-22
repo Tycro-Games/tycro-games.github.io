@@ -3,6 +3,48 @@ document.addEventListener('DOMContentLoaded', function () {
   const filterButtons = document.querySelectorAll('.filter-btn');
   const projectCards = document.querySelectorAll('.portfolio-page > .projects-container .project-card-link');
   const articleCards = document.querySelectorAll('.articles-section .project-card-link');
+  const articlesSection = document.querySelector('.articles-section');
+  const projectCount = document.getElementById('project-count');
+  const articleCount = document.getElementById('article-count');
+  
+  function updateCounts(filter) {
+    const totalProjects = projectCards.length;
+    const totalArticles = articleCards.length;
+    
+    let visibleProjects, visibleArticles;
+    
+    if (filter === 'highlights') {
+      visibleProjects = Array.from(projectCards).filter(c => 
+        (parseInt(c.getAttribute('data-priority-highlights')) || 999) !== 999
+      ).length;
+      visibleArticles = Array.from(articleCards).filter(c => 
+        c.getAttribute('data-pinned') === 'true'
+      ).length;
+    } else {
+      visibleProjects = totalProjects;
+      visibleArticles = 0;
+    }
+    
+    // Update project count
+    if (projectCount) {
+      if (filter === 'highlights' && visibleProjects < totalProjects) {
+        projectCount.textContent = `Showing ${visibleProjects} of ${totalProjects}`;
+        projectCount.style.display = '';
+      } else {
+        projectCount.style.display = 'none';
+      }
+    }
+    
+    // Update article count
+    if (articleCount) {
+      if (filter === 'highlights' && visibleArticles < totalArticles) {
+        articleCount.textContent = `Showing ${visibleArticles} of ${totalArticles}`;
+        articleCount.style.display = '';
+      } else {
+        articleCount.style.display = 'none';
+      }
+    }
+  }
   
   function applyFilter(filter) {
     const cardsArray = Array.from(projectCards);
@@ -36,17 +78,23 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
     
-    // Filter articles
-    articleCards.forEach(card => {
+    // Show/hide entire articles section based on filter
+    if (articlesSection) {
       if (filter === 'highlights') {
-        // Show only pinned articles in highlights
-        const isPinned = card.getAttribute('data-pinned') === 'true';
-        card.style.display = isPinned ? '' : 'none';
+        // Show articles section, but only pinned articles
+        articlesSection.style.display = '';
+        articleCards.forEach(card => {
+          const isPinned = card.getAttribute('data-pinned') === 'true';
+          card.style.display = isPinned ? '' : 'none';
+        });
       } else {
-        // Show all articles in chronological
-        card.style.display = '';
+        // Hide entire articles section in "All Projects" view
+        articlesSection.style.display = 'none';
       }
-    });
+    }
+    
+    // Update counts
+    updateCounts(filter);
   }
   
   // Apply default filter
