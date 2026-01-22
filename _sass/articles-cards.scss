@@ -218,6 +218,12 @@
   border-top: 1px solid rgba(128, 128, 128, 0.2);
 }
 
+.article-metadata .meta-tag {
+  flex: 1 1 auto;
+  min-width: fit-content;
+  text-align: center;
+  font-size: 0.85rem; /* Match project tags */
+}
 /* ===========================================
    META TAG BASE STYLES
    =========================================== */
@@ -228,7 +234,7 @@
   gap: 5px;
   padding: 8px 12px;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   white-space: nowrap;

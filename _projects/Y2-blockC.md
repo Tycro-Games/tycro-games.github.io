@@ -18,10 +18,6 @@ priority_highlights: 1
 
 ---
 
-## 📂 Source Code
-
-Unfortunately, due to NDA restrictions, I am unable to share the codebase.
-
 ## 🎓 About the Project
 
 FireAnt is a cross-platform engine, with **Nintendo** and **PC**. It was made to create strategy game in a team of 7 programmers, over 8 weeks. I focused on **graphics programming** and on the **cross-platform API** for Nintendo using OpenGL.

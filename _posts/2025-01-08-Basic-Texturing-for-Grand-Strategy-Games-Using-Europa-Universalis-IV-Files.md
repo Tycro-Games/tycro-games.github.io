@@ -15,56 +15,45 @@ In this article I will explain how to texture a procedural mesh used in typical 
 ![alt text](../assets/assets-2025-01-08/showcase.gif)
 
 ## Prerequisites
-
 I am going to use C++ and OpenGL for showcasing the concepts in code. I am expecting the reader has some understanding of graphics programming. I will not explain how to procedurally generate a mesh from this heightmap:
-
 ![heightmap_texture_of_the_world]({{ page.img_path }}heightmap.bmp)
 *Heightmap from EU4*
 
 ### Creating the mesh on the CPU
-
 I will provide the sources I used to generate my own procedural mesh below:
-
-- [OGLDEV](https://youtu.be/xoqESu9iOUE?si=HWXc-EfHuPOQWhgq)
-- [LearnOpenGL](https://learnopengl.com/Guest-Articles/2021/Tessellation/Height-map)
+- [OGLDEV - Terrain Rendering (YouTube)](https://youtu.be/xoqESu9iOUE?si=HWXc-EfHuPOQWhgq)
+- [LearnOpenGL - Height Map Tessellation Tutorial](https://learnopengl.com/Guest-Articles/2021/Tessellation/Height-map)
 
 > If you do not mind creating a low resolution mesh and downscaling or resizing the image to something smaller, you can skip this optimization step.
 {: .prompt-warning }
 
 ### Optimizations
-
 Dividing the mesh into patches and having different levels of detail (LOD) picked based on the camera distance is a common approach towards rendering the mesh more performant. I recommend trying [GeoMipMapping](https://www.youtube.com/watch?v=08dApu_vS4c) which creates LODs for patches on the CPU.
-
-- [OGLDEV](https://www.youtube.com/watch?v=08dApu_vS4c)
-- [paper](https://flipcode.com/archives/article_geomipmaps.pdf)
+- [OGLDEV - GeoMipMapping Tutorial (YouTube)](https://www.youtube.com/watch?v=08dApu_vS4c)
+- [GeoMipMapping Paper by Willem H. de Boer (PDF)](https://flipcode.com/archives/article_geomipmaps.pdf)
 
 Another option is to use Tesselation Shaders. This will be a bit more advanced to set up with OpenGL, however, it might be faster than the previous option.
-
-- [OGLDEV](https://youtu.be/GgW3MVOP8_A?si=E2KBs9SAsol77p3p)
-- [LearnOpenGL](https://learnopengl.com/Guest-Articles/2021/Tessellation/Tessellation)
+- [OGLDEV - Tessellation Shaders (YouTube)](https://youtu.be/GgW3MVOP8_A?si=E2KBs9SAsol77p3p)
+- [LearnOpenGL - Tessellation Tutorial](https://learnopengl.com/Guest-Articles/2021/Tessellation/Tessellation)
 
 ## Background
-
 Grand Strategy games (GSG) are a niche genre that appeal only to a smaller portion of the strategy audience. Their complex simulations of the world make it a hard genre to get into as well as a difficult one to develop for. The complex systems that guide diplomacy, economy and even history are being utilized for more than just entertainment. The area of research around these games has become more active in the recent years. Grand Strategy games might also be "Serious Games" and will aid in teaching history, economy and medieval diplomacy. Here are a few research papers exploring these topics:
-
-- [Grand Strategy Games As A Pedagogical Tool For Introductory Economics: A Student's Perspective](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4986923#paper-references-widget)
-- [Simulating medieval connections Grand strategy games and social network analysis](https://jhnr.net/articles/81/files/660bbe5c7c0b0.pdf)
-- [Grand Strategy Games and Economies](https://www.diva-portal.org/smash/get/diva2:1686298/FULLTEXT01.pdf)
-- [Digitising Diplomacy: Grand Strategy Video Games as an Introductory Tool for Learning Diplomacy and International Relations](https://www.academia.edu/75509526/Digitising_Diplomacy_Grand_Strategy_Video_Games_as_an_Introductory_Tool_for_Learning_Diplomacy_and_International_Relations)
+- [Grand Strategy Games As A Pedagogical Tool For Introductory Economics: A Student's Perspective (SSRN)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4986923#paper-references-widget)
+- [Simulating Medieval Connections: Grand Strategy Games and Social Network Analysis (PDF)](https://jhnr.net/articles/81/files/660bbe5c7c0b0.pdf)
+- [Grand Strategy Games and Economies - Linköping University Thesis (PDF)](https://www.diva-portal.org/smash/get/diva2:1686298/FULLTEXT01.pdf)
+- [Digitising Diplomacy: Grand Strategy Video Games as an Introductory Tool for Learning Diplomacy and International Relations (Academia.edu)](https://www.academia.edu/75509526/Digitising_Diplomacy_Grand_Strategy_Video_Games_as_an_Introductory_Tool_for_Learning_Diplomacy_and_International_Relations)
 
 ## Assets used in this tutorial
+All maps, except for the layers, are from EU4 which you can download from the [EU4 Map Modding Wiki](https://eu4.paradoxwikis.com/Map_modding).
 
-All maps, except for the layers, are from EU4 which you can download [here](https://eu4.paradoxwikis.com/Map_modding).
 The layer textures can be found below, in the order that they are used:
-
-- [first](https://polyhaven.com/a/coast_sand_02)
-- [second](https://polyhaven.com/a/aerial_grass_rock)
-- [third](https://polyhaven.com/a/rock_face)
-- [fourth](https://polyhaven.com/a/snow_02)
+- [Coast Sand 02 - Poly Haven](https://polyhaven.com/a/coast_sand_02)
+- [Aerial Grass Rock - Poly Haven](https://polyhaven.com/a/aerial_grass_rock)
+- [Rock Face - Poly Haven](https://polyhaven.com/a/rock_face)
+- [Snow 02 - Poly Haven](https://polyhaven.com/a/snow_02)
 
 > To follow along you need a province and color map, as well as the layer pairs (diffuse + normal).
 {: .prompt-info }
-
 ### Assets outline
 
 This is a high level overview of all textures I used in my renderer.

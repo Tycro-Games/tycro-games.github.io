@@ -16,10 +16,6 @@ priority_graphics: 999
 priority_engine: 5
 ---
 
-## 📂 Source Code
-
-This project was hosted on **Perforce** as part of a collaborative workflow, and the source code is not publicly available.
-
 
 ## 🎓 About the Project
 

@@ -18,10 +18,6 @@ priority_highlights: 3
 
 ---
 
-## 📂 Source Code
-
-Unfortunately, due to NDA restrictions, I am unable to share the codebase.
-
 ## 🎓 About the Project
 
 This project was created by a team of 12 students (9 programmers and 3 artists). Without a dedicated designer, I stepped up as a first time producer—leading meetings, resolving conflicts, managing releases, and supporting workflow improvements.

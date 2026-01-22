@@ -4,7 +4,7 @@ date: 2025-10-27 14:10:00 +0200
 categories: [Graphics 🎨, Engine 🔧]
 math: true
 img_path: /assets/assets-2025-10-27/
-image: /assets/assets-2025-10-27/demo_final.gif
+image: /assets/assets-2025-10-27/upscaled.png
 pin: true
 
 ---
