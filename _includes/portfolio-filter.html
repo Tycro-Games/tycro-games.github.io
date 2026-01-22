@@ -1,4 +1,3 @@
-{% raw %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const filterButtons = document.querySelectorAll('.filter-btn');
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
       visibleArticles = 0;
     }
     
-    // Update project count
     if (projectCount) {
       if (filter === 'highlights' && visibleProjects < totalProjects) {
         projectCount.textContent = `Showing ${visibleProjects} of ${totalProjects}`;
@@ -36,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
     
-    // Update article count
     if (articleCount) {
       if (filter === 'highlights' && visibleArticles < totalArticles) {
         articleCount.textContent = `Showing ${visibleArticles} of ${totalArticles}`;
@@ -50,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
   function applyFilter(filter) {
     const cardsArray = Array.from(projectCards);
     
-    // Filter projects
     if (filter === 'chronological') {
       cardsArray.sort((a, b) => {
         const dateA = parseInt(a.getAttribute('data-date'));
@@ -79,26 +75,21 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
     
-    // Show/hide entire articles section based on filter
     if (articlesSection) {
       if (filter === 'highlights') {
-        // Show articles section, but only pinned articles
         articlesSection.style.display = '';
         articleCards.forEach(card => {
           const isPinned = card.getAttribute('data-pinned') === 'true';
           card.style.display = isPinned ? '' : 'none';
         });
       } else {
-        // Hide entire articles section in "All Projects" view
         articlesSection.style.display = 'none';
       }
     }
     
-    // Update counts
     updateCounts(filter);
   }
   
-  // Apply default filter
   applyFilter('highlights');
   
   filterButtons.forEach((button) => {
@@ -110,4 +101,3 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 </script>
-{% endraw %}
