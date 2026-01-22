@@ -9,7 +9,7 @@ script_includes:
   <!-- Filter Controls -->
   <div class="filter-controls">
     <button class="filter-btn active" data-filter="highlights">Highlights</button>
-    <button class="filter-btn" data-filter="chronological">Chronological</button>
+    <button class="filter-btn" data-filter="chronological">All Projects</button>
   </div>
 
   <div class="projects-container">
@@ -107,47 +107,46 @@ script_includes:
     {% endfor %}
   </div>
 
-  <!-- Articles Section -->
-  <div class="articles-section">
-    <h2 class="section-header">Articles</h2>
+ <!-- Articles Section -->
+<div class="articles-section">
+  <h2 class="section-header">Articles</h2>
+  
+  <div class="projects-container">
+    {% assign all_pinned = site.posts | where: 'pin', 'true' %}
+    {% assign all_normal = site.posts | where_exp: 'item', 'item.pin != true and item.hidden != true' %}
+    {% assign all_posts = all_pinned | concat: all_normal %}
     
-    <div class="projects-container">
-      {% assign all_pinned = site.posts | where: 'pin', 'true' %}
-      {% assign all_normal = site.posts | where_exp: 'item', 'item.pin != true and item.hidden != true' %}
-      {% assign all_posts = all_pinned | concat: all_normal %}
-      
-      {% for post in all_posts %}
-        <a href="{{ post.url }}" class="project-card-link">
-          <article class="project-card">
-            {% if post.image %}
-              <div class="project-image">
-                <img src="{{ post.image | relative_url }}" alt="{{ post.title }} Preview">
-              </div>
-            {% endif %}
-            
-            <div class="project-info">
-              <h3>{{ post.title }}</h3>
-              <p>
-                {% if post.description %}
-                  {{ post.description }}
-                {% else %}
-                  {% include post-description.html %}
-                {% endif %}
-              </p>
-              
-              <!-- Article Metadata Tags -->
-              <div class="article-metadata">
-                {% if post.categories %}
-                  {% for cat in post.categories %}
-                    <div class="meta-tag category">{{ cat }}</div>
-                  {% endfor %}
-                {% endif %}
-              </div>
+    {% for post in all_posts %}
+      <a href="{{ post.url }}" class="project-card-link" data-pinned="{{ post.pin }}">
+        <article class="project-card">
+          {% if post.image %}
+            <div class="project-image">
+              <img src="{{ post.image | relative_url }}" alt="{{ post.title }} Preview">
             </div>
-          </article>
-        </a>
-      {% endfor %}
-    </div>
+          {% endif %}
+          
+          <div class="project-info">
+            <h3>{{ post.title }}</h3>
+            <p>
+              {% if post.description %}
+                {{ post.description }}
+              {% else %}
+                {% include post-description.html %}
+              {% endif %}
+            </p>
+            
+            <!-- Article Metadata Tags -->
+            <div class="article-metadata">
+              {% if post.categories %}
+                {% for cat in post.categories %}
+                  <div class="meta-tag category">{{ cat }}</div>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+        </article>
+      </a>
+    {% endfor %}
   </div>
 </div>
 

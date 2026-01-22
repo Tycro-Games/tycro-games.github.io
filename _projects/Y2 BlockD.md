@@ -14,6 +14,8 @@ platform: "PC/PS5"
 duration: "May. - Jun. 2025"
 priority_graphics: 4
 priority_engine: 4
+priority_highlights: 3
+
 ---
 
 ## 📂 Source Code

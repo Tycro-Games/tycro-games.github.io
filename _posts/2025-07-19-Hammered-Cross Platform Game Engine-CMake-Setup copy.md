@@ -7,9 +7,8 @@ math: true
 img_path: /assets/assets-2025-07-19/
 image: /assets/assets-2025-07-19/gl_vk_demo.gif
 pin: true
----
 
-## Intro
+---
 
 At the end of my second year at university, I had the opportunity to work with custom game technologies. I contributed to cross-platform engines (each took 8 weeks) that ran on [Nintendo](https://tycro-games.github.io/projects/Y2-blockC/) and [PS5](https://tycro-games.github.io/projects/Y2-BlockD/). Over another 8 weeks, I built a [grand strategy renderer](https://tycro-games.github.io/projects/Y2-blockB/) inspired by one of my favorite games, *Europa Universalis IV*.
 
