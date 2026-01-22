@@ -1,4 +1,3 @@
-<script>
 document.addEventListener('DOMContentLoaded', function () {
   const filterButtons = document.querySelectorAll('.filter-btn');
   const projectCards = document.querySelectorAll('.portfolio-page > .projects-container .project-card-link');
@@ -108,4 +107,3 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
-</script>
