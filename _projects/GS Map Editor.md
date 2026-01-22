@@ -64,3 +64,5 @@ There are many ways to do border rendering. One can generate meshes, use vector 
 In this project I also learned how to extend the editor in Godot. Below you can see how the user can change owenership of provinces, or their country color through the editor I made. The changes are saved in the file format that Europa Universalis 4 uses.
 
 <video controls src="/assets/media/gs_map/export import.mp4" title="Title"></video>
+
+*Demonstration of province ownership editing and export/import functionality*
