@@ -6,7 +6,7 @@ math: true
 mermaid: true
 img_path: /assets/assets-2026-01-14/
 image: /assets/assets-2026-01-14/cover.png
-
+pin: true
 ---
 
 Logging is a pretty basic concept which you get exposed to quite early as a programmer. The most fundamental programming exercises are usually about logging to a console or to a file. Multithreading on the other hand, has always been something that had a complex aura around it. As my curiosity compels me to do, I aimed to make a small project where I could learn how to apply multithreading to logging.

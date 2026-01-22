@@ -11,15 +11,16 @@ date: 2025-01-27
 engine: "C++ & OpenGL"
 team_size: "Solo"
 platform: "PC"
-duration: "8 weeks"
+duration: "Nov. 2024 - Feb. 2025"
 priority_graphics: 2
 priority_engine: 6
 ---
 
-## 📂 Source Code
+## 📚 Project Article (with code!)
 
-Unfortunately, due to NDA restrictions, I am unable to share the full codebase.
+As part of the project, we also had to create an article where we share the knowledge we gained over the span of our research and development process.
 
+**[Basic Texturing for Grand Strategy Games Using Europa Universalis IV Files](https://tycro-games.github.io/posts/Basic-Texturing-for-Grand-Strategy-Games-Using-Europa-Universalis-IV-Files/)**
 
 ## 🛠️ Skills and Technologies
 
@@ -29,11 +30,6 @@ Unfortunately, due to NDA restrictions, I am unable to share the full codebase.
 - **Height based texturing**: Implemented a configurable layer system using a color map for terrain texturing.
 - **Compute Shaders**: Using compute shaders in OpenGL, a Distance Field texture is generated for the political map mode.
 
-## 📚 Project Article (with code!)
-
-As part of the project, we also had to create an article where we share the knowledge we gained over the span of our research and development process.
-
-**[Basic Texturing for Grand Strategy Games Using Europa Universalis IV Files](https://tycro-games.github.io/posts/Basic-Texturing-for-Grand-Strategy-Games-Using-Europa-Universalis-IV-Files/)**
 
 
 ## ⚙️ My Contributions

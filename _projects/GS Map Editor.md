@@ -7,13 +7,13 @@ image: assets/media/gs_map/demo_final.gif
 main_category: University Projects
 date: 2025-11-07
 
-# features: "Shaders & Editor Tools"
 engine: "C++ & Godot"
 team_size: "Solo"  
 platform: "PC"  
-duration: "8 weeks" 
+duration: "Sep. - Nov. 2025"
 priority_graphics: 1
 priority_engine: 2
+priority_highlights: 1
 ---
 
 

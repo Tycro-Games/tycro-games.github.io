@@ -10,6 +10,7 @@ date: 2024-11-05
 # features: "AI & Tools"
 engine: "C# & Unity"
 team_size: "2 people"
+duration: "Oct. - Nov. 2024"
 platform: "PC/Web"
 priority_graphics: 999
 priority_engine: 10
@@ -17,7 +18,7 @@ priority_engine: 10
 
 ## 📂 Source Code
 
-The game source code can be found on [GitHub](https://github.com/Tycro-Games/Stalemate).
+The game source code can be found on [GitHub](https://github.com/OneBogdan01/Stalemate).
 
 
 ## 🚀 About the Project

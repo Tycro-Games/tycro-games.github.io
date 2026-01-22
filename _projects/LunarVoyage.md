@@ -11,7 +11,8 @@ date: 2022-08-08
 engine: "C# & Unity"
 team_size: "2 people"
 platform: "PC/Web"
-duration: "3 months"
+duration: "Mar. - Sep. 2021"
+
 priority_graphics: 999
 priority_engine: 20
 ---

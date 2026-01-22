@@ -11,9 +11,11 @@ date: 2025-04-08
 engine: "C++ & OpenGL"
 team_size: "7 programmers"
 platform: "PC/Nintendo"
-duration: "8 weeks"
+duration: "Feb. - Apr. 2025"
 priority_graphics: 5
 priority_engine: 3
+priority_highlights: 1
+
 ---
 
 ## 📂 Source Code

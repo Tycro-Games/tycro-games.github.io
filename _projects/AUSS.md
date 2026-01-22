@@ -11,12 +11,13 @@ date: 2022-12-28
 engine: "C++ & SDL2"
 team_size: "Solo"
 platform: "PC"
+duration: "Mar. - Dec. 2022"
 priority_graphics: 20
 priority_engine: 9
 ---
 ## 📂 Source Code & Template
 
-The game is based on a template I received during the intake, which you can find [here on GitHub](https://github.com/Tycro-Games/AUSS).
+The game is based on a template I received during the intake, which you can find [here on GitHub](https://github.com/OneBogdan01/AUSS).
 
 
 # An Unrealistic Spaceship Simulator (AUSS) 🚀

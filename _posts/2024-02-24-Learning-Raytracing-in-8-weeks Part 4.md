@@ -5,6 +5,7 @@ categories: [Graphics 🎨, Raytracing 🌐]
 math: true
 img_path: /assets/assets-2024-04-08/
 image: /assets/assets-2024-04-08/finCloud.png
+
 ---
 
 Hello, this is the forth article of an 4 part series where I write down what I've learned about Raytracing on the CPU with voxels (which is of course in C++). I have used [this](https://github.com/jbikker/voxpopuli) template to which I have added features and refactored over the span of the 8 weeks.

@@ -5,6 +5,7 @@ categories: [Graphics 🎨, Engine 🔧]
 math: true
 img_path: /assets/assets-2025-10-27/
 image: /assets/assets-2025-10-27/demo_final.gif
+pin: true
 ---
 
 In this article I will cover how I implemented the border rendering, and the possible improvements or future work one might be interested in.

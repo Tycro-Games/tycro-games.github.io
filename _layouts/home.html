@@ -8,8 +8,7 @@ script_includes:
 <div class="portfolio-page">
   <!-- Filter Controls -->
   <div class="filter-controls">
-    <button class="filter-btn active" data-filter="engine">Engine</button>
-    <button class="filter-btn" data-filter="graphics">Graphics</button>
+    <button class="filter-btn active" data-filter="highlights">Highlights</button>
     <button class="filter-btn" data-filter="chronological">Chronological</button>
   </div>
 
@@ -18,9 +17,7 @@ script_includes:
     
     {% for project in all_projects %}
     <a href="{{ project.url }}" class="project-card-link" 
-       data-priority-graphics="{{ project.priority_graphics | default: 999 }}"
-       data-priority-engine="{{ project.priority_engine | default: 999 }}"
-       data-priority-custom="{{ project.priority_custom | default: 999 }}"
+       data-priority-highlights="{{ project.priority_highlights | default: 999 }}"
        data-categories="{{ project.tags | join: ' ' }}">
       <article class="project-card">
         
@@ -109,8 +106,50 @@ script_includes:
     </a>
     {% endfor %}
   </div>
-</div>
 
+  <!-- Articles Section -->
+  <div class="articles-section">
+    <h2 class="section-header">Articles</h2>
+    
+    <div class="projects-container">
+      {% assign all_pinned = site.posts | where: 'pin', 'true' %}
+      {% assign all_normal = site.posts | where_exp: 'item', 'item.pin != true and item.hidden != true' %}
+      {% assign all_posts = all_pinned | concat: all_normal %}
+      
+      {% for post in all_posts %}
+        <a href="{{ post.url }}" class="project-card-link">
+          <article class="project-card">
+            {% if post.image %}
+              <div class="project-image">
+                <img src="{{ post.image | relative_url }}" alt="{{ post.title }} Preview">
+              </div>
+            {% endif %}
+            
+            <div class="project-info">
+              <h3>{{ post.title }}</h3>
+              <p>
+                {% if post.description %}
+                  {{ post.description }}
+                {% else %}
+                  {% include post-description.html %}
+                {% endif %}
+              </p>
+              
+              <!-- Article Metadata Tags -->
+              <div class="article-metadata">
+                {% if post.categories %}
+                  {% for cat in post.categories %}
+                    <div class="meta-tag category">{{ cat }}</div>
+                  {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+          </article>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
 
 <style>/* Filter Controls */
 .filter-controls {
@@ -277,6 +316,19 @@ script_includes:
   line-height: 1;
 }
 
+/* Article Metadata Tags */
+.article-metadata {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(128, 128, 128, 0.2);
+}
+.meta-tag.category {
+  background-color: #059669; /* Emerald Green */
+  color: white;
+}
 /* Distinct Color Palette - No Similar Colors */
 .meta-tag.university {
   background-color: #2563eb; /* Royal Blue */

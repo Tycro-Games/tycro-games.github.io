@@ -11,7 +11,8 @@ date: 2024-04-02
 engine: "C++"
 team_size: "Solo"
 platform: "PC"
-duration: "8 weeks"
+duration: "Feb. - Apr. 2024"
+
 priority_graphics: 5
 priority_engine: 999
 ---

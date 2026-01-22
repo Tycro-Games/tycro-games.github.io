@@ -4,7 +4,7 @@ title: A Personal Game Engine for Learning Low-Level Systems | Hammered
 description: A personal learning project for exploring low-level engine systems and graphics programming.
 image: assets/assets-2025-07-19/gl_vk_demo.gif
 main_category: Personal Projects
-date: 2025-11-05
+date: 2099-11-05
 engine: "C++"
 team_size: "Solo"
 platform: "PC"
