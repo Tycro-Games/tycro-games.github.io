@@ -1,17 +1,11 @@
 ---
 layout: page
-script_includes:
-  - portfolio-filter
+title: Projects
+
 ---
 {% include lang.html %}
 
 <div class="portfolio-page">
-
-<div class="section-header-row">
-  <h2 class="section-header">Projects</h2>
-  <span class="item-count" id="project-count"></span>
-</div>
-
   <div class="projects-container">
     {% assign all_projects = site.projects | sort: 'date' | reverse %}
     
@@ -31,10 +25,8 @@ script_includes:
           <h3>{{ project.title }}</h3>
           <p>{{ project.description }}</p>
           
-          <!-- Project Metadata Tags -->
           <div class="project-metadata">
             
-            <!-- 1. Project Type Badge (always first) -->
             {% if project.main_category == "University Projects" %}
               <div class="meta-tag university">
                 <span class="meta-icon">🎓</span>
@@ -52,7 +44,6 @@ script_includes:
               </div>
             {% endif %}
             
-            <!-- 2. Engine/Tools -->
             {% if project.engine %}
               <div class="meta-tag engine">
                 <span class="meta-icon">🔧</span>
@@ -60,7 +51,6 @@ script_includes:
               </div>
             {% endif %}
 
-            <!-- 3. Team Size -->
             {% if project.team_size %}
               {% assign team_lower = project.team_size | downcase %}
               {% if team_lower contains "solo" %}
@@ -76,7 +66,6 @@ script_includes:
               {% endif %}
             {% endif %}
 
-            <!-- 4. Platform -->
             {% if project.platform %}
               <div class="meta-tag platform">
                 <span class="meta-icon">💻</span>
@@ -84,7 +73,6 @@ script_includes:
               </div>
             {% endif %}
 
-            <!-- 5. Duration -->
             {% if project.duration %}
               <div class="meta-tag duration">
                 <span class="meta-icon">⏱️</span>
@@ -92,7 +80,6 @@ script_includes:
               </div>
             {% endif %}
             
-            <!-- 6. Features (last, since it can be long) -->
             {% if project.features %}
               <div class="meta-tag features">
                 <span class="meta-icon">✨</span>
@@ -105,57 +92,5 @@ script_includes:
       </article>
     </a>
     {% endfor %}
-  </div>
-
-  <div class="view-all-container">
-    <a href="{{ '/projects/' | relative_url }}" class="view-all-link">View All Projects →</a>
-  </div>
-
-<!-- Articles Section -->
-<div class="articles-section">
-  <div class="section-header-row">
-    <h2 class="section-header">Articles</h2>
-    <span class="item-count" id="article-count"></span>
-  </div>
-  <div class="projects-container">
-    {% assign all_pinned = site.posts | where: 'pin', 'true' %}
-    {% assign all_normal = site.posts | where_exp: 'item', 'item.pin != true and item.hidden != true' %}
-    {% assign all_posts = all_pinned | concat: all_normal %}
-    
-    {% for post in all_posts %}
-      <a href="{{ post.url }}" class="project-card-link" data-pinned="{{ post.pin }}">
-        <article class="project-card">
-          {% if post.image %}
-            <div class="project-image">
-              <img src="{{ post.image | relative_url }}" alt="{{ post.title }} Preview">
-            </div>
-          {% endif %}
-          
-          <div class="project-info">
-            <h3>{{ post.title }}</h3>
-            <p>
-              {% if post.description %}
-                {{ post.description }}
-              {% else %}
-                {% include post-description.html %}
-              {% endif %}
-            </p>
-            
-            <!-- Article Metadata Tags -->
-            <div class="article-metadata">
-              {% if post.categories %}
-                {% for cat in post.categories %}
-                  <div class="meta-tag category">{{ cat }}</div>
-                {% endfor %}
-              {% endif %}
-            </div>
-          </div>
-        </article>
-      </a>
-    {% endfor %}
-  </div>
-  
- <div class="view-all-container">
-    <a href="{{ '/articles/' | relative_url }}" class="view-all-link">View All Articles →</a>
   </div>
 </div>
