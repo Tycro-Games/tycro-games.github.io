@@ -1501,7 +1501,7 @@ search {
       (100vw - $sidebar-width-large - $main-content-max-width) / 2 + 2rem
     );
   }
-
+ 
   #sidebar {
     width: $sidebar-width-large;
 
@@ -1532,3 +1532,4 @@ search {
     }
   }
 } /* min-width: 1650px */
+
