@@ -18,9 +18,12 @@ priority_engine: 1
 Can be found [here](https://github.com/OneBogdan01/hammered/tree/main).
 
 
-## 📚 Project Article 
+## 📚 Project Article
 
-[Hammered Engine | Cmake setup](https://tycro-games.github.io/posts/Hammered-Cross-Platform-Game-Engine-CMake-Setup-copy/)
+I am currently restructuring the engine in a more modular fashion based, inspired by Bevy game engine. Below you can find the articles I wrote:
+
+[Cmake setup](https://tycro-games.github.io/posts/Hammered-Cross-Platform-Game-Engine-CMake-Setup-copy/)
+[Async logger](https://tycro-games.github.io/posts/Learning-Multithreading-With-A-Logger/)
 
 ## 🚀 About the Project
 

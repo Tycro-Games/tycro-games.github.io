@@ -13,7 +13,7 @@ Logging is a pretty basic concept which you get exposed to quite early as a prog
 
 If you need a production-ready solution, please use [spdlog][spdlog].
 
-The project is open source. You can access the repo by clicking [here][hammered_repo].
+The project is open source. You can access the repo by clicking [here][hammered_repo], keep in mind that this is the version of the project that I used when writing the article.
 
 ## Preliminaries
 
@@ -817,7 +817,7 @@ flowchart LR
 
 [spdlog]: https://github.com/gabime/spdlog
 [tracy]: https://github.com/wolfpld/tracy
-[hammered_repo]: https://github.com/OneBogdan01/hammered
+[hammered_repo]: https://github.com/OneBogdan01/hammered/tree/b7f02d68582e81e534c6a6183b8724575e26d28f
 [mike_shah]: https://www.youtube.com/playlist?list=PLvv0ScY6vfd9wBHRBmWh7EvAHYbqH9NRV
 [cppreference_thread]: https://en.cppreference.com/w/cpp/thread
 
