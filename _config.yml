@@ -155,10 +155,12 @@ defaults:
     values:
       comments: false
   - scope:
-        path: "projects"
+      path: ""
+      type: projects  # This targets the collection
     values:
       layout: project
       toc: true
+      comments: true
   - scope:
       path: ""
       type: tabs # see `site.collections`

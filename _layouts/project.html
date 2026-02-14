@@ -3,84 +3,107 @@ layout: default
 refactor: true
 panel_includes:
   - toc
-tail_includes:
-  - related-posts
-  - post-nav
-script_includes:
-  - comments
 ---
 
 {% include lang.html %}
 
 {% include toc-status.html %}
 
-<article class="project-detail" data-toc="{{ enable_toc }}">
+<article class="px-1" data-toc="{{ enable_toc }}">
   <header>
     <h1 data-toc-skip>{{ page.title }}</h1>
+    
     {% if page.description %}
       <p class="post-desc fw-light mb-4">{{ page.description }}</p>
     {% endif %}
 
-    <div class="post-meta text-muted">
-      <!-- published date -->
-      <span>
-        {{ site.data.locales[lang].post.posted }}
-        {% include datetime.html date=page.date tooltip=true lang=lang %}
-      </span>
-
-      <!-- lastmod date -->
-      {% if page.last_modified_at and page.last_modified_at != page.date %}
-        <span>
-          {{ site.data.locales[lang].post.updated }}
-          {% include datetime.html date=page.last_modified_at tooltip=true lang=lang %}
+    <!-- Project Metadata Tags -->
+    <div class="project-metadata d-flex flex-wrap justify-content-center gap-2 mb-4">
+      
+      <!-- 1. Project Type Badge -->
+      {% if page.main_category == "University Projects" %}
+        <span class="meta-tag university">
+          <span class="meta-icon">🎓</span>
+          <span class="meta-label">University</span>
+        </span>
+      {% elsif page.main_category == "Personal Projects" %}
+        <span class="meta-tag personal">
+          <span class="meta-icon">🚀</span>
+          <span class="meta-label">Personal</span>
+        </span>
+      {% elsif page.main_category == "Archive Projects" %}
+        <span class="meta-tag archive">
+          <span class="meta-icon">📦</span>
+          <span class="meta-label">Archived</span>
+        </span>
+      {% endif %}
+      
+      <!-- 2. Engine/Tools -->
+      {% if page.engine %}
+        <span class="meta-tag engine">
+          <span class="meta-icon">🔧</span>
+          <span class="meta-label">{{ page.engine }}</span>
         </span>
       {% endif %}
 
+      <!-- 3. Team Size -->
+      {% if page.team_size %}
+        {% assign team_lower = page.team_size | downcase %}
+        {% if team_lower contains "solo" %}
+          <span class="meta-tag team solo">
+            <span class="meta-icon">👤</span>
+            <span class="meta-label">{{ page.team_size }}</span>
+          </span>
+        {% else %}
+          <span class="meta-tag team group">
+            <span class="meta-icon">👥</span>
+            <span class="meta-label">{{ page.team_size }}</span>
+          </span>
+        {% endif %}
+      {% endif %}
 
-
-      <div class="d-flex justify-content-between">
-        <!-- author(s) -->
-        <span>
-          {% if page.author %}
-            {% assign authors = page.author %}
-          {% elsif page.authors %}
-            {% assign authors = page.authors %}
-          {% endif %}
-
-          {{ site.data.locales[lang].post.written_by }}
-
-          <em>
-            {% if authors %}
-              {% for author in authors %}
-                {% if site.data.authors[author].url -%}
-                  <a href="{{ site.data.authors[author].url }}">{{ site.data.authors[author].name }}</a>
-                {%- else -%}
-                  {{ site.data.authors[author].name }}
-                {%- endif %}
-                {% unless forloop.last %}{{ '</em>, <em>' }}{% endunless %}
-              {% endfor %}
-            {% else %}
-              <a href="{{ site.social.links[0] }}">{{ site.social.name }}</a>
-            {% endif %}
-          </em>
+      <!-- 4. Platform -->
+      {% if page.platform %}
+        <span class="meta-tag platform">
+          <span class="meta-icon">💻</span>
+          <span class="meta-label">{{ page.platform }}</span>
         </span>
+      {% endif %}
 
-        <div>
-          <!-- pageviews -->
-          {% if site.pageviews.provider and site.analytics[site.pageviews.provider].id %}
-            <span>
-              <em id="pageviews">
-                <i class="fas fa-spinner fa-spin small"></i>
-              </em>
-              {{ site.data.locales[lang].post.pageview_measure }}
-            </span>
-          {% endif %}
+      <!-- 5. Duration -->
+      {% if page.duration %}
+        <span class="meta-tag duration">
+          <span class="meta-icon">⏱️</span>
+          <span class="meta-label">{{ page.duration }}</span>
+        </span>
+      {% endif %}
+      
+      <!-- 6. Features -->
+      {% if page.features %}
+        <span class="meta-tag features">
+          <span class="meta-icon">✨</span>
+          <span class="meta-label">{{ page.features }}</span>
+        </span>
+      {% endif %}
 
-          <!-- read time -->
-          {% include read-time.html content=content prompt=true lang=lang %}
-        </div>
-      </div>
     </div>
+
+    <!-- Media Section -->
+    {% if page.image or page.video %}
+      <div class="project-media mb-4">
+        {% if page.image %}
+          <div class="project-image">
+            <img src="{{ page.image | relative_url }}" alt="{{ page.title }} Preview" class="w-100 rounded">
+          </div>
+        {% endif %}
+        {% if page.video %}
+          <div class="project-video ratio ratio-16x9">
+            <iframe src="{{ page.video }}" allowfullscreen></iframe>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
   </header>
 
   {% if enable_toc %}
@@ -107,11 +130,9 @@ script_includes:
     </dialog>
   {% endif %}
 
-
   <div class="content">
     {{ content }}
   </div>
-
 
   <div class="post-tail-wrapper text-muted">
     <!-- categories -->
@@ -130,64 +151,57 @@ script_includes:
       <div class="post-tags">
         <i class="fa fa-tags fa-fw me-1"></i>
         {% for tag in page.tags %}
-          <a
-            href="{{ site.baseurl }}/tags/{{ tag | slugify | url_encode }}/"
-            class="post-tag no-text-decoration"
-          >
+          <a href="{{ site.baseurl }}/tags/{{ tag | slugify | url_encode }}/" class="post-tag no-text-decoration">
             {{- tag -}}
           </a>
         {% endfor %}
       </div>
     {% endif %}
-  <div class="giscus-frame" style="margin-top: 24px">
-    <div class="giscus"></div>
-  </div>
-    <div
-      class="
-        post-tail-bottom
-        d-flex justify-content-between align-items-center mt-5 pb-2
-      "
-    >
+
+    <div class="post-tail-bottom d-flex justify-content-between align-items-center mt-5 pb-2">
       <div class="license-wrapper">
         {% if site.data.locales[lang].copyright.license.template %}
           {% capture _replacement %}
-        <a href="{{ site.data.locales[lang].copyright.license.link }}">
-          {{ site.data.locales[lang].copyright.license.name }}
-        </a>
-        {% endcapture %}
-
+            <a href="{{ site.data.locales[lang].copyright.license.link }}">
+              {{ site.data.locales[lang].copyright.license.name }}
+            </a>
+          {% endcapture %}
           {{ site.data.locales[lang].copyright.license.template | replace: ':LICENSE_NAME', _replacement }}
         {% endif %}
       </div>
 
       {% include post-sharing.html lang=lang %}
     </div>
-    <!-- .post-tail-bottom -->
   </div>
-  <!-- div.post-tail-wrapper -->
 </article>
-<!-- Inline CSS -->
+
 <style>
-  /* Main Project Detail Styles */
-  .project-detail {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-
+  /* Project Metadata Tags */
+  .meta-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.67);
   }
 
-  .project-header {
-    text-align: center;
-    margin-bottom: 40px;
+  .meta-icon {
+    font-size: 1rem;
   }
 
-  .project-header h1 {
-    font-size: 3rem;
-    font-weight: bold;
-  }
-
- .project-header .project-description {
-    font-size: 1.2rem;
-    margin-top: 10px; /* Added 'px' for proper unit */
-}
+  /* Color Palette */
+  .meta-tag.university { background-color: #2563eb; color: white; }
+  .meta-tag.personal { background-color: #dc2626; color: white; }
+  .meta-tag.archive { background-color: #64748b; color: white; }
+  .meta-tag.engine { background-color: #059669; color: white; }
+  .meta-tag.team.solo { background-color: #9254ff; color: white; }
+  .meta-tag.team.group { background-color: #db2777; color: white; }
+  .meta-tag.platform { background-color: #0891b2; color: white; }
+  .meta-tag.duration { background-color: #ea580c; color: white; }
+  .meta-tag.features { background-color: #b45309; color: white; }
 </style>
