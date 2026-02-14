@@ -154,7 +154,11 @@ defaults:
       path: _drafts
     values:
       comments: false
-
+  - scope:
+        path: "projects"
+    values:
+      layout: project
+      toc: true
   - scope:
       path: ""
       type: tabs # see `site.collections`

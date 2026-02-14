@@ -1,5 +1,6 @@
 ---
 layout: project
+toc: true
 title: Plugin for Godot | Grand Strategy Map Editor
 description: A Godot 4.5 GDExtension that provides editor tools for interacting with Europa Universalis provinces and country data as well as a shader pipeline that renders a map with smooth borders.
 image: assets/media/gs_map/demo_final.gif
