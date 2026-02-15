@@ -45,11 +45,13 @@ Create a Godot plugin that could:
 - Export back to EU4's file format
 
 ---
+
 ### Rendering
 
 I believe that the **[article](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/)** explains in a logical way how I arrived at the answer which I considered good enough visually. If you have any doubts please consult the paper, or the article. 
 
 This is the core logic behind rendering fragment shader that renders political countries with no borders:
+
 ```glsl
 shader_type canvas_item;
 
@@ -86,85 +88,121 @@ The output using EU4's files:
 
 ### Borders
 
-Rendering borders is very much like learning grand strategy games for the first time. There is no easy solution that provides a particularly great answer. So I would like to go over the ones that I considered to do, although I have not pursued me to finality.
-
+Rendering borders is very much like learning grand strategy games for the first time. There is no easy solution that provides a particularly great answer. So I would like to go over the ones that I considered to do, although I have not pursued them to finality.
 
 #### Simple AA and edge detection
 
 The first implementation is to try making smooth borders by using edge detection and adding some AA, it looks somehow promising, but not perfect either:
 
-![alt text](../assets/media/gs_map/early_edges.gif)
-
+![Animated demonstration of early border rendering attempt using edge detection with anti-aliasing applied](../assets/media/gs_map/early_edges.gif)
 _Video with basic edges with AA applied_
 
-![alt text](<../assets/media/gs_map/Screenshot 2025-09-30 102505.png>)
-
+![Political map showing pixelated borders created using basic edge detection technique](../assets/media/gs_map/Screenshot 2025-09-30 102505.png)
 _Screenshot of the political map with basic edge detection_
 
 #### Upscaling using HQX
 
-The main problem is that the effect is constrained by the texture resolution. It seemed logical to try to use an upscaler [shader][9]. Fortunately, this shader is used by Thomas Holtvedt's [project](https://github.com/Thomas-Holtvedt/opengs). HQX is a popular shader which is also used in other grand strategy map projects.
-The border can be smoothed out, at the cost of having any color values as the border itself.
+The main problem is that the effect is constrained by the texture resolution. It seemed logical to try to use an upscaler [shader][9]. Fortunately, this shader is used by Thomas Holtvedt's [open-source project](https://github.com/Thomas-Holtvedt/opengs) in Godot. HQX is a popular shader which is also used in other grand strategy map projects. The border can be smoothed out, at the cost of having any color values as the border itself.
 
-**No** HQX applied:
-![alt text](../assets/media/gs_map/edges.png)
+**No** HQX:
+
+![Political map with sharp pixelated edges before HQX upscaling is applied](../assets/media/gs_map/edges.png)
 _Political map with no borders_
 
-HQX applied:
+**HQX applied:**
 
-![alt text](../assets/media/gs_map/HQX.png)
+![Political map with smoother borders after HQX shader upscaling, showing color bleeding artifacts](../assets/media/gs_map/HQX.png)
 _HQX shader applied to the political map_
 
 Combining simple edge detected borders with the upscaler shader was creating too many artifacts, especially when the color was using partial alpha values:
 
-![alt text](<../assets/media/gs_map/Screenshot 2025-10-02 104218.png>)
+![Close-up showing visual artifacts where HQX upscaling interacts with alpha channel edges](../assets/media/gs_map/Screenshot 2025-10-02 104218.png)
 _Artifacts due to the alpha of the simple borders_
 
 #### Generating meshes?
 
-This is a technique used in EU4! In fact, there are profiling results showing that rendering the border meshes takes most of the rendering, which you can find [here](https://www.hlsl.co.uk/blog/2018/7/18/what-can-we-learn-from-gpu-frame-captures-europa-universalis-4). This makes the technique quite complicated, requiring triangulation in order to achieve arbitrary shapes based on the province map. In addition, the fact that EU4 takes 90% from its render time for the borders according to the previous article makes it less appealing to pursue.
+This is one of the techniques used in EU4! In fact, there are profiling results showing that rendering the border meshes takes most of the rendering, which you can find [here](https://www.hlsl.co.uk/blog/2018/7/18/what-can-we-learn-from-gpu-frame-captures-europa-universalis-4). This makes the technique quite complicated, requiring triangulation in order to achieve arbitrary shapes based on the province map. In addition, the fact that EU4 takes 90% from its render time for the borders according to the previous article makes it less appealing to pursue.
 
-![alt text](../assets/media/gs_map/eu4_borders.png)
-
+![Screenshot from Europa Universalis IV showing mesh-generated borders between neighboring countries](../assets/media/gs_map/eu4_borders.png)
 _Mesh Generated borders based on the neighboring countries from EU4_
 
-### SVG approach
+#### SVG approach
 
 I found a repo generating SVG maps based on the EU4 game data and textures as [oikoumene](https://github.com/primislas/eu4-svg-map). They only use vector based approaches to create borders between countries or provinces which is impressive in itself. It is an educated guess that EU4 uses a similar technique with multiple passes over the `province map` to create curves around the provinces and smooth them out in subsequent passes. My personal opinion is that they create a layered approach to their borders, so they might use a combination of techniques. 
 
-This technique is ideal and their results speak for themselves.They are scalable and provide near identical results as the borders from the game in terms of shapes. The downside is the time needed to be invested in order to only generate the most basic province borders and the complexity that comes with that.
+This technique is ideal and their results speak for themselves. They are scalable and provide near identical results as the borders from the game in terms of shapes. The downside is the time needed to be invested in order to only generate the most basic province borders and the complexity that comes with that.
 
-![alt text](../assets/media/gs_map/banner.png)
+![High-quality vector-based map borders generated by the oikoumene project using SVG techniques](../assets/media/gs_map/banner.png)
 _Screenshot from Oikoumene samples_
-
-
 #### Distance Field Texture and HQX
 
-![alt text](../assets/media/gs_map/final.png)
+![Final border rendering result combining distance fields with HQX upscaling showing smooth country borders](../assets/media/gs_map/demo_final.gif)
 _Final technique used to render borders_
 
-The solution I settled with is a compromise with image based. The better solution would have been to use mesh generation or vector based solutions for making borders. This breaks if the map is very zoomed in, however, it looks good from most distances. The steps for this effect are the following:
+Given the complexity of vector approaches and the performance cost of mesh generation, I settled on a hybrid image-based technique. This approach breaks down if the map is very zoomed in, however, it looks good from most distances. The steps for this effect are the following:
 
-- Generate Distance Field from Color + Lookup maps.
+- Generate Distance Field from `Color` + `Lookup` maps
 - Sample the distance field to create the gradient
 - Have an edge threshold, that when reached represents the border between countries (fill with border color)
-- Use the HQX upscaled on the previous output to create smooth edges
+- Use the HQX upscaler on the previous output to create smooth edges
+
+> **Implementation Note:** A significant challenge was implementing the Jump Flood Algorithm for distance field generation. I was unable to get it working with Godot's `SubViewports`, though a compute shader approach might be more feasible for future work.
+
 Adding province borders is trivial, as these will never change over the course of the game.
 
 Here are a few screenshots with this effect on more exotic shapes:
 
-![alt text](<../assets/media/gs_map/Screenshot 2025-10-07 105332.png>)
+![Map of Brazil showing smooth border rendering on large landmass with complex provincial boundaries](../assets/media/gs_map/Screenshot 2025-10-07 105332.png)
+_Smooth borders on large continental landmasses_
 
-_Screenshot of the outlines for exotic shapes_
-![alt text](<../assets/media/gs_map/Screenshot 2025-10-07 105438.png>)
-_Screenshot of the outlines for exotic shapes_
+![Map of Norway showing border rendering handling complex coastal geometry and fjords](../assets/media/gs_map/Screenshot 2025-10-07 105438.png)
+_Handling complex coastal geometry and fjords_
 
-![alt text](<../assets/media/gs_map/Screenshot 2025-10-07 105558.png>)
-_Screenshot of the outlines
+![Map of Japan showing border rendering on island chains and archipelago formations](../assets/media/gs_map/Screenshot 2025-10-07 105558.png)
+_Island chains and separated territories_
 
 ### Editor Functionality
 
-In this project I also learned how to extend the editor in Godot. Below you can see how the user can change owenership of provinces, or their country color through the editor I made. The changes are saved in the file format that Europa Universalis 4 uses.
+The main challange for the editor functionality was figuring out how to store the data in such a way that I could display and change it without any hiccups. Profiling led to structuring the data in dictionaries and sometimes, in dictionaries that refer to various aspects of the same country. This was not implemented from the start, since I wanted to keep it simple using arrays, which meant that sometimes I had to iterate in order to find element x of a country, then use it to iterate over another array to get element y. That meant O(n^3) which took a considerable amount of time
+
+
+![alt text](<../assets/media/Screenshot 2025-09-29 143200.png>)
+*Very slow result*
+
+![alt text](<../assets/media/Screenshot 2025-09-29 145654.png>)
+*Very fast result*
+
+This is the way data gets initialized at the start:
+```cpp
+void CountryData::build_look_up_tables(const Array &province_data, const Array &country_data, const Array &country_color_data)
+{
+    //dictionaries
+	country_id_to_country_name.clear();
+	country_id_to_color.clear();
+	country_name_to_color.clear();
+	province_id_to_owner.clear();
+	province_id_to_name.clear();
+	for (const Dictionary &dict : country_color_data)
+	{
+		country_name_to_color[dict["Name"]] = dict["Color"];
+	}
+	for (const Dictionary &dict : country_data)
+	{
+		country_id_to_country_name[dict["Id"]] = dict["Name"];
+		country_id_to_color[dict["Id"]] = country_name_to_color[dict["Name"]];
+	}
+
+	for (const Dictionary &dict : province_data)
+	{
+		province_id_to_owner[dict["Id"]] = dict["Owner"];
+		province_id_to_name[dict["Id"]] = dict["Name"];
+	}
+	UtilityFunctions::print("Parsed Provinces:", province_data.size());
+	UtilityFunctions::print("Parsed Country Colors:", country_color_data.size());
+	UtilityFunctions::print("Parsed Countries:", country_data.size());
+}
+```
+In this project I also learned how to extend the editor in Godot. Below you can see how the user can change owenership of provinces, or their country color through the editor I made. The changes are saved in the file format that Europa Universalis 4 uses. 
 
 <video controls src="/assets/media/gs_map/export import.mp4" title="Title"></video>
 
@@ -174,8 +212,56 @@ In this project I also learned how to extend the editor in Godot. Below you can 
 *Changing the color of France in the editor, then running the game*
 
 
-As a fun section, these are some of my attemths to implement the "basic" political rendering:
+Important piece of code used to cache the editor data properly
+```cpp
+void CountryInspector::cache_display_data()
+{
+ display_data.clear();
+ TypedDictionary<String, Color> country_name_color = country_data->get_country_name_to_color();
+ TypedDictionary<String, String> country_id_name = country_data->get_country_id_to_country_name();
+
+ for (const String &country_id : country_id_name.keys())
+ {
+  Dictionary country_info;
+  String country_name = country_id_name[country_id];
+
+  country_info["name"] = country_name;
+  country_info["color"] = country_name_color.get(country_name, Color(1, 1, 1));
+  country_info["provinces"] = country_data->get_country_provinces(country_id);
+
+  display_data[country_id] = country_info;
+ }
+
+ UtilityFunctions::print_verbose("Display data for ", display_data.size());
+}
+
+```cpp
+ ColorPicker *color_picker = memnew(ColorPicker);
+ PopupPanel *popup = memnew(PopupPanel);
+  //other logic to set them up
+  //signals
+ color_picker->connect("color_changed", callable_mp(this, &CountryInspector::on_color_changed).bind(item, country_id));
+ popup->connect("popup_hide", callable_mp(this, &CountryInspector::on_color_picker_closed).bind(popup));
+
+  //somewhere else
+  void CountryInspector::on_color_picker_closed(PopupPanel *popup)
+{
+ if (country_color_save.is_empty() == false)
+ {
+  country_data->export_color_data(country_color_save);
+ }
+ popup->queue_free();
+}
+
+void CountryInspector::on_context_menu_closed(PopupMenu *menu)
+{
+ menu->queue_free();
+}
+```
+
+As a fun section, these are some of my attempts to implement the "basic" political rendering:
 ![alt text](<./assets/media/gs_map/Screenshot 2025-09-23 143842.png>) ![alt text](<./assets/media/gs_map/Screenshot 2025-09-23 144805.png>) ![alt text](<./assets/media/gs_map/Screenshot 2025-09-24 113424.png>)
+
 ## References
 
 ### Godot & Compute Shaders
