@@ -45,13 +45,11 @@ Create a Godot plugin that could:
 - Export back to EU4's file format
 
 ---
-
 ### Rendering
 
-I believe that the [article](https://github.com/OneBogdan01/gs-map-editor) explains in a logical way how I arrived at the answer which I considered good enough visually. If you have any doubts please consult the paper, or the article. 
+I believe that the **[article](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/)** explains in a logical way how I arrived at the answer which I considered good enough visually. If you have any doubts please consult the paper, or the article. 
 
 This is the core logic behind rendering fragment shader that renders political countries with no borders:
-
 ```glsl
 shader_type canvas_item;
 
@@ -74,19 +72,16 @@ void fragment() {
     
     COLOR = color;
 }
-
 ```
 
 This can also be visualized as:
 
-![Pipeline diagram](/assets/assets-2025-10-27/diagram.jpg)
-
+![Diagram showing the complete rendering pipeline from province map to final rendered output](/assets/assets-2025-10-27/diagram.jpg)
 *Complete overview of the rendering pipeline from province map to final output*
 
 The output using EU4's files:
 
-![Simple political map](/assets/assets-2025-10-27/Screenshot 2025-09-24 133323.png)
-
+![Political map showing European countries colored by ownership without border rendering](/assets/assets-2025-10-27/Screenshot 2025-09-24 133323.png)
 *Basic political map outputting province colors without borders*
 
 ### Borders

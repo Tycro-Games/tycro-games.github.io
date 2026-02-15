@@ -9,7 +9,7 @@ panel_includes:
 
 {% include toc-status.html %}
 
-<article class="px-1" data-toc="{{ enable_toc }}">
+<article class="project-detail" data-toc="{{ enable_toc }}">
   <header>
     <h1 data-toc-skip>{{ page.title }}</h1>
     
@@ -163,6 +163,11 @@ panel_includes:
 </article>
 
 <style>
+  .project-detail {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
   .project-media {
     max-height: 500px;
     overflow: hidden;
