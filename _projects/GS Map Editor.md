@@ -133,7 +133,8 @@ void CountryInspector::cache_display_data()
 
 ### Color Picker Implementation
 
-The editor uses Godot's color picker with proper signal handling and memory management:
+The editor uses Godot's color picker with proper signal handling and memory management. This is used through the "inspector" code which was prototyped into Godot's scripting language and then moved into C++.
+
 ```cpp
 ColorPicker *color_picker = memnew(ColorPicker);
 PopupPanel *popup = memnew(PopupPanel);
@@ -141,7 +142,9 @@ PopupPanel *popup = memnew(PopupPanel);
 // Setup and signal connections
 color_picker->connect("color_changed", callable_mp(this, &CountryInspector::on_color_changed).bind(item, country_id));
 popup->connect("popup_hide", callable_mp(this, &CountryInspector::on_color_picker_closed).bind(popup));
+```
 
+```cpp
 // Cleanup handlers
 void CountryInspector::on_color_picker_closed(PopupPanel *popup)
 {
@@ -325,8 +328,8 @@ Here are a few screenshots with this effect on more exotic shapes:
 
 As a fun section, these are some of my attempts to implement the "basic" political rendering before getting it right. 
 
-![Early rendering attempt showing incorrect color mapping or shader artifacts](./assets/media/gs_map/Screenshot 2025-09-23 143842.png)
-![Second attempt at political map rendering with visible bugs or incorrect province colors](./assets/media/gs_map/Screenshot 2025-09-23 144805.png)
-![Third iteration of political rendering showing progress toward final implementation](./assets/media/gs_map/Screenshot 2025-09-24 113424.png)
+![Early rendering attempt showing incorrect color mapping or shader artifacts](../assets/media/gs_map/Screenshot 2025-09-23 143842.png)
+![Second attempt at political map rendering with visible bugs or incorrect province colors](../assets/media/gs_map/Screenshot 2025-09-23 144805.png)
+![Third iteration of political rendering showing progress toward final implementation](../assets/media/gs_map/Screenshot 2025-09-24 113424.png)
 
 *Early iterations of the rendering pipeline*
