@@ -46,6 +46,123 @@ Create a Godot plugin that could:
 
 ---
 
+### Editor Functionality
+
+In this project I also learned how to extend the editor in Godot. Below you can see how the user can change ownership of provinces, or their country color through the editor I made. The changes are saved in the file format that Europa Universalis 4 uses.
+
+<video controls src="/assets/media/gs_map/export import.mp4" title="Province ownership editor demonstration"></video>
+*Demonstration of province ownership editing and export/import functionality*
+
+
+<video controls src="/assets/media/gs_map/change_color.mp4" title="Country color editing demonstration"></video>
+*Changing the color of France in the editor, then running the game*
+
+**To be clear, France is blue in the original file data.**
+
+#### Data Structure Optimization
+
+The main challenge for the editor functionality was figuring out how to store the data in such a way that I could display and change it without any hiccups. 
+
+**Initial approach (arrays):** I started simple using arrays, which meant that sometimes I had to iterate to find element x of a country, then use it to iterate over another array to get element y. That resulted in **O(n³) complexity** which took a considerable amount of time:
+
+![Editor running very slowly with array-based data structure showing long frame times](../assets/media/gs_map/Screenshot 2025-09-29 143200.png)
+*Very slow result with array-based approach*
+
+**Optimized approach (dictionaries):** Profiling led to restructuring the data into dictionaries, and sometimes into dictionaries that refer to various aspects of the same country. This dramatically improved performance:
+
+![Editor running smoothly with dictionary-based data structure showing fast frame times](../assets/media/gs_map/Screenshot 2025-09-29 145654.png)
+*Very fast result after optimization*
+
+**Data initialization using lookup tables:**
+```cpp
+void CountryData::build_look_up_tables(const Array &province_data, const Array &country_data, const Array &country_color_data)
+{
+    // Initialize dictionaries for O(1) lookups
+    country_id_to_country_name.clear();
+    country_id_to_color.clear();
+    country_name_to_color.clear();
+    province_id_to_owner.clear();
+    province_id_to_name.clear();
+    
+    // Build color lookup
+    for (const Dictionary &dict : country_color_data)
+    {
+        country_name_to_color[dict["Name"]] = dict["Color"];
+    }
+    
+    // Build country lookups
+    for (const Dictionary &dict : country_data)
+    {
+        country_id_to_country_name[dict["Id"]] = dict["Name"];
+        country_id_to_color[dict["Id"]] = country_name_to_color[dict["Name"]];
+    }
+    
+    // Build province lookups
+    for (const Dictionary &dict : province_data)
+    {
+        province_id_to_owner[dict["Id"]] = dict["Owner"];
+        province_id_to_name[dict["Id"]] = dict["Name"];
+    }
+    
+    UtilityFunctions::print("Parsed Provinces:", province_data.size());
+    UtilityFunctions::print("Parsed Country Colors:", country_color_data.size());
+    UtilityFunctions::print("Parsed Countries:", country_data.size());
+}
+```
+
+#### Editor Display Data Caching
+
+To avoid repeated lookups during UI rendering, I cache the display data:
+```cpp
+void CountryInspector::cache_display_data()
+{
+    display_data.clear();
+    TypedDictionary<String, Color> country_name_color = country_data->get_country_name_to_color();
+    TypedDictionary<String, String> country_id_name = country_data->get_country_id_to_country_name();
+    
+    for (const String &country_id : country_id_name.keys())
+    {
+        Dictionary country_info;
+        String country_name = country_id_name[country_id];
+        country_info["name"] = country_name;
+        country_info["color"] = country_name_color.get(country_name, Color(1, 1, 1));
+        country_info["provinces"] = country_data->get_country_provinces(country_id);
+        display_data[country_id] = country_info;
+    }
+    
+    UtilityFunctions::print_verbose("Display data for ", display_data.size());
+}
+```
+
+#### Color Picker Implementation
+
+The editor uses Godot's color picker with proper signal handling and memory management:
+```cpp
+ColorPicker *color_picker = memnew(ColorPicker);
+PopupPanel *popup = memnew(PopupPanel);
+
+// Setup and signal connections
+color_picker->connect("color_changed", callable_mp(this, &CountryInspector::on_color_changed).bind(item, country_id));
+popup->connect("popup_hide", callable_mp(this, &CountryInspector::on_color_picker_closed).bind(popup));
+
+// Cleanup handlers
+void CountryInspector::on_color_picker_closed(PopupPanel *popup)
+{
+    if (country_color_save.is_empty() == false)
+    {
+        country_data->export_color_data(country_color_save);
+    }
+    popup->queue_free();
+}
+
+void CountryInspector::on_context_menu_closed(PopupMenu *menu)
+{
+    menu->queue_free();
+}
+```
+
+---
+
 ### Rendering
 
 I believe that the **[article](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/)** explains in a logical way how I arrived at the answer which I considered good enough visually. If you have any doubts please consult the paper, or the article. 
@@ -161,106 +278,7 @@ _Handling complex coastal geometry and fjords_
 ![Map of Japan showing border rendering on island chains and archipelago formations](../assets/media/gs_map/Screenshot 2025-10-07 105558.png)
 _Island chains and separated territories_
 
-### Editor Functionality
 
-The main challange for the editor functionality was figuring out how to store the data in such a way that I could display and change it without any hiccups. Profiling led to structuring the data in dictionaries and sometimes, in dictionaries that refer to various aspects of the same country. This was not implemented from the start, since I wanted to keep it simple using arrays, which meant that sometimes I had to iterate in order to find element x of a country, then use it to iterate over another array to get element y. That meant O(n^3) which took a considerable amount of time
-
-
-![alt text](<../assets/media/Screenshot 2025-09-29 143200.png>)
-*Very slow result*
-
-![alt text](<../assets/media/Screenshot 2025-09-29 145654.png>)
-*Very fast result*
-
-This is the way data gets initialized at the start:
-```cpp
-void CountryData::build_look_up_tables(const Array &province_data, const Array &country_data, const Array &country_color_data)
-{
-    //dictionaries
-	country_id_to_country_name.clear();
-	country_id_to_color.clear();
-	country_name_to_color.clear();
-	province_id_to_owner.clear();
-	province_id_to_name.clear();
-	for (const Dictionary &dict : country_color_data)
-	{
-		country_name_to_color[dict["Name"]] = dict["Color"];
-	}
-	for (const Dictionary &dict : country_data)
-	{
-		country_id_to_country_name[dict["Id"]] = dict["Name"];
-		country_id_to_color[dict["Id"]] = country_name_to_color[dict["Name"]];
-	}
-
-	for (const Dictionary &dict : province_data)
-	{
-		province_id_to_owner[dict["Id"]] = dict["Owner"];
-		province_id_to_name[dict["Id"]] = dict["Name"];
-	}
-	UtilityFunctions::print("Parsed Provinces:", province_data.size());
-	UtilityFunctions::print("Parsed Country Colors:", country_color_data.size());
-	UtilityFunctions::print("Parsed Countries:", country_data.size());
-}
-```
-In this project I also learned how to extend the editor in Godot. Below you can see how the user can change owenership of provinces, or their country color through the editor I made. The changes are saved in the file format that Europa Universalis 4 uses. 
-
-<video controls src="/assets/media/gs_map/export import.mp4" title="Title"></video>
-
-*Demonstration of province ownership editing and export/import functionality*
-
-<video controls src="/assets/media/gs_map/change_color.mp4" title="Title"></video>
-*Changing the color of France in the editor, then running the game*
-
-
-Important piece of code used to cache the editor data properly
-```cpp
-void CountryInspector::cache_display_data()
-{
- display_data.clear();
- TypedDictionary<String, Color> country_name_color = country_data->get_country_name_to_color();
- TypedDictionary<String, String> country_id_name = country_data->get_country_id_to_country_name();
-
- for (const String &country_id : country_id_name.keys())
- {
-  Dictionary country_info;
-  String country_name = country_id_name[country_id];
-
-  country_info["name"] = country_name;
-  country_info["color"] = country_name_color.get(country_name, Color(1, 1, 1));
-  country_info["provinces"] = country_data->get_country_provinces(country_id);
-
-  display_data[country_id] = country_info;
- }
-
- UtilityFunctions::print_verbose("Display data for ", display_data.size());
-}
-
-```cpp
- ColorPicker *color_picker = memnew(ColorPicker);
- PopupPanel *popup = memnew(PopupPanel);
-  //other logic to set them up
-  //signals
- color_picker->connect("color_changed", callable_mp(this, &CountryInspector::on_color_changed).bind(item, country_id));
- popup->connect("popup_hide", callable_mp(this, &CountryInspector::on_color_picker_closed).bind(popup));
-
-  //somewhere else
-  void CountryInspector::on_color_picker_closed(PopupPanel *popup)
-{
- if (country_color_save.is_empty() == false)
- {
-  country_data->export_color_data(country_color_save);
- }
- popup->queue_free();
-}
-
-void CountryInspector::on_context_menu_closed(PopupMenu *menu)
-{
- menu->queue_free();
-}
-```
-
-As a fun section, these are some of my attempts to implement the "basic" political rendering:
-![alt text](<./assets/media/gs_map/Screenshot 2025-09-23 143842.png>) ![alt text](<./assets/media/gs_map/Screenshot 2025-09-23 144805.png>) ![alt text](<./assets/media/gs_map/Screenshot 2025-09-24 113424.png>)
 
 ## References
 
@@ -301,3 +319,13 @@ As a fun section, these are some of my attempts to implement the "basic" politic
 [12]: https://bgolus.medium.com/the-quest-for-very-wide-outlines-ba82ed442cd9
 [13]: https://medium.com/@squashfold/anatomy-of-a-grand-strategy-game-devlog-1-3962ba395ae4
 [14]: https://gamedev.stackexchange.com/questions/183354/in-unity-how-can-i-render-borders-of-provinces-from-a-colored-province-map-in-a
+
+## Behind the Scenes: Early Rendering Attempts
+
+As a fun section, these are some of my attempts to implement the "basic" political rendering before getting it right. 
+
+![Early rendering attempt showing incorrect color mapping or shader artifacts](./assets/media/gs_map/Screenshot 2025-09-23 143842.png)
+![Second attempt at political map rendering with visible bugs or incorrect province colors](./assets/media/gs_map/Screenshot 2025-09-23 144805.png)
+![Third iteration of political rendering showing progress toward final implementation](./assets/media/gs_map/Screenshot 2025-09-24 113424.png)
+
+*Early iterations of the rendering pipeline*
