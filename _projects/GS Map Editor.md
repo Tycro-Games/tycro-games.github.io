@@ -25,44 +25,147 @@ Can be found on GitHub [here](https://github.com/OneBogdan01/gs-map-editor).
 
 ## Overview
 
-I created a plugin in C++ that can read and modify a database of countries with provinces based on the Europa Universalis 4 and render a political map that has esthetic borders at medium to far distances.
+Grand strategy games like Europa Universalis IV use intricate political maps with thousands of irregular provinces and smooth borders that change as countries expand. I built a Godot C++ plugin to explore these systems and provide a starting point for game development/modding, focusing on creating smooth borders.
 
-- I did not know how to create editor tools in godot
-- I had to research various ways to render political maps, focusing on creating borders.
+My primary goal was learning how to extend Godot with C++ (coming from simpler custom engines), while explore rendering techniques, editor tool integration, and Godot's extension architecture
 
-My main goal for this project was to learn how the Godot engine can be extended using C++. It was a general confirmation that the language can be modified and changed to fit with a general architecture of the engine. C++ is very different in Godot compared to the small scale engines I worked on previously. One could argue that they were frameworks, rather then engines as complex as Godot.
+**Key Achievement:** Implemented smooth border rendering using a texture indirection pipeline with HQX upscaling, adapted from Intel's Imperator: Rome rendering paper.
 
-The secondary goal was to dive deeper into how Europa Universalis 4(EU4) works as a grand strategy game, which is one of my favorite genres of all time. More specifically, the problems I wanted to solve relate to the database that needs to manage the countries. In turn, countries are build out of provinces which in a grid would be the cells. In this case however, provinces are voronoi like shapes that take an immersive historical aura.
+### 📚 [Article I wrote focusing on the rendering aspect (with code!)](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/)
 
-One of the more interesting aspects was the rendering of country states. Below is an article I wrote that explains how I achieved this using an adapted technique explained from this [paper](https://www.intel.com/content/dam/develop/external/us/en/documents/optimized-gradient-border-rendering-in-imperator-rome.pdf).
+---
 
-### 📚 [Project Article (contains code!)](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/)
+## Project Goals
 
-## 🛠️ Features
+Create a Godot plugin that could:
 
-- Smooth borders using HQX shader
-- Compute abstraction for generating `color_map`, `lookup_color` and `political_mask`
-- Export/import functionality based on Europa Universalis 4 format
-- Custom Inspector window for editing country data
+- Parse Europa Universalis IV's files to create a country and province database
+- Render political maps with aesthetic borders that change in real-time
+- Provide editor tools for modifying province ownership and country color
+- Export back to EU4's file format
 
-## ⚙️ My Contributions
+---
 
-### Rendering Pipeline
+### Rendering
 
-I used the technique described in this [paper](https://www.intel.com/content/dam/develop/external/us/en/documents/optimized-gradient-border-rendering-in-imperator-rome.pdf) to implement basic rendering for each of the countries, which can change at runtime their provinces. Broadly speaking, it involves using two textures(UV coordinates and one with color values) as an indirection in the fragment shader. One of them defines the UV coordinates to the other texture, therefore, a province is mapped to a pixel and changing that particular pixel will change the province color.
+I believe that the [article](https://github.com/OneBogdan01/gs-map-editor) explains in a logical way how I arrived at the answer which I considered good enough visually. If you have any doubts please consult the paper, or the article. 
+
+This is the core logic behind rendering fragment shader that renders political countries with no borders:
+
+```glsl
+shader_type canvas_item;
+
+// texture with province IDs
+uniform sampler2D lookup_map : filter_nearest;
+// small texture with each provinces color, resolution is small (i.e. 256x256)
+uniform sampler2D color_map : source_color, filter_nearest;
+
+vec4 get_color(const in vec2 uv) {
+    // UV in range [0-1]
+    vec4 lookup = texture(lookup_map, uv);
+    vec2 province_uv = lookup.rg;
+    //get color from color map
+    return texture(color_map, province_uv);
+}
+
+void fragment() {
+    vec2 uv = UV;
+    vec4 color = get_color(uv);
+    
+    COLOR = color;
+}
+
+```
+
+This can also be visualized as:
 
 ![Pipeline diagram](/assets/assets-2025-10-27/diagram.jpg)
+
 *Complete overview of the rendering pipeline from province map to final output*
 
+The output using EU4's files:
+
 ![Simple political map](/assets/assets-2025-10-27/Screenshot 2025-09-24 133323.png)
+
 *Basic political map outputting province colors without borders*
 
-### Border Rendering
+### Borders
 
-There are many ways to do border rendering. One can generate meshes, use vector based splines or image based techniques. The latter is one of the simpler ones that I implemented, it has artifacts in certain . The political map from the `Rendering Pipeline` is used in conjunction with a mask and Signed Distance Field texture to create low resolution borders. Afterwards a HQX shader is applied to create a smooth appearance.
+Rendering borders is very much like learning grand strategy games for the first time. There is no easy solution that provides a particularly great answer. So I would like to go over the ones that I considered to do, although I have not pursued me to finality.
 
-![Upscaled map result](/assets/assets-2025-10-27/upscaled.png)
-*Map upscaled using HQX shader for smoother appearance*
+
+#### Simple AA and edge detection
+
+The first implementation is to try making smooth borders by using edge detection and adding some AA, it looks somehow promising, but not perfect either:
+
+![alt text](../assets/media/gs_map/early_edges.gif)
+
+_Video with basic edges with AA applied_
+
+![alt text](<../assets/media/gs_map/Screenshot 2025-09-30 102505.png>)
+
+_Screenshot of the political map with basic edge detection_
+
+#### Upscaling using HQX
+
+The main problem is that the effect is constrained by the texture resolution. It seemed logical to try to use an upscaler [shader][9]. Fortunately, this shader is used by Thomas Holtvedt's [project](https://github.com/Thomas-Holtvedt/opengs). HQX is a popular shader which is also used in other grand strategy map projects.
+The border can be smoothed out, at the cost of having any color values as the border itself.
+
+**No** HQX applied:
+![alt text](../assets/media/gs_map/edges.png)
+_Political map with no borders_
+
+HQX applied:
+
+![alt text](../assets/media/gs_map/HQX.png)
+_HQX shader applied to the political map_
+
+Combining simple edge detected borders with the upscaler shader was creating too many artifacts, especially when the color was using partial alpha values:
+
+![alt text](<../assets/media/gs_map/Screenshot 2025-10-02 104218.png>)
+_Artifacts due to the alpha of the simple borders_
+
+#### Generating meshes?
+
+This is a technique used in EU4! In fact, there are profiling results showing that rendering the border meshes takes most of the rendering, which you can find [here](https://www.hlsl.co.uk/blog/2018/7/18/what-can-we-learn-from-gpu-frame-captures-europa-universalis-4). This makes the technique quite complicated, requiring triangulation in order to achieve arbitrary shapes based on the province map. In addition, the fact that EU4 takes 90% from its render time for the borders according to the previous article makes it less appealing to pursue.
+
+![alt text](../assets/media/gs_map/eu4_borders.png)
+
+_Mesh Generated borders based on the neighboring countries from EU4_
+
+### SVG approach
+
+I found a repo generating SVG maps based on the EU4 game data and textures as [oikoumene](https://github.com/primislas/eu4-svg-map). They only use vector based approaches to create borders between countries or provinces which is impressive in itself. It is an educated guess that EU4 uses a similar technique with multiple passes over the `province map` to create curves around the provinces and smooth them out in subsequent passes. My personal opinion is that they create a layered approach to their borders, so they might use a combination of techniques. 
+
+This technique is ideal and their results speak for themselves.They are scalable and provide near identical results as the borders from the game in terms of shapes. The downside is the time needed to be invested in order to only generate the most basic province borders and the complexity that comes with that.
+
+![alt text](../assets/media/gs_map/banner.png)
+_Screenshot from Oikoumene samples_
+
+
+#### Distance Field Texture and HQX
+
+![alt text](../assets/media/gs_map/final.png)
+_Final technique used to render borders_
+
+The solution I settled with is a compromise with image based. The better solution would have been to use mesh generation or vector based solutions for making borders. This breaks if the map is very zoomed in, however, it looks good from most distances. The steps for this effect are the following:
+
+- Generate Distance Field from Color + Lookup maps.
+- Sample the distance field to create the gradient
+- Have an edge threshold, that when reached represents the border between countries (fill with border color)
+- Use the HQX upscaled on the previous output to create smooth edges
+Adding province borders is trivial, as these will never change over the course of the game.
+
+Here are a few screenshots with this effect on more exotic shapes:
+
+![alt text](<../assets/media/gs_map/Screenshot 2025-10-07 105332.png>)
+
+_Screenshot of the outlines for exotic shapes_
+![alt text](<../assets/media/gs_map/Screenshot 2025-10-07 105438.png>)
+_Screenshot of the outlines for exotic shapes_
+
+![alt text](<../assets/media/gs_map/Screenshot 2025-10-07 105558.png>)
+_Screenshot of the outlines
 
 ### Editor Functionality
 
@@ -72,6 +175,48 @@ In this project I also learned how to extend the editor in Godot. Below you can 
 
 *Demonstration of province ownership editing and export/import functionality*
 
-## 🎮 Download on itch.io
+<video controls src="/assets/media/gs_map/change_color.mp4" title="Title"></video>
+*Changing the color of France in the editor, then running the game*
 
-<iframe frameborder="0" src="https://itch.io/embed/4008182" width="552" height="167"><a href="https://tycro-dev.itch.io/grand-strategy-map-demo">Grand Strategy Map Demo by Tycro Games</a></iframe>
+
+As a fun section, these are some of my attemths to implement the "basic" political rendering:
+![alt text](<./assets/media/gs_map/Screenshot 2025-09-23 143842.png>) ![alt text](<./assets/media/gs_map/Screenshot 2025-09-23 144805.png>) ![alt text](<./assets/media/gs_map/Screenshot 2025-09-24 113424.png>)
+## References
+
+### Godot & Compute Shaders
+
+- [Godot Official Compute Shaders Documentation][1]
+- [Compute Shader Textures Tutorial by NekoToArts][2]
+- [Shader Storage Buffer Objects (SSBOs) Guide][3]
+- [Godot Viewport as Texture Documentation][4]
+
+### Map Rendering & Border Techniques
+
+- [Intel Paper: Optimized Gradient Border Rendering in Imperator: Rome][5]
+- [Simulating the EU4 Map in the Browser with WebGL][6]
+- [Valve Paper: Improved Alpha-Tested Magnification (Distance Fields)][7]
+- [Inigo Quilez: Introduction to Signed Distance Fields (Video)][8]
+- [HQX Upscaling Filter (Shadertoy)][9]
+- [Sobel Edge Detection Filter (Shadertoy)][10]
+- [Unreal Engine Forum: Paradox Grand Strategy Game Borders Discussion][11]
+- [Ben Golus: The Quest for Very Wide Outlines (Jump Flood Algorithm)][12]
+
+### Alternative Border Approaches (Vector & Mesh-Based)
+
+- [Anatomy of a Grand Strategy Game: Mesh Generation Devlog][13]
+- [GameDev Stack Exchange: Rendering Province Borders in Unity][14]
+
+[1]: https://docs.godotengine.org/en/stable/tutorials/shaders/compute_shaders.html
+[2]: https://nekotoarts.github.io/blog/Compute-Shader-Textures
+[3]: https://ktstephano.github.io/rendering/opengl/ssbos
+[4]: https://docs.godotengine.org/en/stable/tutorials/shaders/using_viewport_as_texture.html
+[5]: https://www.intel.com/content/dam/develop/external/us/en/documents/optimized-gradient-border-rendering-in-imperator-rome.pdf
+[6]: https://nickb.dev/blog/simulating-the-eu4-map-in-the-browser-with-webgl/
+[7]: https://steamcdn-a.akamaihd.net/apps/valve/2007/SIGGRAPH2007_AlphaTestedMagnification.pdf
+[8]: https://www.youtube.com/watch?v=1b5hIMqz_wM
+[9]: https://www.shadertoy.com/view/tsdcRM
+[10]: https://www.shadertoy.com/view/4ss3Dr
+[11]: https://forums.unrealengine.com/t/borders-like-paradox-grand-strategy-game/763968
+[12]: https://bgolus.medium.com/the-quest-for-very-wide-outlines-ba82ed442cd9
+[13]: https://medium.com/@squashfold/anatomy-of-a-grand-strategy-game-devlog-1-3962ba395ae4
+[14]: https://gamedev.stackexchange.com/questions/183354/in-unity-how-can-i-render-borders-of-provinces-from-a-colored-province-map-in-a
