@@ -53,7 +53,15 @@ In this project I also learned how to **extend the editor in Godot**. Below you 
 <video controls src="/assets/media/gs_map/export import.mp4" title="Province ownership editor demonstration"></video>
 *Demonstration of province ownership editing and export/import functionality*
 
-<video controls src="/assets/media/gs_map/change_color.mp4" title="Country color editing demonstration"></video>
+Below you can see how the file format changed after using the editor to modify it:
+
+![alt text](../assets/media/gs_map/owner_change.png)
+_Diff in github with the file responsible for assigning ownership_
+
+![alt text](../assets/media/gs_map/color_change.png)
+_Diff in github with the file responsible for assigning country colors_
+
+![Country color editing demonstration](../assets/media/gs_map/change_france.gif)
 *Changing the color of France in the editor, then running the game*
 
 ### Data Structure Optimization

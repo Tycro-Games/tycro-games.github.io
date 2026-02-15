@@ -74,4 +74,4 @@ Designed a WFC algorithm that enables defining 3D tiles and their connections wi
 Incorporated an A* pathfinding algorithm to generate roads between specified points. The algorithm avoids obstacle objects, ensuring that roads go around the island's gameplay objectives or props.
 
 ![A* pathfinding demonstration in Unity prototype](/assets/portfolio/blockD/AUnity.gif)
-*A* algorithm generating roads that navigate around obstacles*
+*A start algorithm generating roads that navigate around obstacles*
