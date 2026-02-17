@@ -9,7 +9,7 @@ image: /assets/assets-2026-01-14/cover.png
 pin: true
 ---
 
-Logging is a pretty basic concept which you get exposed to quite early as a programmer. The most fundamental programming exercises are usually about logging to a console or to a file. Multithreading on the other hand, has always been something that had a complex aura around it. This idea of building a multithreaded logger was given to me by Nick De Breuck when I asked him the following question: "How to learn multithreading?".
+Logging is a pretty basic concept which you get exposed to quite early as a programmer. The most fundamental programming exercises are usually about logging to a console or to a file. Multithreading on the other hand, has always been something that had a complex aura around it. This idea of building a multithreaded logger was given to me by [Nick De Breuck](https://www.linkedin.com/in/nick-de-breuck-a9a207158/) when I asked him the following question: "How to learn multithreading?".
 
 If you need a production-ready solution, please use [spdlog][spdlog].
 

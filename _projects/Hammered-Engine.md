@@ -35,7 +35,7 @@ I explored both **OpenGL and Vulkan** rendering backends following **[vkguide.de
 
 ### Learning Multithreading
 
-Multithreading is one of the most complex and elusive things I encountered as a game programmer, while logging is maybe the most fundamental debugging and profiling tool that I have used when I ran my first executable in C++. This idea was given to me by Nick De Breuck when I asked him how to learn multithreading. The problem that this project aimed to solve was my own lack of experience using multithreading.
+Multithreading is one of the most complex and elusive things I encountered as a game programmer, while logging is maybe the most fundamental debugging and profiling tool that I have used when I ran my first executable in C++. This idea was given to me by [Nick De Breuck](https://www.linkedin.com/in/nick-de-breuck-a9a207158/) when I asked him how to learn multithreading. The problem that this project aimed to solve was my own lack of experience using multithreading.
 
 ### Overview
 
@@ -192,4 +192,3 @@ I also started using CPM, a CMake utility for managing dependencies without git 
 
 I chose flecs because it uses similar terminology to the Bevy engine, and I wanted to learn how a different ECS library behaves compared to entt, which I used in all my university projects. I plan to create a boid simulation to learn how the scheduler works in practice. In short, the scheduler plans which systems run in what order and allows for parallelization of systems with no dependencies. I am particularly excited to discover the performance gains from using multithreading in this way.
 
----
