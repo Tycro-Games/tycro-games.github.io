@@ -33,26 +33,80 @@ I explored both **OpenGL and Vulkan** rendering backends following **[vkguide.de
 
 📚 **[Read the full article](https://tycro-games.github.io/posts/Learning-Multithreading-With-A-Logger/)**
 
-### Learning multithreading
+### Learning Multithreading
 
-Multithreading is one of the most complex and elusive things I encountered as a game programmer, while logging is maybe the most fundamental debugging and profiling tool that I have used right when I ran my first executable in C++. This idea was given to me by Nick De Breuck when I asked him how to learn multithreading. The problem that this project aimed to solve, was my own lack of experience using multithreading.
+Multithreading is one of the most complex and elusive things I encountered as a game programmer, while logging is maybe the most fundamental debugging and profiling tool that I have used when I ran my first executable in C++. This idea was given to me by Nick De Breuck when I asked him how to learn multithreading. The problem that this project aimed to solve was my own lack of experience using multithreading.
 
 ### Overview
 
+The core idea behind the async logger is separating the act of queueing a message from writing it to a destination (console, file). The calling thread posts a message into a thread-safe queue and returns immediately, while a background worker thread processes the queue and writes to the sinks.
 
+I started with a single-threaded logger as a baseline, then explored naive multithreading with a thread pool before arriving at the async approach. The article outlines the whole journey.
 
-### What I Built
+The main thread's `Log` function posts to the queue without blocking:
 
-- Thread-safe async logger
-- Lock-free message queue
-- Background I/O worker thread
-- Multiple log levels/targets
+```cpp
+void AsyncLogger::Log(Level level, std::string_view msg)
+{
+  HM_ZONE_SCOPED_N("AsyncLogger::Log");
+  if (level < m_level)
+    return;
+
+  LogMsgView view {.level = level,
+                   .loggerName = m_name,
+                   .payload = msg,
+                   .timestamp = clock::now(),
+                   .threadId = std::this_thread::get_id()};
+
+  if (pool)
+  {
+    pool->PostLog(shared_from_this(), view, m_overflowPolicy);
+  }
+}
+```
+
+The worker thread picks up messages from the queue and processes them:
+
+```cpp
+bool hm::log::LogThreadPool::ProcessNextMsg()
+{
+  HM_ZONE_SCOPED_N("ProcessLogMsg");
+  AsyncMessage incoming_msg;
+  m_queue.Dequeue(incoming_msg);
+
+  switch (incoming_msg.type)
+  {
+    case AsyncMessageType::LOG:
+      incoming_msg.asyncLogger->BackendSink(incoming_msg.msg);
+      return true;
+    case AsyncMessageType::FLUSH:
+      incoming_msg.asyncLogger->BackendFlush();
+      return true;
+    case AsyncMessageType::TERMINATE:
+      return false;
+  }
+  return true;
+}
+```
+
+![Tracy timeline showing async logger thread separation](../assets/assets-2026-01-14/async_logger.png)
+*Main thread (green) finishes logging calls quickly while the worker thread (pink) continues processing queued messages*
+
+### Performance
+
+| Approach              | Log::Debug Total | Log::Debug (mean) | Speedup  |
+| --------------------- | ---------------- | ----------------- | -------- |
+| Single-threaded       | 811 ms           | 47 µs             | baseline |
+| Async Logger          | 70 ms            | 4 µs              | ~11×     |
+| Buffered + ThreadPool | 29 ms            | 1.7 µs            | ~28×     |
+
+The async logger reduces per-log overhead from 47 µs to 4 µs. The buffered approach is faster (~28×) but requires manual flushing and delayed output. The async logger (~11×) provides real-time output while keeping the main thread responsive.
 
 ### Reflection
 
-- [Multithreading concept you grasped]
-- [Surprising challenge you encountered]
-- [Performance insight]
+I used [Tracy](https://github.com/wolfpld/tracy), an open-source profiler with great multithreading visualization, to compare each approach. The profiling data made it clear that the fastest solution (buffered thread pool) is not necessarily the best: it requires a clunky API and delayed output. The async logger provides a balance between performance and a better API.
+
+The async logger also supports multiple producer and consumer threads, at the cost of losing message ordering. In my tests I used one producer (main thread) and one consumer (worker thread) to keep ordering intact.
 
 ---
 
