@@ -10,6 +10,7 @@ platform: "PC"
 duration: "In Progress"
 priority_graphics: 2
 priority_engine: 1
+priority_highlights: 2
 ---
 
 ## 📂 Source Code
@@ -28,47 +29,17 @@ I explored both **OpenGL and Vulkan** rendering backends following **[vkguide.de
 
 ---
 
-## Cross-Platform Build System
-
-📚 **[Read the full article](https://tycro-games.github.io/posts/Hammered-Cross-Platform-Game-Engine-CMake-Setup-copy/)**
-
-### Overview
-
-C++ suffers from the lack of a build system standard. There are many options, Cmake is considered "defacto" according to their website. I could try to reason about the importance of having a robust system for cross-platform, multiple graphics APIs, the desire or need to use various compilers in order to persuade the reader to believe that CMake is an important tool for any complex project. Instead, I would like to say that when I first started to learn the Rust programming language, they had a standard for everything, from the format standard to the build system they use, called `Cargo`. This system allowed me to manage my dependencies so easily, that it felt like cheating compared to C++. Despite that, I believe that CMake is the closest option to cargo and in the spirit of C++, it allows for great control at the cost of great complexity. Fortunately, learning can alleviate the latter problem.
-
-### Goal
-
-Simply put, I would like to have two backends (OpenGL/Vulkan) which are quite arbitrary and mainly make the architecture more complex by design. The goal behind the project is to handle both backends gracefully.
-
-### What I Built
-
-In the article I more or less go through all the steps needed to set-up a simple engine project that follows this diagram:
-
-![alt text](../assets/assets-2025-07-19/FolderStructure_ManimCE_v0.19.0.png)
-*Cmake project structure*
-
-This would be the most simple approach to an engine. The engine itself is a static library which is bundled with its code and externals. This library is then linked with an executable which represents our realtime application, also known as the "game". The interesting aspect here, is the external libraries need to be linked depending on the graphics API used. 
-
-### Opening and Closing the engine
-
-As stated earlier I would like to be able to switch between OpenGL and Vulkan without closing the application explicitly as the user. Some games close the device and release all resources and start the restart the engine while saving the state that is not dependent on the graphics API. I found this quite
-
----
-
 ## Multithreaded Logging System
 
 📚 **[Read the full article](https://tycro-games.github.io/posts/Learning-Multithreading-With-A-Logger/)**
 
-### The Problem
+### Learning multithreading
 
-Multithreading is one of the most complex and elusive things I encountered as a game programmer, while logging is maybe the most fundamental debugging and profiling tool that I have used right when I ran my first executable in C++. This idea of building a multithreaded logger was given to me by Nick De Breuck when I asked him the following question: "How to learn multithreading?"
+Multithreading is one of the most complex and elusive things I encountered as a game programmer, while logging is maybe the most fundamental debugging and profiling tool that I have used right when I ran my first executable in C++. This idea was given to me by Nick De Breuck when I asked him how to learn multithreading. The problem that this project aimed to solve, was my own lack of experience using multithreading.
 
-### My Approach
+### Overview
 
 
-
-- Producer-consumer pattern
-- Message queue design decisions
 
 ### What I Built
 
@@ -77,7 +48,7 @@ Multithreading is one of the most complex and elusive things I encountered as a 
 - Background I/O worker thread
 - Multiple log levels/targets
 
-### What I Learned
+### Reflection
 
 - [Multithreading concept you grasped]
 - [Surprising challenge you encountered]
@@ -85,30 +56,86 @@ Multithreading is one of the most complex and elusive things I encountered as a 
 
 ---
 
+## Cross-Platform Build System
+
+📚 **[Read the full article](https://tycro-games.github.io/posts/Hammered-Cross-Platform-Game-Engine-CMake-Setup-copy/)**
+
+### Overview
+
+C++ lacks a standardized build system. When I learned Rust, its built-in package manager Cargo made dependency management feel way easier compared to C++. CMake is the closest equivalent, offering similar control at the cost of complexity, in the same spirit as C++ in my opinion.
+
+I wanted to build an engine that compiles against two graphics backends (OpenGL and Vulkan) from a shared codebase. The challenge was structuring the CMake project so that common code and externals are shared, while backend-specific code and libraries get linked conditionally based on the target API.
+
+The backends are very simple: for both, I render a triangle and the background is the result of a compute shader.
+
+<video controls src="/assets/assets-2025-07-19/2025-07-19 18-00-20.mp4" title="Dual backend demonstration"></video>
+*Switching between OpenGL and Vulkan backends at runtime*
+
+### Architecture
+
+The engine is built as two static libraries (`hammered_engine_gl` and `hammered_engine_vk`), each sharing common code but linking against their own platform-specific externals. A CMake utility function generates both backend executables from a single configuration flag.
+
+![alt text](../assets/assets-2025-07-19/folder.png)
+*Visual Studio solution hierarchy showing the dual-backend organization*
+
+The core of this approach is iterating over enabled backends and linking the right libraries for each:
+
+```cmake
+foreach(backend ${GAME_BACKENDS})
+    set(engine_target "hammered_engine_${backend}")
+
+    # Common libraries for all backends
+    target_link_libraries(${engine_target}
+        PUBLIC
+            glm
+    )
+
+    # Backend-specific libraries
+    if(backend STREQUAL "gl")
+        target_link_libraries(${engine_target}
+            PUBLIC
+                glad
+                imgui_opengl
+        )
+    elseif(backend STREQUAL "vk")
+        target_link_libraries(${engine_target}
+            PUBLIC
+                vkbootstrap
+                vma
+                imgui_vulkan
+        )
+    endif()
+endforeach()
+
+```
+
+### Reflection
+
+Building this system taught me that while the dual-backend approach works, the architecture does not enforce encapsulation of dependencies. Everything links against one monolithic engine library rather than each subsystem linking only against what it needs. This realization is what motivated the current redesign toward a modular architecture inspired by [Bevy](https://bevy.org/). While researching Bevy, I also learned a little about the [Rust](https://rust-lang.org/) programming language, which influenced how I write C++ code.
+
+Another important lesson from this period was that the Vulkan API was very difficult to build good architecture around. I accumulated significant technical debt by trying to make Vulkan "work", which contributed to my decision to restructure the engine in a modular fashion.
+
+---
+
 ## Current Development
 
-I'm restructuring the engine with a **modular ECS-based architecture** inspired by Bevy's design.
+I'm restructuring the engine with a **modular ECS-based architecture** inspired by Bevy's design, using [flecs](https://www.flecs.dev/flecs/).
 
 **Focus areas:**
 
-- Entity Component System implementation
 - Data-driven system design
 - Modular architecture patterns
 
-[What specific problem are you solving with this redesign?]
-[What have you learned so far in the process?]
+In the previous architecture, I was coupling certain systems to others implicitly. To use the rendering aspect from the first build system as an example: what if I had no need for a renderer? It sounds extreme, but I can imagine a simulation with no rendering or that uses the command line for all its gameplay.
 
-![Dual rendering backend showing OpenGL and Vulkan implementations](assets/assets-2025-07-19/gl_vk_demo.gif)
-*Dual backend build system supporting both OpenGL and Vulkan*
+The new architecture would allow me to include only the modules needed for a particular application. My main reason for working on this engine is to be able to build anything I might be curious about, so this kind of design where I can mix and match each part of the engine is the right approach going forward.
 
----
-
-## What's Next
-
-- Complete ECS architecture
-- Resource management system
-- [Add 1-2 more specific goals]
+I also started using CPM, a CMake utility for managing dependencies without git submodules. It brings some of the convenience of Rust's Cargo into the C++ workflow.
 
 ---
 
-*This project is in active development as a learning exercise. I'm building it to understand engine architecture from the ground up.*
+## Next steps
+
+I chose flecs because it uses similar terminology to the Bevy engine, and I wanted to learn how a different ECS library behaves compared to entt, which I used in all my university projects. I plan to create a boid simulation to learn how the scheduler works in practice. In short, the scheduler plans which systems run in what order and allows for parallelization of systems with no dependencies. I am particularly excited to discover the performance gains from using multithreading in this way.
+
+---
