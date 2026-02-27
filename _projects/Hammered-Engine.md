@@ -13,7 +13,7 @@ priority_engine: 1
 priority_highlights: 2
 ---
 
-## 📂 Source Code
+## Source Code
 
 Can be found on GitHub **[here](https://github.com/OneBogdan01/hammered/tree/main)**.
 

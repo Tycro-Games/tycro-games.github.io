@@ -17,7 +17,7 @@ priority_engine: 2
 priority_highlights: 1
 ---
 
-## 📂 Source Code
+## Source Code
 
 Can be found on GitHub **[here](https://github.com/OneBogdan01/gs-map-editor)**.
 
@@ -50,23 +50,21 @@ Create a Godot plugin that could:
 
 In this project I also learned how to **extend the editor in Godot**. Below you can see how the user can change ownership of provinces, or their country color through the editor I made. The changes are saved in the file format that Europa Universalis 4 uses.
 
+_Demonstration of province ownership editing, export/import functionality and changing of country colors_
 <video controls src="/assets/media/gs_map/export import.mp4" title="Province ownership editor demonstration"></video>
-*Demonstration of province ownership editing and export/import functionality*
+
 
 Below you can see how the file format changed after using the editor to modify it:
 
 ![alt text](../assets/media/gs_map/owner_change.png)
-_Diff in github with the file responsible for assigning ownership_
+*Diff in github with the file responsible for assigning ownership*
 
 ![alt text](../assets/media/gs_map/color_change.png)
-_Diff in github with the file responsible for assigning country colors_
-
-![Country color editing demonstration](../assets/media/gs_map/change_france.gif)
-*Changing the color of France in the editor, then running the game*
+*Diff in github with the file responsible for assigning country colors*
 
 ### Data Structure Optimization
 
-The main challenge for the editor functionality was figuring out how to store the data in such a way that I could display and change it without any hiccups. 
+The main challenge for the editor functionality was figuring out how to store the data in such a way that I could display and change it without any hiccups.
 
 **Initial approach (arrays):** I started simple using arrays, which meant that sometimes I had to iterate to find element x of a country, then use it to iterate over another array to get element y. That resulted in **O(n³) complexity** which took a considerable amount of time:
 
@@ -79,6 +77,7 @@ The main challenge for the editor functionality was figuring out how to store th
 *Very fast result after optimization*
 
 **Data initialization using lookup tables:**
+
 ```cpp
 void CountryData::build_look_up_tables(const Array &province_data, const Array &country_data, const Array &country_color_data)
 {
@@ -118,6 +117,7 @@ void CountryData::build_look_up_tables(const Array &province_data, const Array &
 ### Editor Display Data Caching
 
 To avoid repeated lookups during UI rendering, I cache the display data:
+
 ```cpp
 void CountryInspector::cache_display_data()
 {
@@ -173,9 +173,10 @@ void CountryInspector::on_context_menu_closed(PopupMenu *menu)
 
 ## Rendering
 
-I believe that the **[article](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/)** explains in a logical way how I arrived at the answer which I considered good enough visually. If you have any doubts please consult the **[paper](https://www.intel.com/content/dam/develop/external/us/en/documents/optimized-gradient-border-rendering-in-imperator-rome.pdf)**, or the article. 
+I believe that this **[article](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/)** explains *my rendering method*, which I considered good enough visually. If you are curious please consult the **[paper](https://www.intel.com/content/dam/develop/external/us/en/documents/optimized-gradient-border-rendering-in-imperator-rome.pdf)**, or the article.
 
-This is the core logic behind rendering fragment shader that renders political countries with **no borders:**
+This is the core logic behind the **fragment shader** that renders political countries:
+
 ```glsl
 shader_type canvas_item;
 
@@ -214,7 +215,7 @@ The output using EU4's files:
 
 ## Borders
 
-Rendering borders is very much like learning grand strategy games for the first time. There is **no easy solution** that provides a particularly great answer. So I would like to go over the ones that I considered to do, although I have not pursued them to finality.
+Rendering borders is very much like learning grand strategy games for the first time. There is **no easy solution** that provides a particularly great answer. So I would like to go over the ones that I considered doing, although I have not pursued them to finality.
 
 ### Simple AA and edge detection
 
@@ -247,14 +248,14 @@ Combining simple edge detected borders with the upscaler shader was creating **t
 
 ### Generating meshes?
 
-This is one of the techniques used in **EU4**! In fact, there are profiling results showing that rendering the border meshes takes **most of the rendering**, which you can find **[here](https://www.hlsl.co.uk/blog/2018/7/18/what-can-we-learn-from-gpu-frame-captures-europa-universalis-4)**. This makes the technique quite complicated, requiring **triangulation** in order to achieve arbitrary shapes based on the province map. In addition, the fact that EU4 takes **90% from its render time** for the borders according to the previous article makes it less appealing to pursue.
+This is one of the techniques used in **EU4**! In fact, there are profiling results showing that rendering the border meshes takes **most of the rendering**, which you can find **[here](https://www.hlsl.co.uk/blog/2018/7/18/what-can-we-learn-from-gpu-frame-captures-europa-universalis-4)**. This makes the technique quite complicated, requiring **triangulation** in order to achieve arbitrary shapes based on the province map. In addition, the fact that EU4 takes **90% of its render time** for the borders according to the previous article makes it less appealing to pursue.
 
 ![Screenshot from Europa Universalis IV showing mesh-generated borders between neighboring countries](../assets/media/gs_map/eu4_borders.png)
 *Mesh Generated borders based on the neighboring countries from EU4*
 
 ### SVG approach
 
-I found a repo generating SVG maps based on the EU4 game data and textures as **[oikoumene](https://github.com/primislas/eu4-svg-map)**. They only use **vector based approaches** to create borders between countries or provinces which is impressive in itself. It is an educated guess that EU4 uses a similar technique with multiple passes over the `province map` to create curves around the provinces and smooth them out in subsequent passes. My personal opinion is that they create a layered approach to their borders, so they might use a combination of techniques. 
+I found a repo from **[primislas](https://github.com/primislas/eu4-svg-map)** based on [oikoumene](https://github.com/primislas/oikoumene) which generates SVG maps based on the EU4 game data and textures. They only use **vector based approaches** to create borders between countries or provinces which is impressive in itself. It is an educated guess that EU4 uses a similar technique with multiple passes over the `province map` to create curves around the provinces and smooth them out in subsequent passes. My personal opinion is that they create a layered approach to their borders, so they might use a combination of techniques.
 
 This technique is **ideal** and their results speak for themselves. They are **scalable** and provide near identical results as the borders from the game in terms of shapes. The downside is the time needed to be invested in order to only generate the most basic province borders and the complexity that comes with that.
 
@@ -266,7 +267,7 @@ This technique is **ideal** and their results speak for themselves. They are **s
 ![Final border rendering result combining distance fields with HQX upscaling showing smooth country borders](../assets/media/gs_map/demo_final.gif)
 *Final technique used to render borders*
 
-Given the complexity of vector approaches and the performance cost of mesh generation, I settled on a **hybrid image-based technique**. This approach breaks down if the map is very zoomed in, however, it looks good from most distances. The steps for this effect are the following:
+Given the complexity of vector approaches and the performance cost of mesh generation, I settled on a **hybrid image-based technique**. This approach breaks down if the map is very zoomed in; however, it looks good from most distances. The steps for this effect are the following:
 
 - Generate **Distance Field** from `Color` + `Lookup` maps
 - Sample the distance field to create the **gradient**
@@ -334,7 +335,7 @@ Here are a few screenshots with this effect on more exotic shapes:
 
 ## Behind the Scenes: Early Rendering Attempts
 
-As a fun section, these are some of my attempts to implement the "basic" political rendering before getting it right. 
+As a fun section, these are some of my attempts to implement the "basic" political rendering before getting it right.
 
 ![Early rendering attempt showing incorrect color mapping or shader artifacts](../assets/media/gs_map/Screenshot 2025-09-23 143842.png)
 ![Second attempt at political map rendering with visible bugs or incorrect province colors](../assets/media/gs_map/Screenshot 2025-09-23 144805.png)
