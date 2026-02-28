@@ -1,32 +1,47 @@
 ---
 layout: page
 title: Projects
-
 ---
 {% include lang.html %}
-
 <div class="portfolio-page">
   <div class="projects-container">
     {% assign all_projects = site.projects | sort: 'date' | reverse %}
-    
+
+    {% comment %} 
+      Split projects into two groups:
+      1. Featured (anything NOT archived) — shown by default
+      2. Archived — hidden behind a toggle button
+    {% endcomment %}
+
+    {% assign featured_projects = "" | split: "" %}
+    {% assign archived_projects = "" | split: "" %}
+
     {% for project in all_projects %}
-    <a href="{{ project.url }}" class="project-card-link" 
+      {% if project.main_category == "Archive Projects" %}
+        {% assign archived_projects = archived_projects | push: project %}
+      {% else %}
+        {% assign featured_projects = featured_projects | push: project %}
+      {% endif %}
+    {% endfor %}
+
+    {% comment %} ========== FEATURED PROJECTS ========== {% endcomment %}
+    {% for project in featured_projects %}
+    <a href="{{ project.url }}" class="project-card-link"
        data-priority-highlights="{{ project.priority_highlights | default: 999 }}"
        data-categories="{{ project.tags | join: ' ' }}">
       <article class="project-card">
-        
+
         {% if project.image %}
           <div class="project-image">
             <img src="{{ project.image | relative_url }}" alt="{{ project.title }} Preview">
           </div>
         {% endif %}
-        
+
         <div class="project-info">
           <h3>{{ project.title }}</h3>
           <p>{{ project.description }}</p>
-          
+
           <div class="project-metadata">
-            
             {% if project.main_category == "University Projects" %}
               <div class="meta-tag university">
                 <span class="meta-icon">🎓</span>
@@ -37,20 +52,14 @@ title: Projects
                 <span class="meta-icon">🚀</span>
                 <span class="meta-label">Personal</span>
               </div>
-            {% elsif project.main_category == "Archive Projects" %}
-              <div class="meta-tag archive">
-                <span class="meta-icon">📦</span>
-                <span class="meta-label">Archived</span>
-              </div>
             {% endif %}
-            
+
             {% if project.engine %}
               <div class="meta-tag engine">
                 <span class="meta-icon">🔧</span>
                 <span class="meta-label">{{ project.engine }}</span>
               </div>
             {% endif %}
-
             {% if project.team_size %}
               {% assign team_lower = project.team_size | downcase %}
               {% if team_lower contains "solo" %}
@@ -65,32 +74,168 @@ title: Projects
                 </div>
               {% endif %}
             {% endif %}
-
             {% if project.platform %}
               <div class="meta-tag platform">
                 <span class="meta-icon">💻</span>
                 <span class="meta-label">{{ project.platform }}</span>
               </div>
             {% endif %}
-
             {% if project.duration %}
               <div class="meta-tag duration">
                 <span class="meta-icon">⏱️</span>
                 <span class="meta-label">{{ project.duration }}</span>
               </div>
             {% endif %}
-            
             {% if project.features %}
               <div class="meta-tag features">
                 <span class="meta-icon">✨</span>
                 <span class="meta-label">{{ project.features }}</span>
               </div>
             {% endif %}
-
           </div>
         </div>
       </article>
     </a>
     {% endfor %}
   </div>
+
+  {% comment %} ========== ARCHIVED PROJECTS (hidden by default) ========== {% endcomment %}
+  {% if archived_projects.size > 0 %}
+  <div class="archived-section">
+    <button id="toggle-archived" class="show-archived-btn" aria-expanded="false">
+      <span class="btn-text">Show Older Projects ({{ archived_projects.size }})</span>
+      <span class="btn-icon">▼</span>
+    </button>
+
+    <div id="archived-projects" class="projects-container archived-projects-container" style="display: none;">
+      {% for project in archived_projects %}
+      <a href="{{ project.url }}" class="project-card-link"
+         data-priority-highlights="{{ project.priority_highlights | default: 999 }}"
+         data-categories="{{ project.tags | join: ' ' }}">
+        <article class="project-card">
+
+          {% if project.image %}
+            <div class="project-image">
+              <img src="{{ project.image | relative_url }}" alt="{{ project.title }} Preview">
+            </div>
+          {% endif %}
+
+          <div class="project-info">
+            <h3>{{ project.title }}</h3>
+            <p>{{ project.description }}</p>
+
+            <div class="project-metadata">
+              <div class="meta-tag archive">
+                <span class="meta-icon">📦</span>
+                <span class="meta-label">Archived</span>
+              </div>
+
+              {% if project.engine %}
+                <div class="meta-tag engine">
+                  <span class="meta-icon">🔧</span>
+                  <span class="meta-label">{{ project.engine }}</span>
+                </div>
+              {% endif %}
+              {% if project.team_size %}
+                {% assign team_lower = project.team_size | downcase %}
+                {% if team_lower contains "solo" %}
+                  <div class="meta-tag team solo">
+                    <span class="meta-icon">👤</span>
+                    <span class="meta-label">{{ project.team_size }}</span>
+                  </div>
+                {% else %}
+                  <div class="meta-tag team group">
+                    <span class="meta-icon">👥</span>
+                    <span class="meta-label">{{ project.team_size }}</span>
+                  </div>
+                {% endif %}
+              {% endif %}
+              {% if project.platform %}
+                <div class="meta-tag platform">
+                  <span class="meta-icon">💻</span>
+                  <span class="meta-label">{{ project.platform }}</span>
+                </div>
+              {% endif %}
+              {% if project.duration %}
+                <div class="meta-tag duration">
+                  <span class="meta-icon">⏱️</span>
+                  <span class="meta-label">{{ project.duration }}</span>
+                </div>
+              {% endif %}
+              {% if project.features %}
+                <div class="meta-tag features">
+                  <span class="meta-icon">✨</span>
+                  <span class="meta-label">{{ project.features }}</span>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 </div>
+
+<style>
+.archived-section {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.show-archived-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.5rem;
+  border: 1px solid var(--btn-border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 0.5rem;
+  background: var(--card-bg, rgba(255, 255, 255, 0.05));
+  color: var(--text-color, #d4d4d4);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.show-archived-btn:hover {
+  background: var(--card-hover-bg, rgba(255, 255, 255, 0.1));
+  border-color: var(--btn-hover-border, rgba(255, 255, 255, 0.3));
+}
+
+.show-archived-btn .btn-icon {
+  transition: transform 0.3s ease;
+  font-size: 0.75rem;
+}
+
+.show-archived-btn[aria-expanded="true"] .btn-icon {
+  transform: rotate(180deg);
+}
+
+.archived-projects-container {
+  margin-top: 1.5rem;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var btn = document.getElementById('toggle-archived');
+  var container = document.getElementById('archived-projects');
+  if (!btn || !container) return;
+
+  btn.addEventListener('click', function () {
+    var isExpanded = btn.getAttribute('aria-expanded') === 'true';
+
+    if (isExpanded) {
+      container.style.display = 'none';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.querySelector('.btn-text').textContent =
+        'Show Older Projects ({{ archived_projects.size }})';
+    } else {
+      container.style.display = '';
+      btn.setAttribute('aria-expanded', 'true');
+      btn.querySelector('.btn-text').textContent = 'Hide Older Projects';
+    }
+  });
+});
+</script>
