@@ -5,8 +5,142 @@ script_includes:
 ---
 {% include lang.html %}
 
+<style>
+.hero-section {
+  text-align: center;
+  padding: 2rem 0 2.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.1));
+}
+.hero-name {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem;
+  color: var(--heading-color, #fff);
+}
+.hero-tagline {
+  font-size: 1.15rem;
+  color: var(--text-muted-color);
+  margin: 0 0 1.5rem;
+  font-weight: 400;
+}
+.hero-bio {
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 720px;
+  margin: 0 auto 1.5rem;
+  color: var(--text-color);
+}
+.hero-bio a {
+  color: var(--link-color);
+}
+.hero-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+.hero-skills .h-skill {
+  width: 3.5rem;
+  height: 3.5rem;
+  display: block;
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+.hero-skills .h-skill:hover {
+  transform: scale(1.15);
+}
+.hero-skills .h-skill-light {
+  filter: invert(1);
+}
+.hero-cta {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.hero-cta .cta-primary {
+  display: inline-block;
+  padding: 0.55rem 1.4rem;
+  border: 1px solid var(--link-color, #6c9bd1);
+  color: var(--link-color, #6c9bd1);
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.hero-cta .cta-primary:hover {
+  background: var(--link-color, #6c9bd1);
+  color: var(--bg-color, #1b1b1e);
+}
+.hero-cta .cta-secondary {
+  display: inline-block;
+  padding: 0.55rem 1.4rem;
+  color: var(--text-muted-color);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.hero-cta .cta-secondary:hover {
+  color: var(--text-color);
+}
+.hero-availability {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: var(--text-muted-color);
+  margin-top: 1rem;
+}
+.hero-availability::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #4ade80;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+@media (max-width: 600px) {
+  .hero-name { font-size: 1.8rem; }
+  .hero-tagline { font-size: 1rem; }
+  .hero-skills .h-skill { width: 2.8rem; height: 2.8rem; }
+}
+</style>
+
 <div class="portfolio-page">
 
+<!-- Hero Section -->
+<div class="hero-section">
+  <h1 class="hero-name">Bogdan Mocanu</h1>
+  <p class="hero-tagline">Engine Programmer · <a href="https://www.buas.nl/en/programmes/creative-media-and-game-technologies/programming#courses">Breda University of Applied Sciences</a></p>
+
+  <p class="hero-bio">
+    I work primarily in <strong>C++</strong> on cross-platform custom engines targeting PC and consoles,
+    and explore low-level systems and engine architecture in my spare time.
+  </p>
+
+  <div class="hero-skills">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg" class="h-skill" alt="C++">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cmake/cmake-original.svg" class="h-skill" alt="CMake">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-original.svg" class="h-skill" alt="Visual Studio">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" class="h-skill h-skill-light" alt="GitHub">
+    <img src="/assets/img/icons/perforce.png" class="h-skill" alt="Perforce">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-plain.svg" class="h-skill h-skill-light" alt="Unity">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unrealengine/unrealengine-original.svg" class="h-skill h-skill-light" alt="Unreal Engine">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/godot/godot-original.svg" class="h-skill" alt="Godot">
+  </div>
+
+  <div class="hero-cta">
+    <a href="mailto:bogdan.game.development@gmail.com" class="cta-primary">Get in Touch</a>
+    <a href="{{ '/about/' | relative_url }}" class="cta-secondary">More about me →</a>
+  </div>
+
+  <span class="hero-availability">Seeking engine/tools internships · Available Summer 2026</span>
+</div>
+
+<!-- Projects Section -->
 <div class="section-header-row">
   <h2 class="section-header">Projects</h2>
   <span class="item-count" id="project-count"></span>
@@ -31,10 +165,8 @@ script_includes:
           <h3>{{ project.title }}</h3>
           <p>{{ project.description }}</p>
           
-          <!-- Project Metadata Tags -->
           <div class="project-metadata">
             
-            <!-- 1. Project Type Badge (always first) -->
             {% if project.main_category == "University Projects" %}
               <div class="meta-tag university">
                 <span class="meta-icon">🎓</span>
@@ -52,7 +184,6 @@ script_includes:
               </div>
             {% endif %}
             
-            <!-- 2. Engine/Tools -->
             {% if project.engine %}
               <div class="meta-tag engine">
                 <span class="meta-icon">🔧</span>
@@ -60,7 +191,6 @@ script_includes:
               </div>
             {% endif %}
 
-            <!-- 3. Team Size -->
             {% if project.team_size %}
               {% assign team_lower = project.team_size | downcase %}
               {% if team_lower contains "solo" %}
@@ -76,7 +206,6 @@ script_includes:
               {% endif %}
             {% endif %}
 
-            <!-- 4. Platform -->
             {% if project.platform %}
               <div class="meta-tag platform">
                 <span class="meta-icon">💻</span>
@@ -84,7 +213,6 @@ script_includes:
               </div>
             {% endif %}
 
-            <!-- 5. Duration -->
             {% if project.duration %}
               <div class="meta-tag duration">
                 <span class="meta-icon">⏱️</span>
@@ -92,7 +220,6 @@ script_includes:
               </div>
             {% endif %}
             
-            <!-- 6. Features (last, since it can be long) -->
             {% if project.features %}
               <div class="meta-tag features">
                 <span class="meta-icon">✨</span>
@@ -141,7 +268,6 @@ script_includes:
               {% endif %}
             </p>
             
-            <!-- Article Metadata Tags -->
             <div class="article-metadata">
               {% if post.categories %}
                 {% for cat in post.categories %}

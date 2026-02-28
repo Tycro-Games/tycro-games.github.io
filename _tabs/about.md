@@ -84,7 +84,7 @@ order: 1
 
 Hello! I'm **Bogdan Mocanu**, a game programming student at **[Breda University of Applied Sciences](https://www.buas.nl/en/programmes/creative-media-and-game-technologies/programming#courses)** working towards becoming an engine programmer. I mainly work with **C++** and have worked on cross platform custom engines targeting PC and consoles as part of my university projects. I also have experience with **Unity**, **Unreal Engine** and **Godot**.
 
-I have been fascinated from a young age by how Spore, Civilization and Command & Conquer move the pixels around the screen in expansive virtual worlds. Naturally I started to tinker and learn in **Unity** before I started university. I think existing engines are powerful tools, but I find that working on custom technologies teaches me things that I could not learn any other way. In my free time I explore **low-level systems**, **engine architecture** and **optimization techniques** in my own framework called [Hammered](https://github.com/OneBogdan01/hammered-engine). You can check my articles on [multithreading](https://tycro-games.github.io/posts/Learning-Multithreading-With-A-Logger/), [CMake-based engine architecture](https://tycro-games.github.io/posts/Hammered-Cross-Platform-Game-Engine-CMake-Setup/) and [grand strategy map rendering](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/).
+I have been fascinated from a young age by how Spore, Civilization and Command & Conquer create expansive virtual worlds governed by their own strange rules. I started tinkering in **Unity** before university, but I've come to believe that building custom technology teaches things no existing engine can. In my free time I explore **low-level systems**, **engine architecture**, **simulations** and **optimization techniques** in my own engine, [Hammered](https://github.com/OneBogdan01/hammered-engine).
 
 Beyond building games, I care a lot about **collaboration** among game developers. I have worked in teams up to 16 people on custom engines, and I find that working together on games is a much more nuanced and challenging endeavour than simply making them. Even when a project isn't exactly what I would pick for myself, being a dependable part of the team, looking for ways to improve the workflow for others and opportunities to contribute are things that I value greatly.
 
@@ -99,18 +99,15 @@ Beyond building games, I care a lot about **collaboration** among game developer
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-original.svg" class="skill-icon" alt="Visual Studio">
   </div>
   <div class="skill-item">
-    <!-- Was: <i class="devicon-github-original"></i> -->
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" class="skill-icon skill-icon-light" alt="GitHub">
   </div>
   <div class="skill-item">
     <img src="/assets/img/icons/perforce.png" class="skill-icon" alt="Perforce">
   </div>
   <div class="skill-item">
-    <!-- Was: <i class="devicon-unity-plain"></i> -->
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-plain.svg" class="skill-icon skill-icon-light" alt="Unity">
   </div>
   <div class="skill-item">
-    <!-- Was: <i class="devicon-unrealengine-original"></i> -->
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unrealengine/unrealengine-original.svg" class="skill-icon skill-icon-light" alt="Unreal Engine">
   </div>
   <div class="skill-item">
@@ -123,7 +120,7 @@ Beyond building games, I care a lot about **collaboration** among game developer
 - I am practicing **calisthenics** exercises with emphasis on **gymnastic skills** on the rings
 - I play **Paradox**, **indie** and **strategy** **games**; my favorite game of all time is **Europa Universalis 4** *with 1000h+*
 - Every time I return to my home country, I **bake** at least one **pizza** from scratch with my childhood friend
-- 
+
 ---
 
 ### You can find me
