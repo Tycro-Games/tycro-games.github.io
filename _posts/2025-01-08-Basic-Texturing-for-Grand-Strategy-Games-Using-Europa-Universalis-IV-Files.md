@@ -616,6 +616,6 @@ In this article I wrote about texturing techniques common when creating a Grand 
 - Spline based borders
 
 
-Thanks for reading my article. If you have any feedback or questions, please feel free to email me at <bogdan.game.development@gmail.com>.
+Thanks for reading my article. If you have any feedback or questions, please feel free to email me.
 
 ![buas logo](../assets/assets-2025-01-08/logo.png)

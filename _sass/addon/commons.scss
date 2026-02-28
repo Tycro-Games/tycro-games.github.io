@@ -755,6 +755,7 @@ $btn-mb: 0.5rem;
   .site-subtitle {
     font-size: 95%;
     color: var(--site-subtitle-color);
+    font-weight: 700; 
     margin-top: 0.25rem;
     word-spacing: 1px;
     -webkit-user-select: none;
@@ -763,6 +764,17 @@ $btn-mb: 0.5rem;
     user-select: none;
   }
 
+  .site-email {
+      display: block;
+      margin-top: 0.25rem;
+      font-weight: 700; 
+      font-size: 75%;
+      color: var(--site-subtitle-color);
+      opacity: 0.85;
+      user-select: all; /* easy to select & copy */
+      word-break: break-all;
+  }
+  
   ul {
     margin-bottom: 2rem;
 

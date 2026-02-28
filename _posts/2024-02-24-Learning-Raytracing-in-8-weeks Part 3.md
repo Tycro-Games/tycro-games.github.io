@@ -282,6 +282,6 @@ The nicest part about this code is that it is nearly identical to the [original]
 
 ---
 
-Thanks for reading my article. If you have any feedback or questions, please feel free to email me at <bogdan.game.development@gmail.com>.
+Thanks for reading my article. If you have any feedback or questions, please feel free to email me.
 
 ![alt text](../assets/portfolio/logo.png)

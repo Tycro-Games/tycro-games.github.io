@@ -387,4 +387,4 @@ I think this approach looks amazing and I will keep you updated when I finally h
 ## Final Words
 
 I made this article based on a self study project I did as a third year programmer at Breda University of Applied Sciences for the Creative Media and Game Technologies bachelor.
-Thanks for reading my article. If you have any feedback or questions, please feel free to email me at <bogdan.game.development@gmail.com>.
+Thanks for reading my article. If you have any feedback or questions, please feel free to email me.

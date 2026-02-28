@@ -385,6 +385,6 @@ _Isn't that a convincing looking cloud?_
 
 ---
 
-Thanks for reading my article. If you have any feedback or questions, please feel free to share them in the comments or email me [here](javascript:location.href = 'mailto:' + ['bogdan.game.development.','gmail.com'].join('@')).
+Thanks for reading my article. If you have any feedback or questions, please feel free to share them in the comments or email me.
 
 ![alt text](../assets/portfolio/logo.png)

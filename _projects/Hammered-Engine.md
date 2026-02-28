@@ -21,7 +21,7 @@ Can be found on GitHub **[here](https://github.com/OneBogdan01/hammered/tree/mai
 
 ## Overview
 
-Hammered is my personal game engine for learning low-level engine systems, built as my playground to understand how engines work under the hood.
+Hammered is my personal game engine for learning low-level engine systems, built as my **playground** to understand how engines work under the hood.
 
 I explored both **OpenGL and Vulkan** rendering backends following **[vkguide.dev](https://vkguide.dev/)**, implementing basic model loading to understand the fundamentals. Currently, I'm focusing on **engine architecture**, redesigning the engine with a modular, data-driven approach inspired by the Bevy engine.
 
@@ -31,7 +31,7 @@ I explored both **OpenGL and Vulkan** rendering backends following **[vkguide.de
 
 ## Multithreaded Logging System
 
-📚 **[Read the full article](https://tycro-games.github.io/posts/Learning-Multithreading-With-A-Logger/)**
+### 📚 I wrote an article focusing on the rendering aspect — read it **[here](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/)**
 
 ### Learning Multithreading
 
@@ -112,7 +112,7 @@ The async logger also supports multiple producer and consumer threads, at the co
 
 ## Cross-Platform Build System
 
-📚 **[Read the full article](https://tycro-games.github.io/posts/Hammered-Cross-Platform-Game-Engine-CMake-Setup-copy/)**
+### 📚 I wrote a more in-depth **article** that you can read **[here](https://tycro-games.github.io/posts/Hammered-Cross-Platform-Game-Engine-CMake-Setup-copy/)**
 
 ### Overview
 
@@ -127,7 +127,7 @@ The backends are very simple: for both, I render a triangle and the background i
 
 ### Architecture
 
-The engine is built as two static libraries (`hammered_engine_gl` and `hammered_engine_vk`), each sharing common code but linking against their own platform-specific externals. A CMake utility function generates both backend executables from a single configuration flag.
+The engine is built as **two static libraries** (`hammered_engine_gl` and `hammered_engine_vk`), each sharing common code but linking against their own platform-specific externals. A CMake utility function generates both backend executables from a single configuration flag.
 
 ![alt text](../assets/assets-2025-07-19/folder.png)
 *Visual Studio solution hierarchy showing the dual-backend organization*

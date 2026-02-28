@@ -31,7 +31,7 @@ My primary goal was learning how to **extend Godot with C++** (coming from simpl
 
 **Key Achievement:** Implemented smooth border rendering using a texture indirection pipeline with HQX upscaling, adapted from Intel's Imperator: Rome rendering paper.
 
-### 📚 **[Article I wrote focusing on the rendering aspect (with code!)](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/)**
+### 📚 **[Article I wrote focusing on the rendering aspect of the project](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/)**
 
 ---
 

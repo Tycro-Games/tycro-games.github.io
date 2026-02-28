@@ -471,7 +471,7 @@ endfunction()
 
 In my next update I will probably showcase how I designed my rendering layer. I hope this article helped you understand more about Cmake and how you can use it in your own projects.
 
-Thanks for reading my article. If you have any feedback or questions, please feel free to email me at <bogdan.game.development@gmail.com>.
+Thanks for reading my article. If you have any feedback or questions, please feel free to email me.
 
 ## References
 
