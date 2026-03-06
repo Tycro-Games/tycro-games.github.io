@@ -86,7 +86,7 @@ Hello! I'm **Bogdan Mocanu**, a game programming student at **[Breda University 
 
 I have been fascinated from a young age by how Spore, Civilization and Command & Conquer create expansive virtual worlds governed by their own strange rules. I started tinkering in **Unity** before university, but I've come to believe that building custom technology teaches things no existing engine can. In my free time I explore **low-level systems**, **engine architecture**, **simulations** and **optimization techniques** in my own engine, [Hammered](https://github.com/OneBogdan01/hammered-engine).
 
-Beyond building games, I care a lot about **collaboration** among game developers. I have worked in teams up to 16 people on custom engines, and I find that working together on games is a much more nuanced and challenging endeavour than simply making them. Even when a project isn't exactly what I would pick for myself, being a dependable part of the team, looking for ways to improve the workflow for others and opportunities to contribute are things that I value greatly.
+Beyond building games, I care a lot about **collaboration** among game developers. I have worked in teams of up to 16 people on custom engines, and I find that working together on games is a much more nuanced and challenging endeavour than simply making them. Even when a project isn't exactly what I would pick for myself, being a dependable part of the team, looking for ways to improve the workflow for others and finding opportunities to contribute are things that I value greatly.
 
 <div class="skills-row" markdown="0">
   <div class="skill-item">
