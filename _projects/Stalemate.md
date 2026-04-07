@@ -9,7 +9,7 @@ date: 2024-11-05
 # Metadata tags
 # features: "AI & Tools"
 engine: "C# & Unity"
-team_size: "2 people"
+team_size: "2 developers"
 duration: "Oct. - Nov. 2024"
 platform: "PC/Web"
 priority_graphics: 999

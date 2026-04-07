@@ -9,7 +9,7 @@ date: 2024-07-15
 # Metadata tags
 # features: "WFC Algorithm & A* Pathfinding"
 engine: "C++ & Unreal Engine"
-team_size: "12 people"
+team_size: "12 developers"
 platform: "PC"
 duration: "May. - Jun. 2024"
 priority_graphics: 999

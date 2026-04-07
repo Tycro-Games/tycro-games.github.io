@@ -9,7 +9,7 @@ date: 2025-07-15
 # Metadata tags
 # features: "Producer & Engine Tools"
 engine: "C++ Custom Engine"
-team_size: "12 people"
+team_size: "12 developers"
 platform: "PC/PS5"
 duration: "May. - Jun. 2025"
 priority_graphics: 4

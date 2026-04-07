@@ -9,7 +9,7 @@ date: 2022-08-08
 # Metadata tags
 # features: "A* Pathfinding & Tools"
 engine: "C# & Unity"
-team_size: "2 people"
+team_size: "2 developers"
 platform: "PC/Web"
 duration: "Mar. - Sep. 2021"
 
