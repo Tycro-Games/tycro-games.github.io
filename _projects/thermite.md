@@ -60,10 +60,6 @@ In the end, I learned a few new things related to programming and got to meet an
 
 ## Discussion on mining raycasts
 
-## Negative Attitude
-
-## Being hard to understand
-
 ## Overcoming Perfectionism
 
 ---
