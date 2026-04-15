@@ -31,7 +31,7 @@ I explored both **OpenGL and Vulkan** rendering backends following **[vkguide.de
 
 ## Multithreaded Logging System
 
-### 📚 I wrote an article focusing on the rendering aspect — read it **[here](https://tycro-games.github.io/posts/Grand-Strategy-Editor-using-Gdextension-in-Godot-with-C++/)**
+### 📚 I wrote an article focusing on the rendering aspect — read it **[here](https://tycro-games.github.io/posts/Hammered-Cross-Platform-Game-Engine-CMake-Setup/)**
 
 ### Learning Multithreading
 
