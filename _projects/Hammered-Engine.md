@@ -31,7 +31,7 @@ I explored both **OpenGL and Vulkan** rendering backends following **[vkguide.de
 
 ## Multithreaded Logging System
 
-### 📚 I wrote an article focusing on the rendering aspect — read it **[here](https://tycro-games.github.io/posts/Hammered-Cross-Platform-Game-Engine-CMake-Setup/)**
+### 📚 I wrote a more in-depth **article** that you can read **[here](https://tycro-games.github.io/posts/Learning-Multithreading-With-A-Logger/)**
 
 ### Learning Multithreading
 
@@ -112,7 +112,7 @@ The async logger also supports multiple producer and consumer threads, at the co
 
 ## Cross-Platform Build System
 
-### 📚 I wrote a more in-depth **article** that you can read **[here](https://tycro-games.github.io/posts/Hammered-Cross-Platform-Game-Engine-CMake-Setup-copy/)**
+### 📚 I wrote a more in-depth **article** that you can read **[here](https://tycro-games.github.io/posts/Hammered-Cross-Platform-Game-Engine-CMake-Setup/)**
 
 ### Overview
 
