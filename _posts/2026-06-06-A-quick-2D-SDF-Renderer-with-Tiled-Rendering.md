@@ -114,7 +114,8 @@ float sdCircle( float2 p, float b )
 }
 float4 main(float4 screenSpace : SV_Position) : SV_Target
 {
-    float2 uv = screenSpace.xy;
+
+    float2 uv = //normalize coordinates between 0 and 1;
     float2 rect_pos = float2(.2,.5);
     float2 rect_size = float2(.4,.3);
     float2 circle_pos = float2(.6,.5);
@@ -266,7 +267,7 @@ Now, each shape is called for each pixel with the right data. It is important to
 
 Tiled rendering is very common in optimization relating to rendering lighting. I am not much of a lighting enthusiast, since I love more of the simple stylized graphics rather than awfully realistic ones. Outside this project there was no way I would have read this article on how that works.[^tiled]
 
-The main idea is that the screen can be split into tiles. Instead of checking each pixel against each SDF, a pixel will always be part of a tile, each tile can hold the count and indices to the shapes it holds. To do that a compute step needs to be added. Again, the most basic way to do this would be to preallocate some memory for each tile. One buffer will hold the count of shapes for each tile. Another will hold the indices of these primitives that will be associated in the fragment shader. In the compute it is ran for each shape that will be rendered. There is a better way to do this that I will mention by the end.
+The main idea is that the screen can be split into tiles. Instead of checking each pixel against each SDF, a pixel will always be part of a tile, each tile can hold the count and indices to the shapes it holds. To do that a compute step needs to be added. Again, the most basic way to do this would be to preallocate some memory for each tile. One buffer will hold the count of shapes for each tile. Another will hold the indices of these primitives that will be associated in the fragment shader. In the compute it is run for each shape that will be rendered. There is a better way to do this that I will mention by the end.
 
 ```hlsl
 //already uploaded to GPU memory for the fragment shader
@@ -325,7 +326,7 @@ void main(uint3 id : SV_DispatchThreadID)
 }
 ```
 
-`InterlockedAdd` is used to make sure that there are no situations where the GPU somehow causes a race condition. Otherwise, it may happen that two different threads access lets say the value 5 and both increment it. The final result is going to be 6 and that is undesirable.
+`InterlockedAdd` is used to make sure that there are no situations where the GPU somehow causes a race condition. Otherwise, it may happen that two different threads access let's say the value 5 and both increment it. The final result is going to be 6 and that is undesirable.
 
 With these two buffers, in the fragment shader the evaluation changes to this new for loop, I moved the previous switch statement to a new function that takes and modifies the color, the pixel coordinate and the index from the `ui_command` of the shape primitive. I made a heatmap visualisation that displays different colors depending on the count of shapes per tile as well:
 
