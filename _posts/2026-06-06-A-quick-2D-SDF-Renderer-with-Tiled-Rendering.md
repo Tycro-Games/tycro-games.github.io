@@ -23,12 +23,12 @@ I am assuming the reader knows C++ and OpenGL, but has limited understanding of 
 
 SDFs or Signed Distance Functions are the basis for ray marching, and Inigo Quilez's blog has all the information you need to properly understand the topic.[^sdf] Concisely, there is a function that gets called for each pixel on the screen and it returns a distance from the edge. According to a convention, positive numbers will be outside the shape, negative inside. If the distance is 0, then it is exactly on the edge of the shape. As an example, below is a rectangle drawn like that. Red means it is outside, light blue inside and right on the edge is a darker blue.
 
-<video controls src="/assets/media/alloy/sdf_rect_v2.mp4" title="An SDF rectangle"></video>
+<video controls autoplay muted loop playsinline src="/assets/media/alloy/sdf_rect_v2.mp4" title="An SDF rectangle"></video>
 
 > New to SDFs? Poke at them in a live shader editor first — it makes the math click much faster than rebuilding the engine each time.
 {: .prompt-tip }
 
-The first step is to prepare our vertex data. This is a 2D rendering project, so while this may come as a surprise I am going to render a triangle that covers the whole screen. SDL GPU has a pretty verbose pattern, nothing that compares with rendering a triangle in Vulkan. To upload the "screen" , an `SDL_GPUBuffer` is needed. This is used to define the size and usage, in our case a triangle has 3 vertexes and it is used in a vertex shader. A transfer buffer is what you put your CPU data in, while it is in a mapped state. Afterwards, you unmap it, which means you cannot modify it anymore from the CPU and it is ready to be sent to the GPU. To upload things a copy pass is needed, then one can finally combine all of this together and submit it.
+The first step is to prepare our vertex data. This is a 2D rendering project, so while this may come as a surprise I am going to render a triangle that covers the whole screen. SDL GPU has a pretty verbose pattern, nothing that compares with rendering a triangle in Vulkan. To upload the "screen", an `SDL_GPUBuffer` is needed. This is used to define the size and usage, in our case a triangle has 3 vertices and it is used in a vertex shader. A transfer buffer is what you put your CPU data in, while it is in a mapped state. Afterwards, you unmap it, which means you cannot modify it anymore from the CPU and it is ready to be sent to the GPU. To upload things a copy pass is needed, then one can finally combine all of this together and submit it.
 
 ```cpp
 //pointers from SDL need to be saved somewhere:
@@ -139,7 +139,7 @@ I went ahead and used the minimum between two different shapes in the fragment s
 
 Here is one experiment I have done with `min` and `max` distances.
 
-<video controls src="/assets/media/alloy/sdf_shapes.mp4" title="Compositing SDF shapes"></video>
+<video controls autoplay muted loop playsinline src="/assets/media/alloy/sdf_shapes.mp4" title="Compositing SDF shapes"></video>
 
 ## A Command Buffer for all UI Shapes
 
@@ -266,11 +266,11 @@ for (uint i = 0u; i < count; ++i)
 
 Now, each shape is called for each pixel with the right data. It is important to note that the alpha of each shape is stored in the GPU registers. This is a win over transparency in other UI approaches. For instance, one could draw UI elements with quads, but transparency would require a framebuffer.
 
-<video controls src="/assets/media/alloy/sdf_shapes_buff.mp4" title="UI shapes from a storage buffer"></video>
+<video controls autoplay muted loop playsinline src="/assets/media/alloy/sdf_shapes_buff.mp4" title="UI shapes from a storage buffer"></video>
 
 ## Tiled Rendering
 
-Tiled rendering is very common in optimization relating to rendering lighting. I am not much of a lighting enthusiast, since I love more of the simple stylized graphics rather than awfully realistic ones.  Outside this project there was no way I would have read this article on how that works. [^tiled] 
+Tiled rendering is very common in optimization relating to rendering lighting. I am not much of a lighting enthusiast, since I love more of the simple stylized graphics rather than awfully realistic ones. Outside this project there was no way I would have read this article on how that works.[^tiled]
 
 The main idea is that the screen can be split into tiles. Instead of checking each pixel against each SDF, a pixel will always be part of a tile, each tile can hold the count and indices to the shapes it holds. To do that a compute step needs to be added. Again, the most basic way to do this would be to preallocate some memory for each tile. One buffer will hold the count of shapes for each tile. Another will hold the indices of these primitives that will be associated in the fragment shader. In the compute it is ran for each shape that will be rendered. There is a better way to do this that I will mention by the end.
 
@@ -289,8 +289,8 @@ struct UICommand
 
 StructuredBuffer<UICommand> commands : register(t0, space0);
 
-RWStructuredBuffer<uint> counts  : register(u0, space1); // one per tile
-RWStructuredBuffer<uint> indices : register(u1, space1); // tile_count * preallocated memory per tile
+RWStructuredBuffer<uint> tile_counts  : register(u0, space1); // one per tile
+RWStructuredBuffer<uint> tile_indices : register(u1, space1); // tile_count * preallocated memory per tile
 
 //uniform buffer with relevant information
 cbuffer TileParams : register(b0, space2)
@@ -323,9 +323,9 @@ void main(uint3 id : SV_DispatchThreadID)
             uint tile_id = uint(ty) * tiles_x + uint(tx);
             uint slot;
             //prevents race conditions
-            InterlockedAdd(counts[tile_id], 1u, slot); 
+            InterlockedAdd(tile_counts[tile_id], 1u, slot); 
             if (slot < MAX_ENTRIES_PER_TILE) {
-                indices[tile_id * MAX_ENTRIES_PER_TILE + slot] = i;
+                tile_indices[tile_id * MAX_ENTRIES_PER_TILE + slot] = i;
             }
         }
     }
@@ -334,7 +334,7 @@ void main(uint3 id : SV_DispatchThreadID)
 
 `InterlockedAdd` is used to make sure that there are no situations where the GPU somehow causes a race condition. Otherwise, it may happen that two different threads access lets say the value 5 and both increment it. The final result is going to be 6 and that is undesirable.
 
-With these two buffers, in the fragment shader the evaluation changes to this new for loop, I moved the previous switch statement to a new function that takes and modifies the color, the pixel coordinate and the index from the `ui_command` of the shape primitive. I made a heatmap visualisation that display different colors deperning on the count of shapes per tile as well:
+With these two buffers, in the fragment shader the evaluation changes to this new for loop, I moved the previous switch statement to a new function that takes and modifies the color, the pixel coordinate and the index from the `ui_command` of the shape primitive. I made a heatmap visualisation that displays different colors depending on the count of shapes per tile as well:
 
 ```hlsl
 
@@ -370,24 +370,50 @@ color.rgb = lerp(color.rgb, float3(0.25, 0.25, 0.3), grid * 0.4);
 
 ```
 
-That reaches the cover of this article, which was the tiled rendering
+That reaches the cover of this article, which was the tiled rendering.
 
-<video controls src="../assets/media/alloy/tiled_rendering.mp4" title="Title"></video>
+<video controls autoplay muted loop playsinline src="/assets/media/alloy/tiled_rendering.mp4" title="Tiled rendering heatmap"></video>
 
 ## A word on performance and future work
 
 So we replaced a for loop with another for loop, is it any faster? Yes, very fast in fact. Below is a test scene with many many balls bouncing on the screen from left to right. You can see that checking every pixel takes 14ms for 10k shapes. The tiled rendering takes about 1.3ms for the exact same number.
 
-<video controls src="../assets/media/alloy/tiled_performance.mp4" title="Title"></video>
+<video controls autoplay muted loop playsinline src="/assets/media/alloy/tiled_performance.mp4" title="Tiled vs per-pixel performance"></video>
 
-Something that I neglected so far is the waste of space per tile. In the video I assigned 200primitives per tile, it is obvious that it overflows in the video due to the high number of shapes on the screen. The count of shapes per tile is necessary, but a smarter way to utilize memory is to allocate a buffer primitive indices and use it as a common ground via an offset. It would be like partitioning a big array into smaller arrays conceptually. The offset is where the mini-array starts and the count represents when it ends. The diagram below should provide some visual aid to this idea.
+Something that I neglected so far is the waste of space per tile. In the video I assigned 200 primitives per tile, it is obvious that it overflows in the video due to the high number of shapes on the screen. The count of shapes per tile is necessary, but a smarter way to utilize memory is to allocate a single buffer of primitive indices and use it as a common ground via an offset. It would be like partitioning a big array into smaller arrays conceptually. The offset is where the mini-array starts and the count represents when it ends. The diagram below should provide some visual aid to this idea.
 
-TODO mermaid diagram that shows count + offset to get the needed primitive
+Concretely, each tile stores just an `offset` (where its slice starts) and a `count` (how many indices it owns), and every slice lives back-to-back in one shared buffer. The `offset` of a tile is nothing more than the running sum of all the counts before it — an exclusive prefix sum — so you build the whole thing with a single scan over the per-tile counts. Notice that an empty tile (count = 0) simply shares its offset with the next one.
+
+```mermaid
+flowchart LR
+    subgraph tiles["Per tile"]
+        direction TB
+        T0["Tile 0<br/>offset = 0<br/>count = 3"]
+        T1["Tile 1<br/>offset = 3<br/>count = 2"]
+        T2["Tile 2<br/>offset = 5<br/>count = 0"]
+    end
+
+    subgraph buf["Shared index buffer"]
+        direction LR
+        B0["7"] ~~~ B1["2"] ~~~ B2["9"] ~~~ B3["4"] ~~~ B4["1"] 
+    end
+
+    T0 -->|"goes to [0, 3)"| B0
+    T1 -->|"goes to [3, 5)"| B3
+
+    classDef t0 fill:#cfe8ff,stroke:#3b82f6,color:#111;
+    classDef t1 fill:#d1fadf,stroke:#22c55e,color:#111;
+    classDef empty fill:#e5e7eb,stroke:#9ca3af,color:#111;
+    class T0,B0,B1,B2 t0;
+    class T1,B3,B4 t1;
+    class T2 empty;
+```
+
+## Bye
+
+Thanks for reading my article. If you have any feedback or questions, please feel free to email me or leave a comment below.
 
 ## References
-
-Thanks for reading my article. If you have any feedback or questions, please feel free to email me.
-
 
 [^sdl]: SDL3 GPU documentation: <https://wiki.libsdl.org/SDL3/CategoryGPU>
 
