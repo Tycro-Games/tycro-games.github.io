@@ -10,21 +10,17 @@ pin: true
 
 I was just finishing up my third year of university and I was on the lookout for a light project. I wanted to learn something interesting that entailed some graphics programming with SDL GPU.[^sdl] Inspired by this very interesting talk[^talk] about using SDF functions applied to UI rendering for the Decima editor, I decided that a quick excursion into the realm of rendering using math functions was appropriate to finish the year on a different note. I also indulged in an optimization most often used in lighting: tiled rendering.[^tiled]
 
-I am assuming the reader knows C++ and OpenGL, but has limited understanding of modern graphics APIs like Vulkan, DX12, etc. SDL GPU is a thin abstraction over modern graphics APIs that I am going to use in this article. The code I use will not compile and it is kept short for ease of understanding.
+I am assuming the reader knows C++ and OpenGL, but has limited understanding of modern graphics APIs like Vulkan, DX12, etc. SDL GPU is a thin abstraction over modern graphics APIs that I am going to use in this article. The code I use will not compile and it is kept short for ease of understanding. I will also skip most of the SDL initialisation logic, you can find it in the source code or use the examples I linked here.[^gpu_examples]
 
 ## Source Code
 
-<!-- TODO: link to the Hammered examples here. -->
+You can find the code used in this article [here](https://github.com/OneBogdan01/hammered/tree/main/demos/alloy_ui).
 
 ## Rendering an SDF
-
-> Follow the GPU examples to initialize the SDL GPU renderer device. They cover all the setup I am skipping here.[^gpu_examples]
-{: .prompt-tip }
 
 SDFs or Signed Distance Functions are the basis for ray marching, and Inigo Quilez's blog has all the information you need to properly understand the topic.[^sdf] Concisely, there is a function that gets called for each pixel on the screen and it returns a distance from the edge. According to a convention, positive numbers will be outside the shape, negative inside. If the distance is 0, then it is exactly on the edge of the shape. As an example, below is a rectangle drawn like that. Red means it is outside, light blue inside and right on the edge is a darker blue.
 
 <video controls autoplay muted loop playsinline src="/assets/media/alloy/sdf_rect_v2.mp4" title="An SDF rectangle"></video>
-
 
 The first step is to prepare our vertex data. This is a 2D rendering project, so while this may come as a surprise I am going to render a triangle that covers the whole screen. SDL GPU has a pretty verbose pattern, nothing that compares with rendering a triangle in Vulkan. To upload the "screen", an `SDL_GPUBuffer` is needed. This is used to define the size and usage, in our case a triangle has 3 vertices and it is used in a vertex shader. A transfer buffer is what you put your CPU data in, while it is in a mapped state. Afterwards, you unmap it, which means you cannot modify it anymore from the CPU and it is ready to be sent to the GPU. To upload things a copy pass is needed, then one can finally combine all of this together and submit it.
 
@@ -273,7 +269,6 @@ Tiled rendering is very common in optimization relating to rendering lighting. I
 The main idea is that the screen can be split into tiles. Instead of checking each pixel against each SDF, a pixel will always be part of a tile, each tile can hold the count and indices to the shapes it holds. To do that a compute step needs to be added. Again, the most basic way to do this would be to preallocate some memory for each tile. One buffer will hold the count of shapes for each tile. Another will hold the indices of these primitives that will be associated in the fragment shader. In the compute it is ran for each shape that will be rendered. There is a better way to do this that I will mention by the end.
 
 ```hlsl
-//TODO CLEANUP
 //already uploaded to GPU memory for the fragment shader
 struct UICommand
 {
@@ -335,32 +330,35 @@ void main(uint3 id : SV_DispatchThreadID)
 With these two buffers, in the fragment shader the evaluation changes to this new for loop, I moved the previous switch statement to a new function that takes and modifies the color, the pixel coordinate and the index from the `ui_command` of the shape primitive. I made a heatmap visualisation that displays different colors depending on the count of shapes per tile as well:
 
 ```hlsl
-
+// Tiled rendering that will look exactly the same as before, but faster.
+{
 uint n = min(tile_counts[tile_id], MAX_ENTRIES_PER_TILE);
 for (uint j = 0u; j < n; ++j)
     shade(color, pixel, tile_indices[tile_id * MAX_ENTRIES_PER_TILE + j]);
-
+}
+// Heatmap visualization.
+{
 //when pressing space display the heatmap
- uint n = tile_counts[tile_id];
-        float3 hot;
-        float mix = 0.7;
-        if (n == 0u)
-        {
-            hot = color.rgb;
-            mix = 0.0;
-        }
-        else if (n <= 2u)
-            hot = float3(0.0, 0.4, 1.0);
-        else if (n <= 8u)
-            hot = float3(0.0, 1.0, 0.4);
-        else if (n <= 32u)
-            hot = float3(1.0, 0.9, 0.0);
-        else if (n <= 128u)
-            hot = float3(1.0, 0.45, 0.0);
-        else
-            hot = float3(1.0, 0.0, 0.0);
-        color.rgb = lerp(color.rgb, hot, mix);
-
+uint n = tile_counts[tile_id];
+      float3 hot;
+      float mix = 0.7;
+      if (n == 0u)
+      {
+          hot = color.rgb;
+          mix = 0.0;
+      }
+      else if (n <= 2u)
+          hot = float3(0.0, 0.4, 1.0);
+      else if (n <= 8u)
+          hot = float3(0.0, 1.0, 0.4);
+      else if (n <= 32u)
+          hot = float3(1.0, 0.9, 0.0);
+      else if (n <= 128u)
+          hot = float3(1.0, 0.45, 0.0);
+      else
+          hot = float3(1.0, 0.0, 0.0);
+      color.rgb = lerp(color.rgb, hot, mix);
+}
 // adds a grid over the whole screen with a bit of a thickness and a grayish color
 float2 g = frac(pixel / float(tile_size));
 float grid = step(0.9, max(g.x, g.y));
@@ -379,8 +377,6 @@ So we replaced a for loop with another for loop, is it any faster? Yes, very fas
 <video controls autoplay muted loop playsinline src="/assets/media/alloy/tiled_performance.mp4" title="Tiled vs per-pixel performance"></video>
 
 Something that I neglected so far is the waste of space per tile. In the video I assigned 200 primitives per tile, it is obvious that it overflows in the video due to the high number of shapes on the screen. The count of shapes per tile is necessary, but a smarter way to utilize memory is to allocate a single buffer of primitive indices and use it as a common ground via an offset. It would be like partitioning a big array into smaller arrays conceptually. The offset is where the mini-array starts and the count represents when it ends. The diagram below should provide some visual aid to this idea.
-
-Concretely, each tile stores just an `offset` (where its slice starts) and a `count` (how many indices it owns), and every slice lives back-to-back in one shared buffer. The `offset` of a tile is nothing more than the running sum of all the counts before it - an exclusive prefix sum - so you build the whole thing with a single scan over the per-tile counts. Notice that an empty tile (count = 0) simply shares its offset with the next one.
 
 ```mermaid
 flowchart LR
@@ -417,7 +413,7 @@ Thanks for reading my article. If you have any feedback or questions, please fee
 
 [^gpu_examples]: SDL GPU examples repo: <https://github.com/TheSpydog/SDL_gpu_examples>
 
-[^talk]: Guerrilla talk on SDF-based UI rendering for the Decima editor: <https://www.youtube.com/watch?v=U_MnhTuT_l8>
+[^talk]: Guerrilla talk on SDF UI rendering for the Decima editor: <https://www.youtube.com/watch?v=U_MnhTuT_l8>
 
 [^sdf]: Inigo Quilez's 2D distance functions: <https://iquilezles.org/articles/distfunctions2d/>
 
