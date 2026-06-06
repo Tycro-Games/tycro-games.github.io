@@ -18,15 +18,13 @@ I am assuming the reader knows C++ and OpenGL, but has limited understanding of 
 
 ## Rendering an SDF
 
-> Follow the GPU examples to initialize the SDL GPU renderer device — they cover all the setup I am skipping here.[^gpu_examples]
+> Follow the GPU examples to initialize the SDL GPU renderer device. They cover all the setup I am skipping here.[^gpu_examples]
 {: .prompt-tip }
 
 SDFs or Signed Distance Functions are the basis for ray marching, and Inigo Quilez's blog has all the information you need to properly understand the topic.[^sdf] Concisely, there is a function that gets called for each pixel on the screen and it returns a distance from the edge. According to a convention, positive numbers will be outside the shape, negative inside. If the distance is 0, then it is exactly on the edge of the shape. As an example, below is a rectangle drawn like that. Red means it is outside, light blue inside and right on the edge is a darker blue.
 
 <video controls autoplay muted loop playsinline src="/assets/media/alloy/sdf_rect_v2.mp4" title="An SDF rectangle"></video>
 
-> New to SDFs? Poke at them in a live shader editor first — it makes the math click much faster than rebuilding the engine each time.
-{: .prompt-tip }
 
 The first step is to prepare our vertex data. This is a 2D rendering project, so while this may come as a surprise I am going to render a triangle that covers the whole screen. SDL GPU has a pretty verbose pattern, nothing that compares with rendering a triangle in Vulkan. To upload the "screen", an `SDL_GPUBuffer` is needed. This is used to define the size and usage, in our case a triangle has 3 vertices and it is used in a vertex shader. A transfer buffer is what you put your CPU data in, while it is in a mapped state. Afterwards, you unmap it, which means you cannot modify it anymore from the CPU and it is ready to be sent to the GPU. To upload things a copy pass is needed, then one can finally combine all of this together and submit it.
 
@@ -382,7 +380,7 @@ So we replaced a for loop with another for loop, is it any faster? Yes, very fas
 
 Something that I neglected so far is the waste of space per tile. In the video I assigned 200 primitives per tile, it is obvious that it overflows in the video due to the high number of shapes on the screen. The count of shapes per tile is necessary, but a smarter way to utilize memory is to allocate a single buffer of primitive indices and use it as a common ground via an offset. It would be like partitioning a big array into smaller arrays conceptually. The offset is where the mini-array starts and the count represents when it ends. The diagram below should provide some visual aid to this idea.
 
-Concretely, each tile stores just an `offset` (where its slice starts) and a `count` (how many indices it owns), and every slice lives back-to-back in one shared buffer. The `offset` of a tile is nothing more than the running sum of all the counts before it — an exclusive prefix sum — so you build the whole thing with a single scan over the per-tile counts. Notice that an empty tile (count = 0) simply shares its offset with the next one.
+Concretely, each tile stores just an `offset` (where its slice starts) and a `count` (how many indices it owns), and every slice lives back-to-back in one shared buffer. The `offset` of a tile is nothing more than the running sum of all the counts before it - an exclusive prefix sum - so you build the whole thing with a single scan over the per-tile counts. Notice that an empty tile (count = 0) simply shares its offset with the next one.
 
 ```mermaid
 flowchart LR
