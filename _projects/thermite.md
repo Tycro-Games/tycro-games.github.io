@@ -18,16 +18,17 @@ Can be found on GitHub **[here](TODO_LINK)**.
 
 --- -->
 
-> **Note:** This project is still in development — this page covers the first 16 weeks of work.
 
 ## Overview
 
-**Voxmos** (name is still a work in progress) is an FPS mining game that features **raytracing** and **voxel mining with destruction** made with the **Thermite** engine. The engine was built from the beginning of the project in parallel with the design of the game. The team consisted of **10 programmers, 3 designers and 3 artists**. Below is an in-progress video of features of the game and engine:
+**Starlocked** (name is still a work in progress) is an FPS mining game that features **raytracing** and **voxel mining with destruction** made with the **Thermite** engine. The engine was built from the beginning of the project in parallel with the design of the game. The team consisted of **10 programmers, 3 designers and 3 artists**. Below is an in-progress video of features of the game and engine:
 
 
 {% include embed/youtube.html id='vkW3bTD-wck' %}
 
 **Key Achievement:** Building and publishing a custom voxel raytracing engine and game on **Steam** as a multidisciplinary team of 16.
+
+<iframe src="https://store.steampowered.com/widget/4515200/" frameborder="0" width="646" height="190"></iframe>
 
 ---
 
