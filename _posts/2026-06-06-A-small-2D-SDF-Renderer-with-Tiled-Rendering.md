@@ -1,5 +1,5 @@
 ---
-title: A Quick 2D SDF Renderer with Tiled Rendering
+title: A Small 2D SDF Renderer with Tiled Rendering
 date: 2026-06-06 14:10:00 +0200
 categories: [Engine 🔧, Graphics 🎨]
 math: true
