@@ -131,7 +131,7 @@ Beyond building games, I care a lot about **collaboration** among game developer
 
 ---
 
-*Currently seeking programming internships with a focus on engine, tools or low-level systems. Available from Summer 2026.*
+*Currently seeking programming internships with a focus on engine, tools or low-level systems. Available from January 2027.*
 
 </div>
 </div>
