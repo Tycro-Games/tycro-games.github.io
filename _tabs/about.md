@@ -124,7 +124,7 @@ Beyond building games, I care a lot about **collaboration** among game developer
 ---
 
 ### You can find me
-**Email:** [bogdan.game.development@gmail.com](mailto:bogdan.game.development@gmail.com)  
+**Email:** [bogdan.mocanu.gamedev@gmail.com](mailto:bogdan.mocanu.gamedev@gmail.com)  
 **LinkedIn:** [linkedin.com/in/bogdan-mocanu](https://www.linkedin.com/in/bogdan-mocanu-8234581b1/)  
 **GitHub:** [github.com/OneBogdan01](https://github.com/OneBogdan01)  
 **Itch.io:** [tycro-games.itch.io](https://tycro-games.itch.io/)
