@@ -96,9 +96,6 @@ comments:
     category: Comments
     category_id: DIC_kwDOI-t6l84CtbyF
 
-
-
-
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
 assets:
   self_host:
@@ -149,14 +146,14 @@ defaults:
       # DO NOT modify the following parameter unless you are confident enough
       # to update the code of all other post links in this project.
       permalink: /posts/:title/
-      
+
   - scope:
       path: _drafts
     values:
       comments: false
   - scope:
       path: ""
-      type: projects  # This targets the collection
+      type: projects # This targets the collection
     values:
       layout: project
       toc: true
@@ -212,4 +209,4 @@ analytics:
   provider: "google-gtag"
   google:
     tracking_id: "G-6VC31E2K3T"
-    anonymize_ip: false # default  
+    anonymize_ip: false # default

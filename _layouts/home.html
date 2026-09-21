@@ -3,240 +3,408 @@ layout: page
 script_includes:
   - portfolio-filter
 ---
+
 {% include lang.html %}
 
 <style>
-.hero-section {
-  text-align: center;
-  padding: 3.5rem 0 3rem;
-  margin-bottom: 2.5rem;
-  border-bottom: 1px solid var(--main-border-color);
-}
-.hero-name {
-  font-size: 3rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem;
-  color: var(--heading-color);
-  font-family: Lato, 'Microsoft Yahei', sans-serif;
-}
-.hero-tagline {
-  font-size: 1.25rem;
-  color: var(--text-muted-color);
-  margin: 0 0 1.8rem;
-  font-weight: 400;
-}
-.hero-tagline a {
-  color: var(--link-color);
-  text-decoration: none;
-}
-.hero-tagline a:hover {
-  color: var(--link-underline-color);
-}
-.hero-bio {
-  font-size: 1.1rem;
-  line-height: 1.7;
-  max-width: 720px;
-  margin: 0 auto 1.8rem;
-  color: var(--text-color);
-}
-.hero-skills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  justify-content: center;
-  margin: 1.5rem 0;
-}
-.hero-skills .h-skill {
-  width: 4rem;
-  height: 4rem;
-  display: block;
-  pointer-events: none;
-  transition: transform 0.2s ease;
-}
-.hero-skills .h-skill:hover {
-  transform: scale(1.15);
-}
-.hero-skills .h-skill-light {
-  filter: invert(1);
-}
-.hero-cta {
-  margin-top: 1.5rem;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  align-items: center;
-}
-.hero-cta .cta-primary {
-  display: inline-block;
-  padding: 0.55rem 1.4rem;
-  border: 1px solid var(--link-color);
-  color: var(--link-color);
-  border-radius: 6px;
-  text-decoration: none;
-  font-size: 0.95rem;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-.hero-cta .cta-primary:hover {
-  background: var(--link-color);
-  color: var(--main-bg);
-}
-.hero-cta .cta-secondary {
-  display: inline-block;
-  padding: 0.55rem 1.4rem;
-  color: var(--text-muted-color);
-  text-decoration: none;
-  font-size: 0.95rem;
-  transition: color 0.2s ease;
-}
-.hero-cta .cta-secondary:hover {
-  color: var(--heading-color);
-}
-.hero-availability {
-  display: inline-block;
-  font-size: 0.9rem;
-  color: var(--heading-color);
-  margin-top: 1.2rem;
-  padding: 0.5rem 1.2rem;
-  border: 1px solid rgba(74, 222, 128, 0.3);
-  border-radius: 6px;
-  background: rgba(74, 222, 128, 0.08);
-}
-.hero-availability::before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: #4ade80;
-  border-radius: 50%;
-  margin-right: 0.6rem;
-  vertical-align: middle;
-  box-shadow: 0 0 6px rgba(74, 222, 128, 0.5);
-}
-@media (max-width: 600px) {
-  .hero-name { font-size: 2.2rem; }
-  .hero-tagline { font-size: 1.05rem; }
-  .hero-skills .h-skill { width: 2.8rem; height: 2.8rem; }
-}
+  .hero-section {
+    text-align: center;
+    padding: 3.5rem 0 3rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--main-border-color);
+  }
+  .hero-name {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    color: var(--heading-color);
+    font-family: Lato, "Microsoft Yahei", sans-serif;
+  }
+  .hero-tagline {
+    font-size: 1.25rem;
+    color: var(--text-muted-color);
+    margin: 0 0 1.8rem;
+    font-weight: 400;
+  }
+  .hero-tagline a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+  .hero-tagline a:hover {
+    color: var(--link-underline-color);
+  }
+  .hero-bio {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    max-width: 720px;
+    margin: 0 auto 1.8rem;
+    color: var(--text-color);
+  }
+  .hero-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    margin: 1.5rem 0;
+  }
+  .hero-skills .h-skill {
+    width: 4rem;
+    height: 4rem;
+    display: block;
+    pointer-events: none;
+    transition: transform 0.2s ease;
+  }
+  .hero-skills .h-skill:hover {
+    transform: scale(1.15);
+  }
+  .hero-skills .h-skill-light {
+    filter: invert(1);
+  }
+  .hero-cta {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .hero-cta .cta-primary {
+    display: inline-block;
+    padding: 0.55rem 1.4rem;
+    border: 1px solid var(--link-color);
+    color: var(--link-color);
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+  }
+  .hero-cta .cta-primary:hover {
+    background: var(--link-color);
+    color: var(--main-bg);
+  }
+  .hero-cta .cta-secondary {
+    display: inline-block;
+    padding: 0.55rem 1.4rem;
+    color: var(--text-muted-color);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+  }
+  .hero-cta .cta-secondary:hover {
+    color: var(--heading-color);
+  }
+  .hero-availability {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--heading-color);
+    margin-top: 1.2rem;
+    padding: 0.5rem 1.2rem;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    border-radius: 6px;
+    background: rgba(74, 222, 128, 0.08);
+  }
+  .hero-availability::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    margin-right: 0.6rem;
+    vertical-align: middle;
+    box-shadow: 0 0 6px rgba(74, 222, 128, 0.5);
+  }
+  @media (max-width: 600px) {
+    .hero-name {
+      font-size: 2.2rem;
+    }
+    .hero-tagline {
+      font-size: 1.05rem;
+    }
+    .hero-skills .h-skill {
+      width: 2.8rem;
+      height: 2.8rem;
+    }
+  }
+
+  /* Status row: current role + availability */
+  .hero-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 1.2rem;
+  }
+  .hero-status .hero-availability {
+    margin-top: 0;
+  }
+  .hero-current {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--heading-color);
+    padding: 0.5rem 1.2rem;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    border-radius: 6px;
+    background: rgba(96, 165, 250, 0.08);
+  }
+  .hero-current::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #60a5fa;
+    border-radius: 50%;
+    margin-right: 0.6rem;
+    vertical-align: middle;
+    box-shadow: 0 0 6px rgba(96, 165, 250, 0.5);
+  }
+  .hero-current a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgba(96, 165, 250, 0.6);
+  }
+
+  /* Experience card (not clickable, so no hover transform) */
+  .experience-container {
+    padding: 20px;
+  }
+  .experience-card {
+    background-color: var(--project-info-bg);
+    border-left: 4px solid #1e3a8a;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  .experience-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin-bottom: 10px;
+  }
+  .experience-header h3 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin: 0;
+    color: var(--text-color);
+  }
+  .experience-org {
+    font-size: 0.95rem;
+    color: var(--text-muted-color);
+  }
+  .experience-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    color: var(--text-color);
+  }
+  .meta-tag.professional {
+    background-color: #1e3a8a;
+    color: white;
+  }
 </style>
 
 <div class="portfolio-page">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h1 class="hero-name">Bogdan Mocanu</h1>
+    <p class="hero-tagline">
+      <strong
+        >Engine Programmer · Student at
+        <a
+          href="https://www.buas.nl/en/programmes/creative-media-and-game-technologies/programming#courses"
+          >Breda University of Applied Sciences</a
+        ></strong
+      >
+    </p>
+    <p class="hero-bio">
+      I work primarily in <strong>C++</strong> on cross-platform custom engines
+      targeting PC and consoles, and explore low-level systems and engine
+      architecture in my spare time.
+    </p>
 
-<!-- Hero Section -->
-<div class="hero-section">
-  <h1 class="hero-name">Bogdan Mocanu</h1>
-<p class="hero-tagline"><strong>Engine Programmer · Student at <a href="https://www.buas.nl/en/programmes/creative-media-and-game-technologies/programming#courses">Breda University of Applied Sciences</a></strong></p>
-  <p class="hero-bio">
-    I work primarily in <strong>C++</strong> on cross-platform custom engines targeting PC and consoles,
-    and explore low-level systems and engine architecture in my spare time.
-  </p>
+    <div class="hero-skills">
+      <img
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg"
+        class="h-skill"
+        alt="C++"
+      />
+      <img
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cmake/cmake-original.svg"
+        class="h-skill"
+        alt="CMake"
+      />
+      <img
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-original.svg"
+        class="h-skill"
+        alt="Visual Studio"
+      />
+      <img
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg"
+        class="h-skill h-skill-light"
+        alt="GitHub"
+      />
+      <img
+        src="/assets/img/icons/perforce.png"
+        class="h-skill"
+        alt="Perforce"
+      />
+      <img
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-plain.svg"
+        class="h-skill h-skill-light"
+        alt="Unity"
+      />
+      <img
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unrealengine/unrealengine-original.svg"
+        class="h-skill h-skill-light"
+        alt="Unreal Engine"
+      />
+      <img
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/godot/godot-original.svg"
+        class="h-skill"
+        alt="Godot"
+      />
+    </div>
 
-  <div class="hero-skills">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg" class="h-skill" alt="C++">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cmake/cmake-original.svg" class="h-skill" alt="CMake">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-original.svg" class="h-skill" alt="Visual Studio">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" class="h-skill h-skill-light" alt="GitHub">
-    <img src="/assets/img/icons/perforce.png" class="h-skill" alt="Perforce">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-plain.svg" class="h-skill h-skill-light" alt="Unity">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unrealengine/unrealengine-original.svg" class="h-skill h-skill-light" alt="Unreal Engine">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/godot/godot-original.svg" class="h-skill" alt="Godot">
+    <div class="hero-cta">
+      <a href="mailto:bogdan.mocanu.gamedev@gmail.com" class="cta-primary"
+        >Get in Touch</a
+      >
+      <a href="{{ '/about/' | relative_url }}" class="cta-secondary"
+        >More about me →</a
+      >
+    </div>
+
+    <div class="hero-status">
+      <span class="hero-current"
+        >Software Developer Intern at
+        <a href="https://www.radboudumc.nl/en">Radboudumc</a></span
+      >
+      <span class="hero-availability"
+        >Seeking engine/tools graduation internship · Available January
+        2027</span
+      >
+    </div>
   </div>
 
-  <div class="hero-cta">
-    <a href="mailto:bogdan.mocanu.gamedev@gmail.com" class="cta-primary">Get in Touch</a>
-    <a href="{{ '/about/' | relative_url }}" class="cta-secondary">More about me →</a>
+  <!-- Experience Section -->
+  <div class="section-header-row">
+    <h2 class="section-header">Experience</h2>
   </div>
 
-  <span class="hero-availability">Seeking engine/tools internships · Available January 2027</span>
-</div>
+  <div class="experience-container">
+    <article class="experience-card">
+      <div class="experience-header">
+        <h3>Software Developer Intern</h3>
+        <span class="experience-org">Radboudumc · Nijmegen, NL</span>
+      </div>
+      <p>
+        Currently doing an internship at Radboudumc, the university medical
+        center in Nijmegen. This is my first time writing for medical
+        applications that aim to improve patients' experience. My task is
+        tackling 3D reconstruction for this purpose.
+      </p>
+      <div class="article-metadata">
+        <span class="meta-tag professional">
+          <span class="meta-icon">💼</span>
+          <span class="meta-label">Internship</span>
+        </span>
+        <span class="meta-tag engine">
+          <span class="meta-icon">🔧</span>
+          <span class="meta-label">Python + OpenCV and Open3D</span>
+        </span>
+        <span class="meta-tag platform">
+          <span class="meta-icon">🏥</span>
+          <span class="meta-label">Medical software</span>
+        </span>
+        <span class="meta-tag duration">
+          <span class="meta-icon">⏱️</span>
+          <span class="meta-label">Sep. 2026 - Jan. 2027</span>
+        </span>
+      </div>
+    </article>
+  </div>
 
-<!-- Projects Section -->
-<div class="section-header-row">
-  <h2 class="section-header">Projects</h2>
-  <span class="item-count" id="project-count"></span>
-</div>
+  <!-- Projects Section -->
+  <div class="section-header-row">
+    <h2 class="section-header">Projects</h2>
+    <span class="item-count" id="project-count"></span>
+  </div>
 
   <div class="projects-container">
-    {% assign all_projects = site.projects | sort: 'date' | reverse %}
-    
-    {% for project in all_projects %}
-    <a href="{{ project.url }}" class="project-card-link" 
-       data-priority-highlights="{{ project.priority_highlights | default: 999 }}"
-       data-categories="{{ project.tags | join: ' ' }}">
+    {% assign all_projects = site.projects | sort: 'date' | reverse %} {% for
+    project in all_projects %}
+    <a
+      href="{{ project.url }}"
+      class="project-card-link"
+      data-priority-highlights="{{ project.priority_highlights | default: 999 }}"
+      data-categories="{{ project.tags | join: ' ' }}"
+    >
       <article class="project-card">
-        
         {% if project.image %}
-          <div class="project-image">
-            <img src="{{ project.image | relative_url }}" alt="{{ project.title }} Preview">
-          </div>
+        <div class="project-image">
+          <img
+            src="{{ project.image | relative_url }}"
+            alt="{{ project.title }} Preview"
+          />
+        </div>
         {% endif %}
-        
+
         <div class="project-info">
           <h3>{{ project.title }}</h3>
           <p>{{ project.description }}</p>
-          
+
           <div class="project-metadata">
-            
             {% if project.main_category == "University Projects" %}
-              <div class="meta-tag university">
-                <span class="meta-icon">🎓</span>
-                <span class="meta-label">University</span>
-              </div>
+            <div class="meta-tag university">
+              <span class="meta-icon">🎓</span>
+              <span class="meta-label">University</span>
+            </div>
             {% elsif project.main_category == "Personal Projects" %}
-              <div class="meta-tag personal">
-                <span class="meta-icon">🚀</span>
-                <span class="meta-label">Personal</span>
-              </div>
+            <div class="meta-tag personal">
+              <span class="meta-icon">🚀</span>
+              <span class="meta-label">Personal</span>
+            </div>
             {% elsif project.main_category == "Archive Projects" %}
-              <div class="meta-tag archive">
-                <span class="meta-icon">📦</span>
-                <span class="meta-label">Archived</span>
-              </div>
+            <div class="meta-tag archive">
+              <span class="meta-icon">📦</span>
+              <span class="meta-label">Archived</span>
+            </div>
+            {% endif %} {% if project.engine %}
+            <div class="meta-tag engine">
+              <span class="meta-icon">🔧</span>
+              <span class="meta-label">{{ project.engine }}</span>
+            </div>
+            {% endif %} {% if project.team_size %} {% assign team_lower =
+            project.team_size | downcase %} {% if team_lower contains "solo" %}
+            <div class="meta-tag team solo">
+              <span class="meta-icon">👤</span>
+              <span class="meta-label">{{ project.team_size }}</span>
+            </div>
+            {% else %}
+            <div class="meta-tag team group">
+              <span class="meta-icon">👥</span>
+              <span class="meta-label">{{ project.team_size }}</span>
+            </div>
+            {% endif %} {% endif %} {% if project.platform %}
+            <div class="meta-tag platform">
+              <span class="meta-icon">💻</span>
+              <span class="meta-label">{{ project.platform }}</span>
+            </div>
+            {% endif %} {% if project.duration %}
+            <div class="meta-tag duration">
+              <span class="meta-icon">⏱️</span>
+              <span class="meta-label">{{ project.duration }}</span>
+            </div>
+            {% endif %} {% if project.features %}
+            <div class="meta-tag features">
+              <span class="meta-icon">✨</span>
+              <span class="meta-label">{{ project.features }}</span>
+            </div>
             {% endif %}
-            
-            {% if project.engine %}
-              <div class="meta-tag engine">
-                <span class="meta-icon">🔧</span>
-                <span class="meta-label">{{ project.engine }}</span>
-              </div>
-            {% endif %}
-
-            {% if project.team_size %}
-              {% assign team_lower = project.team_size | downcase %}
-              {% if team_lower contains "solo" %}
-                <div class="meta-tag team solo">
-                  <span class="meta-icon">👤</span>
-                  <span class="meta-label">{{ project.team_size }}</span>
-                </div>
-              {% else %}
-                <div class="meta-tag team group">
-                  <span class="meta-icon">👥</span>
-                  <span class="meta-label">{{ project.team_size }}</span>
-                </div>
-              {% endif %}
-            {% endif %}
-
-            {% if project.platform %}
-              <div class="meta-tag platform">
-                <span class="meta-icon">💻</span>
-                <span class="meta-label">{{ project.platform }}</span>
-              </div>
-            {% endif %}
-
-            {% if project.duration %}
-              <div class="meta-tag duration">
-                <span class="meta-icon">⏱️</span>
-                <span class="meta-label">{{ project.duration }}</span>
-              </div>
-            {% endif %}
-            
-            {% if project.features %}
-              <div class="meta-tag features">
-                <span class="meta-icon">✨</span>
-                <span class="meta-label">{{ project.features }}</span>
-              </div>
-            {% endif %}
-
           </div>
         </div>
       </article>
@@ -245,53 +413,59 @@ script_includes:
   </div>
 
   <div class="view-all-container">
-    <a href="{{ '/projects/' | relative_url }}" class="view-all-link">View All Projects →</a>
+    <a href="{{ '/projects/' | relative_url }}" class="view-all-link"
+      >View All Projects →</a
+    >
   </div>
 
-<!-- Articles Section -->
-<div class="articles-section">
-  <div class="section-header-row">
-    <h2 class="section-header">Technical Articles</h2>
-    <span class="item-count" id="article-count"></span>
-  </div>
-  <div class="projects-container">
-    {% assign all_pinned = site.posts | where: 'pin', 'true' %}
-    {% assign all_normal = site.posts | where_exp: 'item', 'item.pin != true and item.hidden != true' %}
-    {% assign all_posts = all_pinned | concat: all_normal %}
-    
-    {% for post in all_posts %}
-      <a href="{{ post.url }}" class="project-card-link" data-pinned="{{ post.pin }}">
+  <!-- Articles Section -->
+  <div class="articles-section">
+    <div class="section-header-row">
+      <h2 class="section-header">Technical Articles</h2>
+      <span class="item-count" id="article-count"></span>
+    </div>
+    <div class="projects-container">
+      {% assign all_pinned = site.posts | where: 'pin', 'true' %} {% assign
+      all_normal = site.posts | where_exp: 'item', 'item.pin != true and
+      item.hidden != true' %} {% assign all_posts = all_pinned | concat:
+      all_normal %} {% for post in all_posts %}
+      <a
+        href="{{ post.url }}"
+        class="project-card-link"
+        data-pinned="{{ post.pin }}"
+      >
         <article class="project-card">
           {% if post.image %}
-            <div class="project-image">
-              <img src="{{ post.image | relative_url }}" alt="{{ post.title }} Preview">
-            </div>
+          <div class="project-image">
+            <img
+              src="{{ post.image | relative_url }}"
+              alt="{{ post.title }} Preview"
+            />
+          </div>
           {% endif %}
-          
+
           <div class="project-info">
             <h3>{{ post.title }}</h3>
             <p>
-              {% if post.description %}
-                {{ post.description }}
-              {% else %}
-                {% include post-description.html %}
-              {% endif %}
+              {% if post.description %} {{ post.description }} {% else %} {%
+              include post-description.html %} {% endif %}
             </p>
-            
+
             <div class="article-metadata">
-              {% if post.categories %}
-                {% for cat in post.categories %}
-                  <div class="meta-tag category">{{ cat }}</div>
-                {% endfor %}
-              {% endif %}
+              {% if post.categories %} {% for cat in post.categories %}
+              <div class="meta-tag category">{{ cat }}</div>
+              {% endfor %} {% endif %}
             </div>
           </div>
         </article>
       </a>
-    {% endfor %}
-  </div>
-  
- <div class="view-all-container">
-    <a href="{{ '/articles/' | relative_url }}" class="view-all-link">View All Articles →</a>
+      {% endfor %}
+    </div>
+
+    <div class="view-all-container">
+      <a href="{{ '/articles/' | relative_url }}" class="view-all-link"
+        >View All Articles →</a
+      >
+    </div>
   </div>
 </div>

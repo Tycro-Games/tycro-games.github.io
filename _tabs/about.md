@@ -84,6 +84,8 @@ order: 1
 
 Hello! I'm **Bogdan Mocanu**, a game programming student at **[Breda University of Applied Sciences](https://www.buas.nl/en/programmes/creative-media-and-game-technologies/programming#courses)** working towards becoming an engine programmer. I mainly work with **C++** and have worked on cross platform custom engines targeting PC and consoles as part of my university projects. I also have experience with **Unity**, **Unreal Engine** and **Godot**.
 
+Since **September 2026** I have been doing a **software development internship** at **[Radboudumc](https://www.radboudumc.nl/en)**, the university medical center in Nijmegen. It is my first time writing software outside of games.
+
 I have been fascinated from a young age by how Spore, Civilization and Command & Conquer create expansive virtual worlds governed by their own strange rules. I started tinkering in **Unity** before university, but I've come to believe that building custom technology teaches things no existing engine can. In my free time I explore **low-level systems**, **engine architecture**, **simulations** and **optimization techniques** in my own engine, [Hammered](https://github.com/OneBogdan01/hammered-engine).
 
 Beyond building games, I care a lot about **collaboration** among game developers. I have worked in teams of up to 16 people on custom engines, and I find that working together on games is a much more nuanced and challenging endeavour than simply making them. Even when a project isn't exactly what I would pick for myself, being a dependable part of the team, looking for ways to improve the workflow for others and finding opportunities to contribute are things that I value greatly.
@@ -131,7 +133,7 @@ Beyond building games, I care a lot about **collaboration** among game developer
 
 ---
 
-*Currently seeking programming internships with a focus on engine, tools or low-level systems. Available from January 2027.*
+*Currently a software developer intern at Radboudumc. Looking for a graduation internship with a focus on engine, tools or low-level systems, starting January 2027.*
 
 </div>
 </div>
